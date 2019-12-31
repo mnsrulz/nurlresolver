@@ -4,8 +4,8 @@ var urlresolver = new (require('./plugins/UrlResolver'))();
 async function respond(req, res, next) {
     var links = await urlresolver.resolve('https://hdhub4u.live');
     links.forEach(x => x.originalLink = x.link);
-    links.forEach(x => x.link = `http://localhost:8080/hs?l=${encodeURIComponent(x.originalLink)}`)
-    links.forEach(x => x.expandlink = `http://localhost:8080/hs2?l=${encodeURIComponent(x.originalLink)}`)
+    links.forEach(x => x.link = `https://nurlresolver.herokuapp.com/hs?l=${encodeURIComponent(x.originalLink)}`)
+    links.forEach(x => x.expandlink = `https://nurlresolver.herokuapp.com/hs2?l=${encodeURIComponent(x.originalLink)}`)
     res.send(links);
     next();
 }
@@ -15,7 +15,7 @@ async function respond1(req, res, next) {
     var links = await urlresolver.resolve(urltoresolve);
     if (links) {
         links.forEach(x => x.originalLink = x.link);
-        links.forEach(x => x.link = `http://localhost:8080/hs?l=${encodeURIComponent(x.link)}`)
+        links.forEach(x => x.link = `https://nurlresolver.herokuapp.com/hs?l=${encodeURIComponent(x.link)}`)
         res.send(links);
     }
     else {
