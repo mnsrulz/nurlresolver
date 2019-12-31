@@ -59,6 +59,28 @@ server.get('/', respond);
 server.get('/hs', respond1);
 server.get('/hs2', respond2);
 
-server.listen(8080, function () {
+var port = normalizePort(process.env.PORT || '3000');
+
+server.listen(port, function () {
     console.log('%s listening at %s', server.name, server.url);
 });
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+    var port = parseInt(val, 10);
+
+    if (isNaN(port)) {
+        // named pipe
+        return val;
+    }
+
+    if (port >= 0) {
+        // port number
+        return port;
+    }
+
+    return false;
+}
