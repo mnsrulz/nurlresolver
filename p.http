@@ -1,0 +1,8 @@
+POST https://apighost.herokuapp.com/api/copytogdrive HTTP/1.1
+content-type: application/json
+
+{
+    "streamUrl": "https://cdn20.letsupload.co/1sq5e/Joker.2019.English.1080p.WEBRip.AAC.6CH.x265.HEVC_-HDHUB4u.Live.mkv?download_token=ea10a7eef58e7bdebbb63a45e74f6a44316641ec4f1460b279c4cf7684b44e50",
+    "streamTitle": "Joker.mkv",
+    "accessToken": "ya29.ImC3B0i57TJ4ZecWkmoq4zVGyiLhafIObHqdCc8RyJjo4ngav7ZSX9HwxdDpdPKKz7LxXrNhSvPAIOCxJhIDYpKoJehdcXZ3icX02qVeHlLR59burXl7kPInCMSHckYknIk"
+}
