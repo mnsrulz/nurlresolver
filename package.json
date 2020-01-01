@@ -8,6 +8,7 @@
   "dependencies": {
     "form-data": "^3.0.0",
     "got": "^10.2.0",
+    "tough-cookie": "^3.0.1",
     "x-ray": "^2.3.4"
   }
 }
