@@ -14,7 +14,8 @@ class Helper {
         for (let index = 0; index < obj.n.length; index++) {
             const n = obj.n[index];
             const v = obj.v[index];
-            n !== undefined && v !== undefined && (datatopost[n] = v);
+            n !== undefined && v !== undefined && 
+            n !== null && v !== null && (datatopost[n] = v);
         }
         return datatopost;
     }
