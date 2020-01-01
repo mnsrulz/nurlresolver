@@ -42,6 +42,37 @@ class UrlResolver {
                 return fs;
         }
     }
+
+    /**
+     * Resolve recursively all the urls until all not fetched. It's a heavy call and 
+     * can take minutes to resolve if the sources are slow to respond.
+     * @param {string} urlToResolve 
+     * @returns {collection of resolved links}
+     */
+    async resolveRecursive(urlToResolve) {
+        var instanceOfUrlResolver = this;
+        var arrayToReturn = [];
+        await rec(urlToResolve, arrayToReturn, []);
+        return arrayToReturn;
+        async function rec(o, j, k) {
+            if (k.some(x => x === o)) return '';
+            k.push(o);
+            console.log(o);
+            if (o) {
+                var p = [];
+                var z = await instanceOfUrlResolver.resolve(o);
+                if (z) {
+                    z.filter(x => x.isPlayable).forEach(x => j.push(x));
+                    z.filter(x => !x.isPlayable).forEach(x => {
+                        p.push(rec(x.link, j, k));
+                    });
+                }
+                await Promise.all(p);
+            } else {
+                return '';
+            }
+        }
+    }
 }
 
 module.exports = UrlResolver;
