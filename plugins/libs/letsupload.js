@@ -17,7 +17,7 @@ class LetsuploadResolver extends BaseUrlResolver {
         const cookieJar = new CookieJar();
         const response = await got(_urlToResolve, { cookieJar });
         var regex = /class='btn btn-free' href='([^']*)/g
-        var link1 = regexp.exec(response.body)[1];
+        var link1 = regex.exec(response.body)[1];
 
         if (link1) {
             await helper.wait(3000);
