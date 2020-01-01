@@ -30,6 +30,7 @@ async function respond2(req, res, next) {
     var urltoresolve = req.query.l;
     var j = [];
     await rec(urltoresolve, j, []);
+    console.log(`processing completed for ${urltoresolve}`);
     res.send(j);
     next();
 }
@@ -43,6 +44,13 @@ async function rec(o, j, k) {
         var z = await urlresolver.resolve(o);
         if (z) {
             z.filter(x => x.isPlayable).forEach(x => j.push(x));
+            // for (const key in z) {
+            //     const x = z[key];
+            //     if (!x.isPlayable) {
+            //         var tttt = await rec(x.link, j, k);
+            //         p.push(tttt);
+            //     }
+            // }
             z.filter(x => !x.isPlayable).forEach(x => {
                 p.push(rec(x.link, j, k));
             });

@@ -21,9 +21,14 @@ class LetsuploadResolver extends BaseUrlResolver {
 
         if (link1) {
             await helper.wait(3000);
-            const response2 = await got(link1, { cookieJar });
-            var regex01 = /title="Download" href="([^"]*)"/g
-            var el = Array.from(response2.body.matchAll(regex01), m => m[1])[0];
+            const response2 = await got(link1, { cookieJar, followRedirect: false });
+            var el = '';
+            if (response2.statusCode === 302) {
+                el = response2.headers['location'];
+            } else {
+                const regex01 = /title="Download" href="([^"]*)"/g
+                el = Array.from(response2.body.matchAll(regex01), m => m[1])[0];
+            }
             if (el) {
                 const title = new URL(el).pathname.split('/').slice(-1)[0];
                 links.push(BaseUrlResolver.prototype.createResult(title, el, '', true));
