@@ -9,23 +9,24 @@
 // var zupload = require('./libs/zupload');
 // var letsupload = require('./libs/letsupload');
 
-var resolvers = [];
-
-require('fs').readdirSync(__dirname + '/libs/').forEach(function (file) {
-    if (file.match(/\.js$/) !== null && file !== 'index.js') {
-        var name = file.replace('.js', '');
-        //   exports[name] = require('./' + file);
-
-        var inst = require('./libs/' + file);
-        var instance = new inst();
-        resolvers.push(instance);
-    }
-});
 
 class UrlResolver {
     allResolvers = [];
     constructor() {
         //this.allResolvers = [new linkrit(), new mvlinks(), new hdhub4u(), new hblinks(), new megaup(), new clicknupload(), new linkstaker(), new crnews(), new zupload(), new letsupload()];
+        var resolvers = [];
+
+        require('fs').readdirSync(__dirname + '/libs/').forEach(function (file) {
+            if (file.match(/\.js$/) !== null && file !== 'index.js') {
+                var name = file.replace('.js', '');
+                //   exports[name] = require('./' + file);
+
+                var inst = require('./libs/' + file);
+                var instance = new inst();
+                resolvers.push(instance);
+            }
+        });
+
         this.allResolvers = resolvers;
     }
 
