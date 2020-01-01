@@ -1,6 +1,7 @@
 class BaseUrlResolver {
-    domains = [];
-
+    constructor() {
+        this.domains = [];
+    }
     /**
      * 
      * @param {string} urlToResolve 
@@ -9,12 +10,12 @@ class BaseUrlResolver {
         var canResolve = this.domains.some((innerUrl) => {
             return (urlToResolve.startsWith(innerUrl));
         });
-        if (canResolve){
+        if (canResolve) {
             try {
-                return await this.resolveInner(urlToResolve);  
+                return await this.resolveInner(urlToResolve);
             } catch (error) {
                 console.log(error);
-            } 
+            }
         }
         return false;
     }

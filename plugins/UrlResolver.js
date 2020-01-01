@@ -11,7 +11,6 @@
 
 
 class UrlResolver {
-    allResolvers = [];
     constructor() {
         //this.allResolvers = [new linkrit(), new mvlinks(), new hdhub4u(), new hblinks(), new megaup(), new clicknupload(), new linkstaker(), new crnews(), new zupload(), new letsupload()];
         var resolvers = [];
