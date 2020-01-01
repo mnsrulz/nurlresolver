@@ -15,23 +15,19 @@ class StreamwireResolver extends BaseUrlResolver {
     async resolveInner(_urlToResolve) {
         var links = [];
         var unpackstr = '';
-        return new Promise(function (resolve, reject) {
-            x(_urlToResolve, {
-                title: 'title',
-                script: ['script']
-            })((err, obj) => {
-
-                const script = obj.script.filter(x => x.startsWith('eval(function(p,a,c,k,e,d)'))[0];
-                const unpack = helper.unPack(script);
-                var regex = /src:"(https[^"]*)/g
-                var el = unpack && Array.from(unpack.matchAll(regex), m => m[1])[0];
-                if (el) {
-                    var title = obj.title;
-                    links.push(BaseUrlResolver.prototype.createResult(title, el, '', true));
-                }
-                resolve(links);
-            })
+        var obj = await x(_urlToResolve, {
+            title: 'title',
+            script: ['script']
         });
+        const script = obj.script.filter(x => x.startsWith('eval(function(p,a,c,k,e,d)'))[0];
+        const unpack = helper.unPack(script);
+        var regex = /src:"(https[^"]*)/g
+        var el = unpack && regex.exec(unpack)[1];
+        if (el) {
+            var title = obj.title;
+            links.push(BaseUrlResolver.prototype.createResult(title, el, '', true));
+        }
+        return links;
     }
 }
 

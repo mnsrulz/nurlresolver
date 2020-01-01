@@ -13,7 +13,8 @@ class LinkstakerResolver extends BaseUrlResolver {
         var links = [];
         const response = await got(_urlToResolve);
         var regex = /\("download"\)\.src="([^"]*)/g
-        var el = Array.from(response.body.matchAll(regex), m => m[1])[0];
+        
+        var el = regex.exec(response.body)[1];
         if (el) {
             var response2 = await got(el, {
                 headers: {
