@@ -24,22 +24,15 @@ class LinkritResolver extends BaseUrlResolver {
         const response2 = await got.post(_urlToResolve, {
             body: form
         });
-
-        var promise = new Promise(function (resolve, reject) {
-            x(response2.body, '.view-well', {
-                title: ['a'],
-                link: ['a@href']
-            })((err, obj) => {
-                var lnks = obj;
-                for (let index = 0; index < obj.title.length; index++) {
-                    const title = obj.title[index];
-                    const link = obj.link[index];
-                    links.push(BaseUrlResolver.prototype.createResult(title, link, '', false));
-                }
-                resolve(links);
-            })
+        var obj = await x(response2.body, '.view-well', {
+            title: ['a'],
+            link: ['a@href']
         });
-        await promise;
+        for (let index = 0; index < obj.title.length; index++) {
+            const title = obj.title[index];
+            const link = obj.link[index];
+            links.push(BaseUrlResolver.prototype.createResult(title, link, '', false));
+        }
         return links;
     }
 }
