@@ -10,7 +10,8 @@ class Hdhub4uResolver extends BaseUrlResolver {
     }
 
     async resolveInner(_urlToResolve) {
-        if (_urlToResolve === 'https://hdhub4u.live') return this.resolveInnerBase();
+        const pathname = new URL(_urlToResolve).pathname;
+        if (pathname === '/') return this.resolveInnerBase(_urlToResolve);
 
         //else do the processing here
         var links = [];
@@ -34,14 +35,15 @@ class Hdhub4uResolver extends BaseUrlResolver {
         return links;
     }
 
-    async resolveInnerBase() {
+    async resolveInnerBase(_urlToResolve) {
+        var origin = new URL(_urlToResolve).origin;
         var counter = 1;
         var promises = [];
         var links = [];
         while (counter <= 20) {
             var promise = new Promise(function (resolve, reject) {
                 var page = counter;
-                x(`https://hdhub4u.live/page/${page}`, '.home-wrapper div.thumb', [
+                x(`${origin}/page/${page}`, '.home-wrapper div.thumb', [
                     {
                         title: 'p',
                         link: 'a@href',
