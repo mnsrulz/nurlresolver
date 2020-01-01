@@ -4,24 +4,19 @@ var x = Xray()
 class Helper {
     async getHiddenForm(page, ix) {
         ix = ix || 0;
-        var promise = new Promise(function (resolve, reject) {
-            x(page, ['form@html'])((err1, obj1) => {
-                var el = obj1[ix];
-                x(el, {
-                    n: ['*@name'],
-                    v: ['*@value']
-                })(async (err, obj) => {
-                    var datatopost = {};
-                    for (let index = 0; index < obj.n.length; index++) {
-                        const n = obj.n[index];
-                        const v = obj.v[index];
-                        n !== undefined && v !== undefined && (datatopost[n] = v);
-                    }
-                    resolve(datatopost);
-                })
-            });
+        var obj1 = await x(page, ['form@html']);
+        var el = obj1[ix];
+        var obj = await x(el, {
+            n: ['*@name'],
+            v: ['*@value']
         });
-        return promise;
+        var datatopost = {};
+        for (let index = 0; index < obj.n.length; index++) {
+            const n = obj.n[index];
+            const v = obj.v[index];
+            n !== undefined && v !== undefined && (datatopost[n] = v);
+        }
+        return datatopost;
     }
 
     async wait(ms) {
@@ -117,16 +112,16 @@ class Helper {
 }
 
 var P_A_C_K_E_R = {
-    detect: function(str) {
+    detect: function (str) {
         return (P_A_C_K_E_R.get_chunks(str).length > 0);
     },
 
-    get_chunks: function(str) {
+    get_chunks: function (str) {
         var chunks = str.match(/eval\(\(?function\(.*?(,0,\{\}\)\)|split\('\|'\)\)\))($|\n)/g);
         return chunks ? chunks : [];
     },
 
-    unpack: function(str) {
+    unpack: function (str) {
         var chunks = P_A_C_K_E_R.get_chunks(str),
             chunk;
         for (var i = 0; i < chunks.length; i++) {
@@ -136,12 +131,12 @@ var P_A_C_K_E_R = {
         return str;
     },
 
-    unpack_chunk: function(str) {
+    unpack_chunk: function (str) {
         var unpacked_source = '';
         var __eval = eval;
         if (P_A_C_K_E_R.detect(str)) {
             try {
-                eval = function(s) { // jshint ignore:line
+                eval = function (s) { // jshint ignore:line
                     unpacked_source += s;
                     return unpacked_source;
                 }; // jshint ignore:line
@@ -157,7 +152,7 @@ var P_A_C_K_E_R = {
         return str;
     },
 
-    run_tests: function(sanity_test) {
+    run_tests: function (sanity_test) {
         var t = sanity_test || new SanityTest();
 
         var pk1 = "eval(function(p,a,c,k,e,r){e=String;if(!''.replace(/^/,String)){while(c--)r[c]=k[c]||c;k=[function(e){return r[e]}];e=function(){return'\\\\w+'};c=1};while(c--)if(k[c])p=p.replace(new RegExp('\\\\b'+e(c)+'\\\\b','g'),k[c]);return p}('0 2=1',3,3,'var||a'.split('|'),0,{}))";

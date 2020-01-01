@@ -12,16 +12,10 @@ class CrnewsResolver extends BaseUrlResolver {
 
     async resolveInner(_urlToResolve) {
         var links = [];
-        var promise = new Promise(function (resolve, reject) {
-            x(_urlToResolve, 'div#wpsafe-link', 'a@href')((err, obj) => {
-                var u = new URL(obj);
-                var link = u.searchParams.get('safelink_redirect');
-                links.push(BaseUrlResolver.prototype.createResult('', link, '', false));
-                resolve(links);
-            })
-
-        });
-        await promise;
+        var obj = await x(_urlToResolve, 'div#wpsafe-link', 'a@href');
+        var u = new URL(obj);
+        var link = u.searchParams.get('safelink_redirect');
+        links.push(BaseUrlResolver.prototype.createResult('', link, '', false));
         return links;
     }
 }

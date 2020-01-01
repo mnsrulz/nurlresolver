@@ -11,21 +11,16 @@ class ClicknuploadResolver extends BaseUrlResolver {
 
     async resolveInner(_urlToResolve) {
         var links = [];
-        var promise = new Promise(function (resolve, reject) {
-            x(_urlToResolve, {
-                title: 'title',
-                body: 'body@html'
-            })((err, obj) => {
-                var regex_link = /"file": "(https:[^"]*)"/g;
-                var link = Array.from(obj.body.matchAll(regex_link), m => m[1])[0];
-                if (link) {
-                    var title = decodeURIComponent(obj.title).replace(/\+/g, ' ');
-                    links.push(BaseUrlResolver.prototype.createResult(title, link, '', true));
-                }
-                resolve(links);
-            })
+        var obj = await x(_urlToResolve, {
+            title: 'title',
+            body: 'body@html'
         });
-        await promise;
+        var regex_link = /"file": "(https:[^"]*)"/g;
+        var link = regex_link.exec(obj.body)[1];
+        if (link) {
+            var title = decodeURIComponent(obj.title).replace(/\+/g, ' ');
+            links.push(BaseUrlResolver.prototype.createResult(title, link, '', true));
+        }
         return links;
     }
 }

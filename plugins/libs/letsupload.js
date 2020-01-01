@@ -17,7 +17,7 @@ class LetsuploadResolver extends BaseUrlResolver {
         const cookieJar = new CookieJar();
         const response = await got(_urlToResolve, { cookieJar });
         var regex = /class='btn btn-free' href='([^']*)/g
-        var link1 = Array.from(response.body.matchAll(regex), m => m[1])[0];
+        var link1 = regexp.exec(response.body)[1];
 
         if (link1) {
             await helper.wait(3000);
@@ -27,7 +27,7 @@ class LetsuploadResolver extends BaseUrlResolver {
                 el = response2.headers['location'];
             } else {
                 const regex01 = /title="Download" href="([^"]*)"/g
-                el = Array.from(response2.body.matchAll(regex01), m => m[1])[0];
+                el = regex01.exec(response2.body)[1];
             }
             if (el) {
                 const title = new URL(el).pathname.split('/').slice(-1)[0];

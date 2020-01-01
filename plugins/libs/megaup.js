@@ -19,7 +19,7 @@ class MegaupResolver extends BaseUrlResolver {
         const cookieJar = new CookieJar();
         const response = await got(_urlToResolve, { cookieJar });
         var regex = /class='btn btn-default' href='([^']*)'/g;
-        var el = Array.from(response.body.matchAll(regex), m => m[1])[0];
+        var el = regex.exec(response.body)[1];
         if (el) {
             await helper.wait(8000);
             const response2 = await got(el, { cookieJar, followRedirect: false });
