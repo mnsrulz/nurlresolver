@@ -37,7 +37,7 @@ class Hdhub4uResolver extends BaseUrlResolver {
         var counter = 1;
         var promises = [];
         var links = [];
-        while (counter <= 20) {
+        while (counter <= 30) {
             var promise = new Promise(function (resolve, reject) {
                 var page = counter;
                 x(`${origin}/page/${page}`, '.home-wrapper div.thumb', [
