@@ -3,7 +3,7 @@ var x = Xray()
 
 var BaseUrlResolver = require('../BaseResolver');
 
-class ClicknuploadResolver extends BaseUrlResolver {
+class LinkstakerResolver extends BaseUrlResolver {
     constructor() {
         super();
         this.domains = ['https://linkstaker.xyz'];
@@ -25,4 +25,4 @@ class ClicknuploadResolver extends BaseUrlResolver {
     }
 }
 
-module.exports = ClicknuploadResolver;
+module.exports = LinkstakerResolver;
