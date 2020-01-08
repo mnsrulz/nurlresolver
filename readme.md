@@ -1,4 +1,4 @@
-# gddirecturl
+# nurlresolver
 Node version of popular urlresolver for python. Easy to integrate and can be plugin to your application easily. Plugin based implementation and easy to extend the functionalty.
 
 **Installation**
@@ -28,7 +28,7 @@ var results = await nUrlResolver.resolve(hdhub4u);
 
 */
 
-var results = await nUrlResolver.resolveRecursive(first.link);
+var results = await nUrlResolver.resolveRecursive(link);
 //this is going to resolve the final playback links. Schema representation is same as above result. The only difference is it recursively resolve all the links as they get found.
 
 ```
