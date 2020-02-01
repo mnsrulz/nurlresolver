@@ -17,14 +17,27 @@ class ExtraMoviesResolver extends BaseUrlResolver {
         //else do the processing here
         var links = [];
 
-        var obj = await x(_urlToResolve, {
+        var obj1 = await x(_urlToResolve, {
+            shortLink: 'link[rel="shortlink"]@href'
+        });
+
+        var shortLink = obj1.shortLink;
+        var urlInstance = url.parse(shortLink, true);
+        var pageId = urlInstance.query["p"];
+        var extramoviesBaseUrl = `https://${urlInstance.host}`;
+        var apiUrl = `${extramoviesBaseUrl}/wp-json/wp/v2/posts/${pageId}`;
+        var apiResponse = await got(apiUrl);
+        var apiResponseAsJson = JSON.parse(apiResponse.body);
+        var renderedContent = apiResponseAsJson.content.rendered;
+
+        var obj = await x(renderedContent, {
             title: ['a'],
             link: ['a@href']
         });
 
         for (let index = 0; index < obj.title.length; index++) {
             const title = obj.title[index];
-            const link = obj.link[index];
+            const link = obj.link[index].startsWith('http') ? obj.link[index] : `${extramoviesBaseUrl}${obj.link[index]}`;
             var u = new URL(link);
             var regexNegate = /.*(wp-login|torrent|trailer)\.php$/ig
             if (regexNegate.exec(u.pathname)) continue;
