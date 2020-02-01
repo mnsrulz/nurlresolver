@@ -22,16 +22,25 @@ class GDriveResolver extends BaseUrlResolver {
         var normalizeDriveUrl = `https://drive.google.com/uc?id=${regexresult[1]}&export=download`;
 
         const cookieJar = new CookieJar();
-        const response = await got(normalizeDriveUrl, { cookieJar });
+        const response = await got(normalizeDriveUrl, {
+            cookieJar,
+            followRedirect: false
+        });
 
         var downloadlink1 = await x(response.body, {
             link: 'a#uc-download-link@href',
             title: 'span.uc-name-size'
         });
 
+        var driveCookie = cookieJar.getCookiesSync(normalizeDriveUrl).find(x => x.domain === 'drive.google.com');
+        //DEV NOTE: While using cookieJar for got, somehow the generated link in the end is not streamable.
+        //So, that is the reason for this custom cookie implementation.
+        var nextRequestCookies = `${driveCookie.key}=${driveCookie.value}`;
         var reqMediaConfirm = await got.get('https://drive.google.com' + downloadlink1.link,
             {
-                cookieJar,
+                headers: {
+                    cookie: nextRequestCookies
+                },
                 followRedirect: false
             });
 
