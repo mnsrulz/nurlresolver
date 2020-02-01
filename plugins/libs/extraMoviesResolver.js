@@ -59,6 +59,8 @@ class ExtraMoviesResolver extends BaseUrlResolver {
                     //ignore other links
                     // linktoadd = link;
                 }
+            } else{
+                links.push(BaseUrlResolver.prototype.createResult(title, link, '', false));
             }
 
         }
