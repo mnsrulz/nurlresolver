@@ -22,8 +22,11 @@ class ExtraMoviesResolver extends BaseUrlResolver {
         });
 
         var shortLink = obj1.shortLink;
-        var urlInstance = url.parse(shortLink, true);
-        var pageId = urlInstance.query["p"];
+
+        var urlInstance = shortLink && url.parse(shortLink, true);
+        var pageId = urlInstance && urlInstance.query["p"];
+        if (!pageId) return links;
+
         var extramoviesBaseUrl = `https://${urlInstance.host}`;
         var apiUrl = `${extramoviesBaseUrl}/wp-json/wp/v2/posts/${pageId}`;
         var apiResponse = await got(apiUrl);
@@ -38,6 +41,9 @@ class ExtraMoviesResolver extends BaseUrlResolver {
         for (let index = 0; index < obj.title.length; index++) {
             const title = obj.title[index];
             const link = obj.link[index].startsWith('http') ? obj.link[index] : `${extramoviesBaseUrl}${obj.link[index]}`;
+            if (!link) {
+                continue;
+            }
             var u = new URL(link);
             var regexNegate = /.*(wp-login|torrent|trailer)\.php$/ig
             if (regexNegate.exec(u.pathname)) continue;
@@ -51,15 +57,16 @@ class ExtraMoviesResolver extends BaseUrlResolver {
                 }
             } else if (u.pathname.endsWith('.php')) {
                 var queryData = url.parse(link, true).query;
-                var linktoadd = '';
                 if (queryData.link) {
-                    linktoadd = Buffer.from(queryData.link, 'base64').toString()
+                    var linktoadd = Buffer.from(queryData.link, 'base64').toString()
                     links.push(BaseUrlResolver.prototype.createResult(title, linktoadd, '', false));
                 } else {
                     //ignore other links
                     // linktoadd = link;
                 }
-            } else{
+            } else if (u.host.startsWith('extramovies')) {
+                //just skip if the link is linking back to some more extramovies link
+            } else {
                 links.push(BaseUrlResolver.prototype.createResult(title, link, '', false));
             }
 
