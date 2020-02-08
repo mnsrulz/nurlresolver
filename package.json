@@ -1,6 +1,6 @@
 {
   "name": "nurlresolver",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "url resolver for node",
   "main": "app.js",
   "author": "manishrawat4u",
