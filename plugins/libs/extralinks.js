@@ -17,6 +17,12 @@ class ExtralinksResolver extends BaseUrlResolver {
         var matchesLink = regex_link.exec(page.body);
         if (matchesLink && matchesLink[1]) {
             links.push(BaseUrlResolver.prototype.createResult('', matchesLink[1], '', true));
+        } else{
+            var regex_link02 = /location\.href ="(https:\/\/drive\.google\.com[^"]*)"/g;
+            var anotherMatch = regex_link02.exec(page.body);
+            if (anotherMatch && anotherMatch[1]){
+                links.push(BaseUrlResolver.prototype.createResult('', anotherMatch[1], '', false));
+            }
         }
         return links;
     }
