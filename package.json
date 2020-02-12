@@ -10,5 +10,17 @@
     "got": "^10.2.0",
     "tough-cookie": "^3.0.1",
     "x-ray": "^2.3.4"
-  }
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manishrawat4u/nurlresolver.git"
+  },
+  "bugs": {
+    "url": "https://github.com/manishrawat4u/nurlresolver/issues"
+  },
+  "homepage": "https://github.com/manishrawat4u/nurlresolver#readme"
 }

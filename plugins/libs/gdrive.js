@@ -13,13 +13,13 @@ class GDriveResolver extends BaseUrlResolver {
     async resolveInner(_urlToResolve) {
         var links = [];
 
-        const rx0 = /drive|docs\.google\.com\/open\?id\=(.*)/
-        const rx1 = /drive|docs\.google\.com\/file\/d\/(.*?)\//
-        const rx2 = /drive|docs\.google\.com\/uc\?id\=(.*?)\&/
+        const rx0 = /(drive|docs)\.google\.com\/open\?id\=(.*)/
+        const rx1 = /(drive|docs)\.google\.com\/file\/d\/(.*?)\//
+        const rx2 = /(drive|docs)\.google\.com\/uc\?id\=(.*?)\&/
 
         var regexresult = rx0.exec(_urlToResolve) || rx1.exec(_urlToResolve) || rx2.exec(_urlToResolve)
         if (regexresult) {
-            var normalizeDriveUrl = `https://drive.google.com/uc?id=${regexresult[1]}&export=download`;
+            var normalizeDriveUrl = `https://drive.google.com/uc?id=${regexresult[2]}&export=download`;
 
             const cookieJar = new CookieJar();
             const response = await got(normalizeDriveUrl, {
