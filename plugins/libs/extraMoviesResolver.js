@@ -7,7 +7,7 @@ var url = require('url');
 class ExtraMoviesResolver extends BaseUrlResolver {
     constructor() {
         super();
-        this.domains = ['https://extramovies'];
+        this.domains = ['https://extramovies','http://extramovies'];
     }
 
     async resolveInner(_urlToResolve) {
