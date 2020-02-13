@@ -6,7 +6,7 @@ var BaseUrlResolver = require('../BaseResolver');
 class HblinksResolver extends BaseUrlResolver {
     constructor() {
         super();
-        this.domains = ['https://hblinks.pw'];
+        this.domains = ['https://hblinks'];
     }
 
     async resolveInner(_urlToResolve) {
