@@ -6,6 +6,7 @@
   "author": "manishrawat4u",
   "license": "MIT",
   "dependencies": {
+    "eval": "^0.1.4",
     "form-data": "^3.0.0",
     "got": "^10.2.0",
     "tough-cookie": "^3.0.1",

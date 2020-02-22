@@ -24,12 +24,13 @@ class BaseUrlResolver {
         throw ('Unimplemented');
     }
 
-    createResult(title, link, poster, isPlayable) {
+    createResult(title, link, poster, isPlayable, referrer) {
         return {
             title,
             link,
             poster,
-            isPlayable
+            isPlayable,
+            referrer
         };
     }
 }
