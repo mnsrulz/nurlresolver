@@ -22,12 +22,8 @@ class YouruploadResolver extends BaseUrlResolver {
             if (regexresponse00) {
                 const title = await x(response.body, 'title');
                 var finalLink2 = new URL(regexresponse00[1], normalizedUrl).href;
-                const headers = {
-                    'referer': normalizedUrl
-                }
                 console.log('yourupload resolver require referrer header to pass')
-                var linkGen = BaseUrlResolver.prototype.createResult(title, finalLink2, '', true);
-                linkGen.headers = headers;
+                var linkGen = BaseUrlResolver.prototype.createResult(title, finalLink2, '', true, normalizedUrl);
                 links.push(linkGen);
             }
         }
