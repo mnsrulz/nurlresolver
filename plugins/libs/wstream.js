@@ -34,7 +34,11 @@ class StreamwireResolver extends BaseUrlResolver {
             var regex = /source:"(https[^"]*)/g
             const regexResponse = regex.exec(unpack);
             if (regexResponse) {
-                const el = regexResponse[1];
+                var el = regexResponse[1];
+                var u = new URL(el);
+                if (u.port === "8443") {
+                    el = "http://" + u.hostname + ":8080" + u.pathname + u.search
+                }
                 links.push(BaseUrlResolver.prototype.createResult(el, el, '', true));
             }
         });
