@@ -9,7 +9,7 @@ var BaseUrlResolver = require('../BaseResolver');
 class StreamwireResolver extends BaseUrlResolver {
     constructor() {
         super();
-        this.domains = ['https://wstream'];
+        this.domains = ['https://wstream', 'https://streamcdn'];
     }
 
     async resolveInner(_urlToResolve) {
@@ -18,7 +18,7 @@ class StreamwireResolver extends BaseUrlResolver {
 
         const goresponse = await got(_urlToResolve, {
             headers: {
-                Referer: 'https://daddylive.live/channels/stream-26.php',
+                Referer: _urlToResolve,
                 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:73.0) Gecko/20100101 Firefox/73.0'
             },
             followRedirect: false
