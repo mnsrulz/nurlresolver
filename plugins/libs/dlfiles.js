@@ -15,7 +15,10 @@ class DlfilesResolver extends BaseUrlResolver {
     async resolveInner(_urlToResolve) {
         var links = [];
         const cookieJar = new CookieJar();
-        const response = await got(_urlToResolve, { cookieJar });
+        const response = await got(_urlToResolve, {
+            cookieJar,
+            timeout: 3000
+        });
 
         var hidden = await helper.getHiddenForm(response.body, 1);
 
