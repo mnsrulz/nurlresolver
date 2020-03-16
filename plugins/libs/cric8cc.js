@@ -9,7 +9,7 @@ var BaseUrlResolver = require('../BaseResolver');
 class Cric8StreamResolver extends BaseUrlResolver {
     constructor() {
         super();
-        this.domains = ['http://cric8.cc/stream', 'https://cric8/stream'];
+        this.domains = ['http://cric8.cc/stream', 'https://cric8.cc/stream'];
     }
 
     async resolveInner(_urlToResolve) {

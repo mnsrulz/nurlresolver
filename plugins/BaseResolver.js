@@ -17,7 +17,7 @@ class BaseUrlResolver {
      * 
      * @param {string} urlToResolve 
      */
-    async resolve(urlToResolve) {
+    async resolve(urlToResolve, options) {
         try {
             var canResolve = await this.canResolve(urlToResolve);
         } catch (error) {
@@ -28,6 +28,7 @@ class BaseUrlResolver {
             try {
                 return await this.resolveInner(urlToResolve);
             } catch (error) {
+                console.log(`Error occurred while resolving: ${urlToResolve}`);
                 console.log(error);
             }
         }
