@@ -12,6 +12,10 @@ class IndishareResolver extends BaseUrlResolver {
         this.domains = ['https://www.indishare'];
     }
 
+    async canResolve(_urlToResolve) {
+        return helper.getSecondLevelDomain(_urlToResolve) === 'indishare';
+    }
+
     async resolveInner(_urlToResolve) {
         var links = [];
         const cookieJar = new CookieJar();
