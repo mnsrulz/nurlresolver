@@ -1,5 +1,6 @@
 var Xray = require('x-ray')
 var x = Xray()
+var psl = require('psl');
 
 class Helper {
     async getHiddenForm(page, ix) {
@@ -14,14 +15,20 @@ class Helper {
         for (let index = 0; index < obj.n.length; index++) {
             const n = obj.n[index];
             const v = obj.v[index];
-            n !== undefined && v !== undefined && 
-            n !== null && v !== null && (datatopost[n] = v);
+            n !== undefined && v !== undefined &&
+                n !== null && v !== null && (datatopost[n] = v);
         }
         return datatopost;
     }
 
     async wait(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    getSecondLevelDomain(someUrl) {
+        var hostname = new URL(someUrl);
+        var parsed = psl.parse(hostname.hostname);
+        return parsed.sld;
     }
 
     unPack(code) {
