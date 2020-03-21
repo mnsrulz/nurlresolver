@@ -20,10 +20,10 @@ class CloudMailRuResolver extends BaseUrlResolver {
             var regex03 = /public\/(.*)/g
 
             var link1 = regex01.exec(response.body)[1];
-            var link2 = regex02.exec(response.body)[1];
+            //var link2 = regex02.exec(response.body);
             var link3 = regex03.exec(_urlToResolve)[1];
 
-            var finalLink = `${link1}/${link3}?key=${link2}`;
+            var finalLink = `${link1}/${link3}`;//?key=${link2}`;
             var headers = await got.head(finalLink);
             (headers.statusCode === 200) &&
                 links.push(BaseUrlResolver.prototype.createResult(title, finalLink, '', true));

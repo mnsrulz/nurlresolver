@@ -6,7 +6,7 @@ var BaseUrlResolver = require('../BaseResolver');
 class LinkstakerResolver extends BaseUrlResolver {
     constructor() {
         super();
-        this.domains = ['https://linkstaker.pw'];
+        this.domains = ['https://linkstaker'];
     }
 
     async resolveInner(_urlToResolve) {
@@ -14,6 +14,8 @@ class LinkstakerResolver extends BaseUrlResolver {
         const response = await got(_urlToResolve);
         var regex = /\("download"\)\.src="([^"]*)/g
         
+//COMBINE BOTH LINKSTAKER IMPLEMENTATION...
+
         var el = regex.exec(response.body)[1];
         if (el) {
             var response2 = await got(el, {
