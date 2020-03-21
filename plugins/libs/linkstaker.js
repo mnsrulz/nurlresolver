@@ -6,7 +6,7 @@ var BaseUrlResolver = require('../BaseResolver');
 class LinkstakerResolver extends BaseUrlResolver {
     constructor() {
         super();
-        this.domains = ['https://linkstaker.xyz'];
+        this.domains = ['https://linkstaker'];
     }
 
     async resolveInner(_urlToResolve) {
