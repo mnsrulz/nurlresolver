@@ -1,4 +1,4 @@
-var nUrlResolver = new (require('./plugins/UrlResolver'))();
+var nUrlResolver = new (require('./UrlResolver'))();
 
 // (async () => {
 //     var linkToResolve = 'someurl';

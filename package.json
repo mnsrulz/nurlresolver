@@ -2,7 +2,7 @@
   "name": "nurlresolver",
   "version": "0.1.0",
   "description": "url resolver for node",
-  "main": "app.js",
+  "main": "src/app.js",
   "author": "manishrawat4u",
   "license": "MIT",
   "dependencies": {
