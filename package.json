@@ -13,9 +13,12 @@
     "tough-cookie": "^3.0.1",
     "x-ray": "^2.3.4"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "typescript": "^3.8.3"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",

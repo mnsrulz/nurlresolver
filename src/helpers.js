@@ -141,10 +141,10 @@ var P_A_C_K_E_R = {
 
     unpack_chunk: function (str) {
         var unpacked_source = '';
-        var __eval = eval;
+        var __eval = evaleval;
         if (P_A_C_K_E_R.detect(str)) {
             try {
-                eval = function (s) { // jshint ignore:line
+                evaleval = function (s) { // jshint ignore:line
                     unpacked_source += s;
                     return unpacked_source;
                 }; // jshint ignore:line
@@ -156,7 +156,7 @@ var P_A_C_K_E_R = {
                 // well, it failed. we'll just return the original, instead of crashing on user.
             }
         }
-        eval = __eval; // jshint ignore:line
+        evaleval = __eval; // jshint ignore:line
         return str;
     },
 
