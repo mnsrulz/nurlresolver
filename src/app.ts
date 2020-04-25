@@ -1,4 +1,4 @@
-var nUrlResolver = new (require('./UrlResolver'))();
+import { UrlResolver } from "./UrlResolver";
 
 // (async () => {
 //     var linkToResolve = 'someurl';
@@ -7,4 +7,4 @@ var nUrlResolver = new (require('./UrlResolver'))();
 //     })
 // })()
 
-module.exports = nUrlResolver;
+module.exports = UrlResolver;
