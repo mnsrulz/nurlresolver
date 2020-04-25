@@ -1,8 +1,10 @@
-class UrlResolver {
+import {readdirSync} from "fs";
+export class UrlResolver {
+    allResolvers: any[];
     constructor() {
-        var resolvers = [];
+        var resolvers: any[] = [];
 
-        require('fs').readdirSync(__dirname + '/libs/').forEach(function (file) {
+        readdirSync(__dirname + '/libs/').forEach(function (file) {
             if (file.match(/\.js$/) !== null && file !== 'index.js') {
                 var name = file.replace('.js', '');
                 var inst = require('./libs/' + file);
@@ -19,7 +21,7 @@ class UrlResolver {
      * @param {string} urlToResolve 
      * @returns {string}
      */
-    async resolve(urlToResolve, options) {
+    async resolve(urlToResolve: string, options: { timeout: number; }) {
         const defaultValues = {
             timeout: 30
         };
@@ -46,15 +48,15 @@ class UrlResolver {
      * @param {string} urlToResolve 
      * @returns {collection of resolved links}
      */
-    async resolveRecursive(urlToResolve, options) {
+    async resolveRecursive(urlToResolve: string, options: { timeout: any; }) {
         const defaultValues = {
             timeout: 30
         };
         options = Object.assign(defaultValues, options);
 
         var instanceOfUrlResolver = this;
-        var myPlayableResources = [];
-        var visitedUrls = [];
+        var myPlayableResources: any[] = [];
+        var visitedUrls: any[] = [];
 
         const timeoutPromise = new Promise(function (resolve, reject) {
             setTimeout(resolve, options.timeout * 1000);
@@ -64,13 +66,13 @@ class UrlResolver {
 
         console.log(JSON.stringify(myPlayableResources));
         return myPlayableResources;
-        async function explode(urlToVisit) {
+        async function explode(urlToVisit: string) {
             if (visitedUrls.some(x => x === urlToVisit)) return;
             visitedUrls.push(urlToVisit);
             console.log(urlToVisit);
-            var resolvedUrls = await instanceOfUrlResolver.resolve(urlToVisit, options);
+            var resolvedUrls = await instanceOfUrlResolver.resolve(urlToVisit, options) as RsolveReturnType[];
             if (resolvedUrls) {
-                var p = []
+                var p: any[] = []
                 resolvedUrls.filter(x => x.isPlayable).forEach(x => myPlayableResources.push(x));
                 resolvedUrls.filter(x => !x.isPlayable).forEach(x => {
                     p.push(explode(x.link));
@@ -81,4 +83,7 @@ class UrlResolver {
     }
 }
 
-module.exports = UrlResolver;
+interface RsolveReturnType{
+    isPlayable: boolean,
+    link: string
+}
