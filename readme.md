@@ -1,6 +1,8 @@
 # nurlresolver
 Node version of popular urlresolver for python. Easy to integrate and can be plugin to your application easily. Plugin based implementation and easy to extend the functionalty.
 
+# Ver 1.x Updates -- Type script support added
+
 **Installation**
 
 ```
