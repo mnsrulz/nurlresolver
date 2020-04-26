@@ -61,7 +61,11 @@ export abstract class BaseUrlResolver {
 
     }
 
-    protected async getHiddenForm(page: string, ix: number): Promise<FormData> {
+    protected async wait(ms: number): Promise<void> {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    protected async getHiddenForm(page: string, ix?: number): Promise<FormData> {
         const form = new FormData();
         ix = ix || 0;
         var obj1 = await this.xInstance(page, ['form@html']);
@@ -78,6 +82,14 @@ export abstract class BaseUrlResolver {
         }
         return form;
     }
+
+    protected getSecondLevelDomain(someUrl: string): string {
+        var psl = require('psl');
+        var hostname = new URL(someUrl);
+        var parsed = psl.parse(hostname.hostname);
+        return parsed.sld;
+    }
+
 }
 
 export interface ResolvedMediaItem {
