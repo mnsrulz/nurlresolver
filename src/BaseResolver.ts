@@ -49,6 +49,9 @@ export abstract class BaseUrlResolver {
     private setupEnvironment(): void {
         let gotoptions = <GotOptions>{};
         this.useCookies && (gotoptions.cookieJar = new this.CookieJar.CookieJar());
+        gotoptions.headers = {
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:75.0) Gecko/20100101 Firefox/75.0'
+        }
         this.gotInstance = got.extend(gotoptions)
     }
 
