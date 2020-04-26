@@ -7,9 +7,13 @@ export class UrlResolver {
         readdirSync(__dirname + '/libs/').forEach(function (file) {
             if (file.match(/\.js$/) !== null && file !== 'index.js') {
                 var name = file.replace('.js', '');
-                var inst = require('./libs/' + file);
-                var instance = new inst();
-                resolvers.push(instance);
+                var inst = require('./libs/' + file);                
+                var allInstances = Object.keys(inst);
+                allInstances.forEach(element => {
+                    var instance = new inst[element]();
+                    resolvers.push(instance);                    
+                });
+
             }
         });
 
