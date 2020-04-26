@@ -1,6 +1,6 @@
 import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
 var CookieJar = require('tough-cookie');
-class GDriveResolver extends BaseUrlResolver {
+export class GDriveResolver extends BaseUrlResolver {
     constructor() {
         super({
             domains: [/https?:\/\/(drive|docs)\.google\.com/]
@@ -49,5 +49,3 @@ class GDriveResolver extends BaseUrlResolver {
         return links;
     }
 }
-
-module.exports = GDriveResolver;
