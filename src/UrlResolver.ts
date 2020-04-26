@@ -1,19 +1,17 @@
-import {readdirSync} from "fs";
+import { readdirSync } from "fs";
+import { ResolvedMediaItem } from "./BaseResolver";
 export class UrlResolver {
     allResolvers: any[];
     constructor() {
         var resolvers: any[] = [];
-
         readdirSync(__dirname + '/libs/').forEach(function (file) {
             if (file.match(/\.js$/) !== null && file !== 'index.js') {
                 var name = file.replace('.js', '');
-                var inst = require('./libs/' + file);                
+                var inst = require('./libs/' + file);
                 var allInstances = Object.keys(inst);
                 allInstances.forEach(element => {
-                    var instance = new inst[element]();
-                    resolvers.push(instance);                    
+                    resolvers.push(inst[element]);
                 });
-
             }
         });
 
@@ -25,20 +23,21 @@ export class UrlResolver {
      * @param {string} urlToResolve 
      * @returns {string}
      */
-    async resolve(urlToResolve: string, options: { timeout: number; }) {
+    async resolve(urlToResolve: string, options: { timeout: number }): Promise<ResolvedMediaItem[]> {
         const defaultValues = {
             timeout: 30
         };
         options = Object.assign(defaultValues, options);
         const _allResolvers = this.allResolvers;
-        const timeoutPromise = new Promise(function (resolve, reject) {
+        const timeoutPromise = new Promise<ResolvedMediaItem[]>((resolve) => {
             setTimeout(resolve, options.timeout * 1000);
+            return [];
         });
         const actualPromise = _();
         return await Promise.race([timeoutPromise, actualPromise]);
         async function _() {
             for (let index = 0; index < _allResolvers.length; index++) {
-                const element = _allResolvers[index];
+                const element = new _allResolvers[index]();
                 var fs = await element.resolve(urlToResolve);
                 if (fs && fs.length > 0)
                     return fs;
@@ -52,7 +51,7 @@ export class UrlResolver {
      * @param {string} urlToResolve 
      * @returns {collection of resolved links}
      */
-    async resolveRecursive(urlToResolve: string, options: { timeout: any; }) {
+    async resolveRecursive(urlToResolve: string, options: { timeout: number }): Promise<ResolvedMediaItem[]> {
         const defaultValues = {
             timeout: 30
         };
@@ -74,7 +73,7 @@ export class UrlResolver {
             if (visitedUrls.some(x => x === urlToVisit)) return;
             visitedUrls.push(urlToVisit);
             console.log(urlToVisit);
-            var resolvedUrls = await instanceOfUrlResolver.resolve(urlToVisit, options) as RsolveReturnType[];
+            var resolvedUrls = await instanceOfUrlResolver.resolve(urlToVisit, options) as ResolvedMediaItem[];
             if (resolvedUrls) {
                 var p: any[] = []
                 resolvedUrls.filter(x => x.isPlayable).forEach(x => myPlayableResources.push(x));
@@ -85,9 +84,4 @@ export class UrlResolver {
             }
         }
     }
-}
-
-interface RsolveReturnType{
-    isPlayable: boolean,
-    link: string
 }

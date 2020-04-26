@@ -8,10 +8,12 @@ export class DaddyliveResolver extends BaseUrlResolver {
     }
 
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
-        const rx = /https:\/\/daddylive/
+        const regex_links = /https:\/\/daddylive/
         var results = await this.xInstance(_urlToResolve, {
-            title: ['iframe@src'], link: ['iframe@src']
-        }) as ResolvedMediaItem[];
-        return results.filter(x => !rx.exec(x.link));
+            link: ['iframe@src']
+        }) as string[];
+        return results.filter(l => !l.match(regex_links)).map(link => {
+            return { link, title: link } as ResolvedMediaItem
+        });
     }
 }

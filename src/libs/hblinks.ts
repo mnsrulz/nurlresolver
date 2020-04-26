@@ -9,10 +9,12 @@ export class HblinksResolver extends BaseUrlResolver {
 
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
         const regex_links = /https?:\/\/(hblinks|hdhub4u)/gi;
-        const links = await this.xInstance(_urlToResolve, {
-            title: ['a'],
-            link: ['a@href']
-        }) as ResolvedMediaItem[];
-        return links.filter(l => l.link.match(regex_links) === null);
+        const result = await this.xInstance(_urlToResolve, {
+            titles: ['a'],
+            links: ['a@href']
+        }) as { titles: string[], links: string[] };
+        return result.links.map((link, ix) => {
+            return { link, title: result.titles[ix] } as ResolvedMediaItem;
+        }).filter(l => !l.link.match(regex_links));        
     }
 }
