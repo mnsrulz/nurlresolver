@@ -1,17 +1,17 @@
-import got from 'got';
+import got, { GotOptions } from 'got';
 import FormData = require('form-data');
 
 export abstract class BaseUrlResolver {
     protected domains: RegExp[];
     protected gotInstance = got;
     protected xInstance = require('x-ray')();
+    protected useCookies: boolean;
     private CookieJar = require('tough-cookie');
 
     constructor(options: IResolverOptions) {
         this.domains = options.domains;
-        this.gotInstance = got.extend({
-            cookieJar: options.useCookies ? new this.CookieJar.CookieJar() : null
-        })
+        this.useCookies = options.useCookies || false;
+
     }
     /**
      * @param {string} urlToResolve
@@ -36,6 +36,7 @@ export abstract class BaseUrlResolver {
         }
         if (canResolve) {
             try {
+                this.setupEnvironment();
                 return await this.resolveInner(urlToResolve);
             } catch (error) {
                 console.log(`Error occurred while resolving: ${urlToResolve}`);
@@ -45,21 +46,13 @@ export abstract class BaseUrlResolver {
         return [];
     }
 
+    private setupEnvironment(): void {
+        let gotoptions = <GotOptions>{};
+        this.useCookies && (gotoptions.cookieJar = new this.CookieJar.CookieJar());
+        this.gotInstance = got.extend(gotoptions)
+    }
+
     async abstract resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]>;
-
-    createResult(title: string, link: string, poster: string, isPlayable: boolean, referer: string) {
-        return {
-            title,
-            link,
-            poster,
-            isPlayable,
-            referer
-        };
-    }
-
-    protected postForm() {
-
-    }
 
     protected async wait(ms: number): Promise<void> {
         return new Promise(resolve => setTimeout(resolve, ms));
