@@ -1,6 +1,6 @@
 import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
 
-class UpgrandResolver extends BaseUrlResolver {
+export class UpgrandResolver extends BaseUrlResolver {
     constructor() {
         super({
             domains: [/https?:\/\/upgrand/]
@@ -23,5 +23,3 @@ class UpgrandResolver extends BaseUrlResolver {
         return links;
     }
 }
-
-module.exports = UpgrandResolver;
