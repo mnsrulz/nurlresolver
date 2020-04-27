@@ -1,6 +1,6 @@
 import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
 
-class LinkstakerResolver extends BaseUrlResolver {
+export class LinkstakerResolver extends BaseUrlResolver {
     constructor() {
         super({
             domains: [/https?:\/\/linkstaker/]
@@ -33,5 +33,3 @@ class LinkstakerResolver extends BaseUrlResolver {
         return links;
     }
 }
-
-module.exports = LinkstakerResolver;
