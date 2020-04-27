@@ -1,1 +1,3 @@
-export * from './UrlResolver'
+import { UrlResolver } from "./UrlResolver";
+
+export = new UrlResolver()
