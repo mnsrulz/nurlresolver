@@ -1,7 +1,7 @@
 import { readdirSync } from "fs";
 import { ResolvedMediaItem } from "./BaseResolver";
 export class UrlResolver {
-    allResolvers: any[];
+    private allResolvers: any[];
     constructor() {
         var resolvers: any[] = [];
         readdirSync(__dirname + '/libs/').forEach(function (file) {
