@@ -35,6 +35,11 @@ var results = await nUrlResolver.resolveRecursive(link);
 
 ```
 
+
+**Try it Online**
+https://repl.it/repls/HandsomeLightgraySmalltalk
+
+
 **Testing**
 ```
 TODO
