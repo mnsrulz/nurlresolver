@@ -18,7 +18,7 @@ export class GDriveResolver extends BaseUrlResolver {
         if (regexresult) {
             var normalizeDriveUrl = `https://drive.google.com/uc?id=${regexresult[2]}&export=download`;
 
-            const cookieJar = new CookieJar();
+            const cookieJar = new CookieJar.CookieJar();
             const response = await this.gotInstance(normalizeDriveUrl, {
                 cookieJar,
                 followRedirect: false
