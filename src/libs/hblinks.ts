@@ -13,6 +13,6 @@ export class HblinksResolver extends BaseUrlResolver {
             link: '@href',
             title: '@text'
         }]) as ResolvedMediaItem[];
-        return result.filter(l => !regex_links.exec(l.link));
+        return result.filter(l => l.link && !l.link.match(regex_links));
     }
 }
