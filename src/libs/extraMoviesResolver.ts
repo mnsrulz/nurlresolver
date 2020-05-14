@@ -31,14 +31,19 @@ export class ExtraMoviesResolver extends BaseUrlResolver {
         var apiResponseAsJson = JSON.parse(apiResponse.body);
         var renderedContent = apiResponseAsJson.content.rendered;
 
-        var obj = await this.xInstance(renderedContent, {
-            title: ['a'],
-            link: ['a@href']
-        });
+        const regex_self_links = /https?:\/\/(extramovies)/gi;
 
-        for (let index = 0; index < obj.title.length; index++) {
-            const title = obj.title[index];
-            const link = obj.link[index].startsWith('http') ? obj.link[index] : `${extramoviesBaseUrl}${obj.link[index]}`;
+        var obj = await this.xInstance(renderedContent, 'a', [{
+            link: '@href',
+            title: '@text'
+        }]) as ResolvedMediaItem[];
+        // var obj = await this.xInstance(renderedContent, {
+        //     title: ['a'],
+        //     link: ['a@href']
+        // });
+        for (const iterator of obj) {
+            const title = iterator.title;
+            const link = iterator.link.startsWith('http') ? iterator.link : `${extramoviesBaseUrl}${iterator.link}`;
             if (!link) {
                 continue;
             }
@@ -65,9 +70,12 @@ export class ExtraMoviesResolver extends BaseUrlResolver {
                 if (queryData.link) {
                     var linktoadd = Buffer.from(queryData.link, 'base64').toString()
                     links.push({ title, link: linktoadd } as ResolvedMediaItem);
-                } else {
-                    //ignore other links
-                    // linktoadd = link;
+                } else if (queryData.id) {
+                    const result = await this.xInstance(link, 'a', [{
+                        link: '@href',
+                        title: '@text'
+                    }]) as ResolvedMediaItem[];
+                    links = links.concat(result.filter(l => l.link && !l.link.match(regex_self_links)));
                 }
             } else if (u.host.startsWith('extramovies')) {
                 //just skip if the link is linking back to some more extramovies link
@@ -75,6 +83,10 @@ export class ExtraMoviesResolver extends BaseUrlResolver {
                 links.push({ title, link } as ResolvedMediaItem);
             }
         }
+
+        // for (let index = 0; index < obj.title.length; index++) {
+
+        // }
         return links;
     }
 }
