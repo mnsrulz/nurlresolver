@@ -20,7 +20,7 @@ export class MegaupResolver extends BaseUrlResolver {
             const response2 = await this.gotInstance(el, { followRedirect: false });
             var link = response2.headers['location'];
             if (link) {
-                const title = new URL(link).pathname.split('/').slice(-1)[0];
+                const title = `${new URL(link).pathname.split('/').slice(-1)[0]} - megaup.net`;
                 var result = { link, title, isPlayable: true } as ResolvedMediaItem;
                 links.push(result);
             }
