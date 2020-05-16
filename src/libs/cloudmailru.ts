@@ -57,7 +57,7 @@ export class CloudMailRuResolver extends BaseUrlResolver {
                 parser.on('item', (item: any) => {
                     const linkUri = url.resolve(m3u8Link, item.get('uri'));
                     const titleWithQuality = `${title} - ${item.get('resolution')}`;
-                    links.push({ link: linkUri, title: titleWithQuality } as ResolvedMediaItem);
+                    links.push({ link: linkUri, title: titleWithQuality, isPlayable: true } as ResolvedMediaItem);
                 });
                 parser.on('m3u', () => {
                     resolve(links);
