@@ -15,21 +15,21 @@ export class StreamwireResolver extends BaseUrlResolver {
             script: ['script']
         });
         const script = (obj.script as string[]).filter(x => x.startsWith('eval(function(p,a,c,k,e,d)'))[0];
+        if (script) {
+            var __: any;
+            var _proxyPlayer = (_: any) => __ = _;
+            _eval(script, '', {
+                window: {
+                    hola_player: _proxyPlayer
+                }
+            }, true);
 
-        var __: any;
-        var _proxyPlayer = (_: any) => __ = _;
-        _eval(script, '', {
-            window: {
-                hola_player: _proxyPlayer
+            if (__) {
+                var link = __.sources[0].src;
+                var result = { link, title: obj.title, isPlayable: true, poster: __.poster } as ResolvedMediaItem;
+                links.push(result);
             }
-        }, true);
-
-        if (__) {
-            var link = __.sources[0].src;
-            var result = { link, title: obj.title, isPlayable: true, poster: __.poster } as ResolvedMediaItem;
-            links.push(result);
         }
-
         return links;
     }
 }
