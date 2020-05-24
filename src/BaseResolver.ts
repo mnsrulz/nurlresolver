@@ -37,13 +37,21 @@ export abstract class BaseUrlResolver {
         if (canResolve) {
             try {
                 this.setupEnvironment();
-                return await this.resolveInner(urlToResolve);
+                var resolveResults = await this.resolveInner(urlToResolve);
+                return this.massageResolveResults(resolveResults);
             } catch (error) {
                 console.log(`Error occurred while resolving: ${urlToResolve}`);
                 console.log(error);
             }
         }
         return [];
+    }
+
+    private massageResolveResults(resolveResults: ResolvedMediaItem[]): ResolvedMediaItem[] {
+        return resolveResults.map(x => {
+            x.link = new URL(x.link).href;  //normalizing the url like escaping spaces
+            return x;
+        });
     }
 
     private setupEnvironment(): void {
