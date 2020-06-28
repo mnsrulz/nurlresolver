@@ -38,6 +38,7 @@ export abstract class BaseUrlResolver {
             try {
                 this.setupEnvironment();
                 var resolveResults = await this.resolveInner(urlToResolve);
+                resolveResults.forEach(x=>x.parent = x.parent || urlToResolve);
                 return this.massageResolveResults(resolveResults);
             } catch (error) {
                 console.log(`Error occurred while resolving: ${urlToResolve}`);
@@ -101,7 +102,8 @@ export interface ResolvedMediaItem {
     poster: string,
     isPlayable: boolean,
     link: string,
-    referer: string
+    referer: string,
+    parent: string
 }
 
 export interface IResolverOptions {
