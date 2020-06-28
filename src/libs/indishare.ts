@@ -14,13 +14,12 @@ export class IndishareResolver extends BaseUrlResolver {
 
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
         const response = await this.gotInstance(_urlToResolve);
-        const title = await this.xInstance(response.body, "meta[name='description']@content");
         const form = await this.getHiddenForm(response.body);
         const response2 = await this.gotInstance.post(response.url, {
             body: form
         });
         var link = await this.xInstance(response2.body, 'span#direct_link', 'a@href');
-
+        const title = `${new URL(link).pathname.split('/').slice(-1)[0]}`;
         var result = <ResolvedMediaItem>{ link, title, isPlayable: true };
         return [result];
     }
