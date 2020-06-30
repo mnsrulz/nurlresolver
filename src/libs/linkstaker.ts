@@ -17,12 +17,20 @@ export class LinkstakerResolver extends BaseUrlResolver {
         var link = regex_link.exec(obj.body)![1];
         if (link) {
             var title = decodeURIComponent(obj.title).replace(/\+/g, ' ');
+            title = title.replace(' - Google Drive', '').trim();
             var result = <ResolvedMediaItem>{
                 link: link,
                 title: title,
                 isPlayable: true
             };
             links.push(result);
+
+            var gdriveUrl = new URL(link);
+            if (gdriveUrl.hostname.toLowerCase().endsWith('googleusercontent.com')) {
+                const googleDocId = gdriveUrl.pathname.split('/').slice(-1)[0];
+                const constructedGoogleLInk = `https://drive.google.com/file/d/${googleDocId}/view`;
+                links.push({ link: constructedGoogleLInk, isPlayable: false } as ResolvedMediaItem);
+            }
         }
         return links;
     }

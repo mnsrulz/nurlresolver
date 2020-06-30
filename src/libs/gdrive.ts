@@ -26,7 +26,7 @@ export class GDriveResolver extends BaseUrlResolver {
 
             var downloadlink1 = await this.xInstance(response.body, {
                 link: 'a#uc-download-link@href',
-                title: 'span.uc-name-size'
+                title: 'span.uc-name-size a'
             });
 
             var driveCookie = cookieJar.getCookiesSync(normalizeDriveUrl).find((x: { domain: string; }) => x.domain === 'drive.google.com');
