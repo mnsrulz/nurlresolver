@@ -8,7 +8,7 @@ export abstract class BaseUrlResolver {
     protected useCookies: boolean;
     private CookieJar = require('tough-cookie');
 
-    constructor(options: IResolverOptions) {
+    constructor(options: BaseResolverOptions) {
         this.domains = options.domains;
         this.useCookies = options.useCookies || false;
 
@@ -38,7 +38,7 @@ export abstract class BaseUrlResolver {
             try {
                 this.setupEnvironment();
                 var resolveResults = await this.resolveInner(urlToResolve);
-                resolveResults.forEach(x=>x.parent = x.parent || urlToResolve);
+                resolveResults.forEach(x => x.parent = x.parent || urlToResolve);
                 return this.massageResolveResults(resolveResults);
             } catch (error) {
                 console.log(`Error occurred while resolving: ${urlToResolve}`);
@@ -106,7 +106,7 @@ export interface ResolvedMediaItem {
     parent: string
 }
 
-export interface IResolverOptions {
+export interface BaseResolverOptions {
     domains: RegExp[],
     useCookies?: boolean
 }

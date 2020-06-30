@@ -23,14 +23,13 @@ export class UrlResolver {
      * @param {string} urlToResolve 
      * @returns {string}
      */
-    async resolve(urlToResolve: string, options: { timeout: number }): Promise<ResolvedMediaItem[]> {
-        const defaultValues = {
+    async resolve(urlToResolve: string, options: Partial<UrlResolverOptions> = {}): Promise<ResolvedMediaItem[]> {
+        const _options = Object.assign({
             timeout: 30
-        };
-        options = Object.assign(defaultValues, options);
+        }, options);
         const _allResolvers = this.allResolvers;
         const timeoutPromise = new Promise<ResolvedMediaItem[]>((resolve) => {
-            setTimeout(resolve, options.timeout * 1000);
+            setTimeout(resolve, _options.timeout * 1000);
             return [];
         });
         const actualPromise = _();
@@ -51,18 +50,17 @@ export class UrlResolver {
      * @param {string} urlToResolve 
      * @returns {collection of resolved links}
      */
-    async resolveRecursive(urlToResolve: string, options: { timeout: number }): Promise<ResolvedMediaItem[]> {
-        const defaultValues = {
+    async resolveRecursive(urlToResolve: string, options: Partial<UrlResolverOptions> = {}): Promise<ResolvedMediaItem[]> {
+        const _options = Object.assign({
             timeout: 30
-        };
-        options = Object.assign(defaultValues, options);
+        }, options);
 
         var instanceOfUrlResolver = this;
         var myPlayableResources: any[] = [];
         var visitedUrls: any[] = [];
 
         const timeoutPromise = new Promise(function (resolve, reject) {
-            setTimeout(resolve, options.timeout * 1000);
+            setTimeout(resolve, _options.timeout * 1000);
         });
         const actualPromise = explode(urlToResolve);
         await Promise.race([timeoutPromise, actualPromise]);
@@ -84,4 +82,8 @@ export class UrlResolver {
             }
         }
     }
+}
+
+type UrlResolverOptions = {
+    timeout: number
 }

@@ -1,8 +1,8 @@
-import { BaseUrlResolver, ResolvedMediaItem, IResolverOptions } from "../BaseResolver";
+import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
 
 export class ZUploadResolver extends BaseUrlResolver {
     constructor() {
-        super(<IResolverOptions>{
+        super({
             domains: [/https?:\/\/zupload.me/],
             useCookies: true
         });
@@ -19,7 +19,7 @@ export class ZUploadResolver extends BaseUrlResolver {
             title: 'title',
             link: 'a.link_button@href'
         }) as ResolvedMediaItem;
-        obj && (obj.isPlayable = true) && links.push(obj);
+        obj && (obj.isPlayable = true) && (obj.title=obj.title.replace(' - Zupload.me','')) && links.push(obj);
         return links;
     }
 }
