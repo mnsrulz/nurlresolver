@@ -12,12 +12,13 @@ export class DoodResolver extends BaseUrlResolver {
             title: 'title',
             link: 'div.download-content a@href'
         }) as ResolvedMediaItem;
-        this.wait(2000);
+        await this.wait(1000);  //lets wait for one second.
         var downloadLinkPage = await this.gotInstance(result.link);
         var contentPage = downloadLinkPage.body;
         const regex01 = /window\.open\('(https[^']*)'/
         var finalDownloadLink = regex01.exec(contentPage)![1];
         result.isPlayable = true;
+        result.title = `${new URL(finalDownloadLink).pathname.split('/').slice(-1)[0]}`;
         result.link = finalDownloadLink;
         result.referer = _urlToResolve;
         return [result];
