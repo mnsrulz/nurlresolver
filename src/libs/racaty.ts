@@ -18,7 +18,7 @@ export class RacatyResolver extends BaseUrlResolver {
 
         const link = await this.xInstance(response2.body, '#DIV_1>a@href');
         if (link) {
-            const title = decodeURIComponent(new URL(link).pathname.split('/').slice(-1)[0]);
+            const title = this.extractFileNameFromUrl(link);
             var result = {title, link, isPlayable:true} as ResolvedMediaItem;
             links.push(result);
         }
