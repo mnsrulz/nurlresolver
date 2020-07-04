@@ -24,7 +24,7 @@ export class CloudMailRuResolver extends BaseUrlResolver {
                 var headers = await this.gotInstance.head(tempLink);
                 if (headers.statusCode === 200) {
                     const finalLink = headers.url;
-                    const title = `${new URL(finalLink).pathname.split('/').slice(-1)[0]}`;
+                    const title = this.extractFileNameFromUrl(finalLink);
                     var result = <ResolvedMediaItem>{
                         link: finalLink,
                         title: title,

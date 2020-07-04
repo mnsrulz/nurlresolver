@@ -95,6 +95,11 @@ export abstract class BaseUrlResolver {
         return parsed.sld;
     }
 
+    protected extractFileNameFromUrl(someUrl: string): string {
+        let fileName = `${new URL(someUrl).pathname.split('/').slice(-1)[0]}`;
+        fileName = decodeURIComponent(fileName);
+        return fileName;
+    }
 }
 
 export interface ResolvedMediaItem {

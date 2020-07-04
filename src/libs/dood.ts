@@ -18,7 +18,7 @@ export class DoodResolver extends BaseUrlResolver {
         const regex01 = /window\.open\('(https[^']*)'/
         var finalDownloadLink = regex01.exec(contentPage)![1];
         result.isPlayable = true;
-        result.title = `${new URL(finalDownloadLink).pathname.split('/').slice(-1)[0]}`;
+        result.title = this.extractFileNameFromUrl(finalDownloadLink);
         result.link = finalDownloadLink;
         result.referer = _urlToResolve;
         return [result];

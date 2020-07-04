@@ -19,7 +19,7 @@ export class IndishareResolver extends BaseUrlResolver {
             body: form
         });
         var link = await this.xInstance(response2.body, 'span#direct_link', 'a@href');
-        const title = `${new URL(link).pathname.split('/').slice(-1)[0]}`;
+        const title = this.extractFileNameFromUrl(link);
         var result = <ResolvedMediaItem>{ link, title, isPlayable: true };
         return [result];
     }
