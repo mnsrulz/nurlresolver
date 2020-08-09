@@ -10,11 +10,8 @@ export class DlfilesResolver extends BaseUrlResolver {
 
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
         const response = await this.gotInstance(_urlToResolve);
-        const form = await this.getHiddenForm(response.body, 1);
-        const response2 = await this.gotInstance.post(_urlToResolve, {
-            body: form
-        });
-        var firstLink = await this.xInstance(response2.body, 'a.link_button@href');
+        const response2Body = await this.postHiddenForm(_urlToResolve, response.body, 1);
+        var firstLink = await this.xInstance(response2Body, 'a.link_button@href');
         const response3 = await this.gotInstance(firstLink);
         var result = await this.xInstance(response3.body, { link: 'a.link_button@href', title: 'title' }) as ResolvedMediaItem;
         result.title = result.title.replace(' - Dlfiles.online', '')
