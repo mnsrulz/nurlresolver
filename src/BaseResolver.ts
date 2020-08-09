@@ -74,7 +74,7 @@ export abstract class BaseUrlResolver {
     }
 
     protected async postHiddenForm(urlToPost: string, page: string, ix?: number): Promise<string | undefined> {
-        const form = await this.getHiddenForm(page);
+        const form = await this.getHiddenForm(page, ix);
         if (form) {
             const response2 = await this.gotInstance.post(urlToPost, {
                 body: form
