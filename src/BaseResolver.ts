@@ -1,4 +1,4 @@
-import got, { GotOptions } from 'got';
+import got, { GotOptions, HTTPError } from 'got';
 import FormData = require('form-data');
 
 export abstract class BaseUrlResolver {
@@ -41,8 +41,11 @@ export abstract class BaseUrlResolver {
                 resolveResults.forEach(x => x.parent = x.parent || urlToResolve);
                 return this.massageResolveResults(resolveResults);
             } catch (error) {
-                console.log(`Error occurred while resolving: ${urlToResolve}`);
-                console.log(error);
+                if (error instanceof HTTPError) {
+                    console.error(`${this.constructor.name}: `, 'Http error.', urlToResolve, error.message);
+                } else {
+                    console.error(`${this.constructor.name}: `, 'Unknown error', urlToResolve, error.message);
+                }
             }
         }
         return [];
@@ -70,22 +73,34 @@ export abstract class BaseUrlResolver {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    protected async getHiddenForm(page: string, ix?: number): Promise<FormData> {
-        const form = new FormData();
+    protected async postHiddenForm(urlToPost: string, page: string, ix?: number): Promise<string | undefined> {
+        const form = await this.getHiddenForm(page);
+        if (form) {
+            const response2 = await this.gotInstance.post(urlToPost, {
+                body: form
+            });
+            return response2.body;
+        }        
+    }
+
+    protected async getHiddenForm(page: string, ix?: number): Promise<FormData | undefined> {
         ix = ix || 0;
-        var obj1 = await this.xInstance(page, ['form@html']);
-        var el = obj1[ix];
-        var obj = await this.xInstance(el, {
-            n: ['*@name'],
-            v: ['*@value']
-        });
-        for (let index = 0; index < obj.n.length; index++) {
-            const n = obj.n[index];
-            const v = obj.v[index];
-            n !== undefined && v !== undefined &&
-                n !== null && v !== null && form.append(n, v);
-        }
-        return form;
+        const pageForms = await this.xInstance(page, ['form@html']);
+        const requestedForm = pageForms[ix];
+        if (requestedForm) {
+            let form = new FormData();
+            var obj = await this.xInstance(requestedForm, {
+                n: ['*@name'],
+                v: ['*@value']
+            });
+            for (let index = 0; index < obj.n.length; index++) {
+                const n = obj.n[index];
+                const v = obj.v[index];
+                n !== undefined && v !== undefined &&
+                    n !== null && v !== null && form.append(n, v);
+            }
+            return form;
+        }        
     }
 
     protected getSecondLevelDomain(someUrl: string): string {

@@ -64,8 +64,7 @@ export class UrlResolver {
         });
         const actualPromise = explode(urlToResolve);
         await Promise.race([timeoutPromise, actualPromise]);
-
-        console.log(JSON.stringify(myPlayableResources));
+        
         return myPlayableResources;
         async function explode(urlToVisit: string) {
             if (visitedUrls.some(x => x === urlToVisit)) return;
