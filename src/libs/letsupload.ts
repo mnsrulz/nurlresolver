@@ -19,7 +19,7 @@ export class LetsuploadResolver extends BaseUrlResolver {
         let title = await this.xInstance(response.body, 'div.title');
         title = title.trim();
         if (link1) {
-            await this.wait(3000);
+            await this.wait(5000);
             const response2 = await this.gotInstance(link1, { followRedirect: false });
             var el = '';
             if (response2.statusCode === 302) {
