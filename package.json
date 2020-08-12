@@ -9,14 +9,14 @@
   "dependencies": {
     "eval": "^0.1.4",
     "form-data": "^3.0.0",
-    "got": "^10.2.0",
+    "got": "^11.5.2",
     "m3u8": "0.0.10",
-    "psl": "^1.7.0",
-    "tough-cookie": "^3.0.1",
+    "psl": "^1.8.0",
+    "tough-cookie": "^4.0.0",
     "x-ray": "^2.3.4"
   },
   "devDependencies": {
-    "typescript": "^3.8.3"
+    "typescript": "^3.9.7"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\"",

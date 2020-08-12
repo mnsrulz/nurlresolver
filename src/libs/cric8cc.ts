@@ -14,7 +14,7 @@ export class Cric8StreamResolver extends BaseUrlResolver {
         var rxResult = response.body.match(rx);
 
         if (rxResult) {
-            rxResult.forEach(el => {
+            rxResult.forEach((el: any) => {
                 var result = { title: el, link: el } as ResolvedMediaItem;
                 links.push(result);
             });
