@@ -1,5 +1,5 @@
 import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
-var url = require('url');
+import * as url from 'url';
 
 export class ExtraMoviesResolver extends BaseUrlResolver {
     constructor() {
@@ -68,7 +68,7 @@ export class ExtraMoviesResolver extends BaseUrlResolver {
             else if (u.pathname.endsWith('.php')) {
                 var queryData = url.parse(link, true).query;
                 if (queryData.link) {
-                    var linktoadd = Buffer.from(queryData.link, 'base64').toString()
+                    var linktoadd = Buffer.from(queryData.link as string, 'base64').toString();
                     links.push({ title, link: linktoadd } as ResolvedMediaItem);
                 } else if (queryData.id) {
                     const result = await this.xInstance(link, 'a', [{

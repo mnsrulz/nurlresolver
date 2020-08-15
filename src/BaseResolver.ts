@@ -1,20 +1,20 @@
 import got, { HTTPError } from 'got';
-// const got = require('got');
-import FormData = require('form-data');
+import * as FormData from 'form-data';
 import * as xray from 'x-ray';
+import { CookieJar } from 'tough-cookie';
+import * as psl from 'psl';
 
 export abstract class BaseUrlResolver {
     protected domains: RegExp[];
     protected gotInstance = got;
 
-    protected xInstance =  xray();
+    protected xInstance = xray();
     protected useCookies: boolean;
-    private CookieJar = require('tough-cookie');
 
     constructor(options: BaseResolverOptions) {
         this.domains = options.domains;
         this.useCookies = options.useCookies || false;
-        
+
     }
     /**
      * @param {string} urlToResolve
@@ -63,7 +63,7 @@ export abstract class BaseUrlResolver {
 
     private setupEnvironment(): void {
         let gotoptions: any = {};
-        this.useCookies && (gotoptions.cookieJar = new this.CookieJar.CookieJar());
+        this.useCookies && (gotoptions.cookieJar = new CookieJar());
         gotoptions.headers = {
             'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:75.0) Gecko/20100101 Firefox/75.0'
         }
@@ -107,10 +107,9 @@ export abstract class BaseUrlResolver {
         }
     }
 
-    protected getSecondLevelDomain(someUrl: string): string {
-        var psl = require('psl');
+    protected getSecondLevelDomain(someUrl: string): string | null {
         var hostname = new URL(someUrl);
-        var parsed = psl.parse(hostname.hostname);
+        var parsed = psl.parse(hostname.hostname) as psl.ParsedDomain;
         return parsed.sld;
     }
 
