@@ -1,6 +1,6 @@
 {
   "name": "nurlresolver",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "url resolver for node",
   "main": "dist/app.js",
   "types": "dist/app.d.ts",
@@ -16,6 +16,9 @@
     "x-ray": "^2.3.4"
   },
   "devDependencies": {
+    "@types/psl": "^1.1.0",
+    "@types/tough-cookie": "^4.0.0",
+    "@types/x-ray": "^2.3.3",
     "typescript": "^3.9.7"
   },
   "scripts": {
