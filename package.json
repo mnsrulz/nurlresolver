@@ -16,6 +16,7 @@
     "x-ray": "^2.3.4"
   },
   "devDependencies": {
+    "@types/x-ray": "^2.3.3",
     "typescript": "^3.9.7"
   },
   "scripts": {

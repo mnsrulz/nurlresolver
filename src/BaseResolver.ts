@@ -1,18 +1,20 @@
 import got, { HTTPError } from 'got';
 // const got = require('got');
 import FormData = require('form-data');
+import * as xray from 'x-ray';
 
 export abstract class BaseUrlResolver {
     protected domains: RegExp[];
     protected gotInstance = got;
-    protected xInstance = require('x-ray')();
+
+    protected xInstance =  xray();
     protected useCookies: boolean;
     private CookieJar = require('tough-cookie');
 
     constructor(options: BaseResolverOptions) {
         this.domains = options.domains;
         this.useCookies = options.useCookies || false;
-
+        
     }
     /**
      * @param {string} urlToResolve
@@ -74,7 +76,7 @@ export abstract class BaseUrlResolver {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    protected async postHiddenForm(urlToPost: string, page: string, ix?: number): Promise<string | undefined> {
+    protected async postHiddenForm(urlToPost: string, page: string, ix?: number): Promise<string> {
         const form = await this.getHiddenForm(page, ix);
         if (form) {
             const response2 = await this.gotInstance.post(urlToPost, {
@@ -82,6 +84,7 @@ export abstract class BaseUrlResolver {
             });
             return response2.body;
         }
+        throw new Error('No form found to post.');
     }
 
     protected async getHiddenForm(page: string, ix?: number): Promise<FormData | undefined> {
