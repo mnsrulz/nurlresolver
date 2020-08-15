@@ -1,5 +1,5 @@
 import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
-var _eval = require('eval');
+const _eval = require('eval');
 
 export class StreamwireResolver extends BaseUrlResolver {
     constructor() {

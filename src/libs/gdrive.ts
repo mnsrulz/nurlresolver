@@ -1,5 +1,5 @@
 import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
-var CookieJar = require('tough-cookie');
+import { CookieJar } from 'tough-cookie';
 export class GDriveResolver extends BaseUrlResolver {
     constructor() {
         super({
@@ -18,7 +18,7 @@ export class GDriveResolver extends BaseUrlResolver {
         if (regexresult) {
             var normalizeDriveUrl = `https://drive.google.com/uc?id=${regexresult[2]}&export=download`;
 
-            const cookieJar = new CookieJar.CookieJar();
+            const cookieJar = new CookieJar();
             const response = await this.gotInstance(normalizeDriveUrl, {
                 cookieJar,
                 followRedirect: false
@@ -29,22 +29,24 @@ export class GDriveResolver extends BaseUrlResolver {
                 title: 'span.uc-name-size a'
             });
 
-            var driveCookie = cookieJar.getCookiesSync(normalizeDriveUrl).find((x: { domain: string; }) => x.domain === 'drive.google.com');
+            var driveCookie = cookieJar.getCookiesSync(normalizeDriveUrl).find(x => x.domain === 'drive.google.com');
             //DEV NOTE: While using cookieJar for got, somehow the generated link in the end is not streamable.
             //So, that is the reason for this custom cookie implementation.
-            var nextRequestCookies = `${driveCookie.key}=${driveCookie.value}`;
-            var reqMediaConfirm = await this.gotInstance('https://drive.google.com' + downloadlink1.link,
-                {
-                    headers: {
-                        cookie: nextRequestCookies
-                    },
-                    followRedirect: false
-                });
+            if (driveCookie) {
+                var nextRequestCookies = `${driveCookie.key}=${driveCookie.value}`;
+                var reqMediaConfirm = await this.gotInstance('https://drive.google.com' + downloadlink1.link,
+                    {
+                        headers: {
+                            cookie: nextRequestCookies
+                        },
+                        followRedirect: false
+                    });
 
-            var link = reqMediaConfirm.headers.location;
-            const title = downloadlink1.title;
-            var result = { link, title, isPlayable: true } as ResolvedMediaItem;
-            links.push(result);
+                var link = reqMediaConfirm.headers.location;
+                const title = downloadlink1.title;
+                var result = { link, title, isPlayable: true } as ResolvedMediaItem;
+                links.push(result);
+            }
         }
         return links;
     }
