@@ -7,13 +7,13 @@
   "author": "manishrawat4u",
   "license": "MIT",
   "dependencies": {
+    "@manishrawat4u/x-ray": "^2.3.5-mnsrulz",
     "eval": "^0.1.4",
     "form-data": "^3.0.0",
     "got": "^11.5.2",
     "m3u8": "0.0.10",
     "psl": "^1.8.0",
-    "tough-cookie": "^4.0.0",
-    "x-ray": "^2.3.4"
+    "tough-cookie": "^4.0.0"
   },
   "devDependencies": {
     "@types/psl": "^1.1.0",

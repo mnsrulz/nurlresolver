@@ -1,6 +1,6 @@
 import got, { HTTPError } from 'got';
 import * as FormData from 'form-data';
-import * as xray from 'x-ray';
+import * as xray from '@manishrawat4u/x-ray';
 import { CookieJar } from 'tough-cookie';
 import * as psl from 'psl';
 
