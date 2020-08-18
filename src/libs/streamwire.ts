@@ -1,5 +1,5 @@
 import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
-const _eval = require('eval');
+import * as unpacker from 'unpacker';
 
 export class StreamwireResolver extends BaseUrlResolver {
     constructor() {
@@ -9,26 +9,18 @@ export class StreamwireResolver extends BaseUrlResolver {
     }
 
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
-        var links = [] as ResolvedMediaItem[];
+        const links = [] as ResolvedMediaItem[];
         var obj = await this.xInstance(_urlToResolve, {
             title: 'title',
             script: ['script']
         });
-        const script = (obj.script as string[]).filter(x => x.startsWith('eval(function(p,a,c,k,e,d)'))[0];
+        const script = (obj.script as string[]).filter(x => unpacker.detect(x))[0];
         if (script) {
-            var __: any;
-            var _proxyPlayer = (_: any) => __ = _;
-            _eval(script, '', {
-                window: {
-                    hola_player: _proxyPlayer
-                }
-            }, true);
-
-            if (__) {
-                var link = __.sources[0].src;
-                var result = { link, title: obj.title, isPlayable: true, poster: __.poster } as ResolvedMediaItem;
-                links.push(result);
-            }
+            const unpacked = unpacker.unpack(script);
+            const sourceRx = /sources:\[{src:"([^"]*)"/;
+            const link = sourceRx.exec(unpacked)![1];
+            let title = link.endsWith('m3u8') ? obj.title + '.m3u8' : obj.title;
+            links.push({ link, title, isPlayable: true } as ResolvedMediaItem);
         }
         return links;
     }
