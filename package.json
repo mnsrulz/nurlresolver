@@ -2,18 +2,18 @@
   "name": "nurlresolver",
   "version": "1.5.3",
   "description": "url resolver for node",
-  "main": "dist/app.js",
-  "types": "dist/app.d.ts",
+  "main": "./dist/app.js",
+  "types": "./dist/app.d.ts",
   "author": "manishrawat4u",
   "license": "MIT",
   "dependencies": {
     "@manishrawat4u/x-ray": "^2.3.5-rc01",
-    "eval": "^0.1.4",
     "form-data": "^3.0.0",
     "got": "^11.5.2",
     "m3u8": "0.0.10",
     "psl": "^1.8.0",
-    "tough-cookie": "^4.0.0"
+    "tough-cookie": "^4.0.0",
+    "unpacker": "^1.0.1"
   },
   "devDependencies": {
     "@types/psl": "^1.1.0",
@@ -33,5 +33,6 @@
   "bugs": {
     "url": "https://github.com/mnsrulz/nurlresolver/issues"
   },
-  "homepage": "https://github.com/mnsrulz/nurlresolver#readme"
+  "homepage": "https://github.com/mnsrulz/nurlresolver#readme",
+  "keywords": ["urlresolver", "megaup", "googledrive", "link extractor", "scraper", "download link", "cloudmail"]
 }
