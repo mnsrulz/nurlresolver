@@ -118,6 +118,14 @@ export abstract class BaseUrlResolver {
         fileName = decodeURIComponent(fileName);
         return fileName;
     }
+
+    protected async getServerPublicIp(): Promise<string> {
+        const result = await this.gotInstance('https://api.ipify.org?format=json', {
+            responseType: 'json',
+            resolveBodyOnly: true,
+        }) as { ip: string };        
+        return result.ip;
+    }
 }
 
 export interface ResolvedMediaItem {
@@ -125,8 +133,8 @@ export interface ResolvedMediaItem {
     poster: string,
     isPlayable: boolean,
     link: string,
-    referer: string,
-    parent: string
+    parent: string,
+    headers: Record<string, string>
 }
 
 export interface BaseResolverOptions {
