@@ -16,6 +16,7 @@ export class DlfilesResolver extends BaseUrlResolver {
         var result = await this.xInstance(response3.body, { link: 'a.link_button@href', title: 'title' }) as ResolvedMediaItem;
         result.title = result.title.replace(' - Dlfiles.online', '')
         result.isPlayable = true;
+        result.headers = { "X-Real-IP": await this.getServerPublicIp() };   //this is the special header required (sometimes) to play this media from any ipaddresses
         return [result];
     }
 }

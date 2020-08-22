@@ -20,7 +20,7 @@ export class DoodResolver extends BaseUrlResolver {
         result.isPlayable = true;
         result.title = this.extractFileNameFromUrl(finalDownloadLink);
         result.link = finalDownloadLink;
-        result.referer = _urlToResolve;
+        result.headers = { "referer": _urlToResolve };
         return [result];
     }
 }
