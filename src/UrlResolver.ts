@@ -1,5 +1,6 @@
 import { ResolvedMediaItem, BaseUrlResolver } from "./BaseResolver";
 import * as allResolverImports from "./allResolvers";
+import { UrlResolverOptions } from "./UrlResolverOptions";
 
 export class UrlResolver {
   private allResolvers: any[];
@@ -20,7 +21,7 @@ export class UrlResolver {
     options: Partial<UrlResolverOptions> = {},
   ): Promise<ResolvedMediaItem[]> {
     const _options = Object.assign({
-      timeout: 30,
+      timeout: 30
     }, options);
     const _allResolvers = this.allResolvers;
     const timeoutPromise = new Promise<ResolvedMediaItem[]>((resolve) => {
@@ -31,12 +32,13 @@ export class UrlResolver {
     return await Promise.race([timeoutPromise, actualPromise]);
     async function _() {
       for (let index = 0; index < _allResolvers.length; index++) {
-        const element = new _allResolvers[index]();
-        var fs = await element.resolve(urlToResolve);
+        const element: BaseUrlResolver = new _allResolvers[index]();
+        var fs = await element.resolve(urlToResolve, _options);
         if (fs && fs.length > 0) {
           return fs;
         }
       }
+      return [];
     }
   }
 
@@ -51,20 +53,21 @@ export class UrlResolver {
     options: Partial<UrlResolverOptions> = {},
   ): Promise<ResolvedMediaItem[]> {
     const _options = Object.assign({
-      timeout: 30,
+      timeout: 30
     }, options);
 
-    var instanceOfUrlResolver = this;
-    var myPlayableResources: any[] = [];
-    var visitedUrls: any[] = [];
+    const instanceOfUrlResolver = this;
+    const myPlayableResources: ResolvedMediaItem[] = [];
+    const visitedUrls: string[] = [];
 
-    const timeoutPromise = new Promise(function (resolve, reject) {
-      setTimeout(resolve, _options.timeout * 1000);
+    const timeoutPromise = new Promise(function (resolvedPromise) {
+      setTimeout(resolvedPromise, _options.timeout * 1000);
     });
     const actualPromise = explode(urlToResolve);
     await Promise.race([timeoutPromise, actualPromise]);
 
     return myPlayableResources;
+
     async function explode(urlToVisit: string) {
       if (visitedUrls.some((x) => x === urlToVisit)) return;
       visitedUrls.push(urlToVisit);
@@ -75,18 +78,12 @@ export class UrlResolver {
       ) as ResolvedMediaItem[];
       if (resolvedUrls) {
         var p: any[] = [];
-        resolvedUrls.filter((x) => x.isPlayable).forEach((x) =>
-          myPlayableResources.push(x)
-        );
-        resolvedUrls.filter((x) => !x.isPlayable).forEach((x) => {
-          p.push(explode(x.link));
-        });
+        for (const resolvedUrl of resolvedUrls) {
+          resolvedUrl.isPlayable ? myPlayableResources.push(resolvedUrl) : p.push(explode(resolvedUrl.link));
+        }
         await Promise.all(p);
       }
     }
   }
 }
 
-type UrlResolverOptions = {
-  timeout: number;
-};

@@ -1,10 +1,12 @@
 import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
 import { CookieJar } from 'tough-cookie';
 export class GDriveResolver extends BaseUrlResolver {
+    private googleDriveId: string;
     constructor() {
         super({
             domains: [/https?:\/\/(drive|docs)\.google\.com/]
         });
+        this.googleDriveId = '';
     }
 
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
@@ -17,7 +19,7 @@ export class GDriveResolver extends BaseUrlResolver {
         var regexresult = rx0.exec(_urlToResolve) || rx1.exec(_urlToResolve) || rx2.exec(_urlToResolve)
         if (regexresult) {
             var normalizeDriveUrl = `https://drive.google.com/uc?id=${regexresult[2]}&export=download`;
-
+            this.googleDriveId = regexresult[2];
             const cookieJar = new CookieJar();
             const response = await this.gotInstance(normalizeDriveUrl, {
                 cookieJar,
@@ -49,5 +51,24 @@ export class GDriveResolver extends BaseUrlResolver {
             }
         }
         return links;
+    }
+
+    async fillMetaInfo(resolveMediaItem: ResolvedMediaItem) {
+        // const headerswithrange = resolveMediaItem.headers || {};
+        // headerswithrange['Range'] = 'bytes=0-0';
+        // const rangeresponse = await this.gotInstance(resolveMediaItem.link, {
+        //     headers: headerswithrange
+        // });
+        const gdriveid = this.googleDriveId;
+        //google doesn't support HTTP HEAD, so another way to find the size and other meta infor is here.
+        const result: { fileSize: string, modifiedDate: Date, mimeType: string } = await this.gotInstance(`https://content.googleapis.com/drive/v2beta/files/${gdriveid}?fields=fileSize%2CmodifiedDate%2CmimeType&supportsTeamDrives=true&key=AIzaSyC1eQ1xj69IdTMeii5r7brs3R90eck-m7k`,
+            {
+                headers: {
+                    "X-Origin": "https://drive.google.com",
+                },
+            }).json();
+        resolveMediaItem.size = result.fileSize;
+        resolveMediaItem.lastModified = result.modifiedDate.toString();
+        resolveMediaItem.contentType = result.mimeType;
     }
 }
