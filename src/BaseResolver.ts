@@ -3,6 +3,7 @@ import * as FormData from 'form-data';
 import * as xray from '@manishrawat4u/x-ray';
 import { CookieJar } from 'tough-cookie';
 import * as psl from 'psl';
+import { UrlResolverOptions } from './UrlResolverOptions';
 
 export abstract class BaseUrlResolver {
     protected domains: RegExp[];
@@ -27,10 +28,12 @@ export abstract class BaseUrlResolver {
     }
 
     /**
-     * 
-     * @param {string} urlToResolve 
+     *
+     * @param {string} urlToResolve
      */
-    async resolve(urlToResolve: string): Promise<ResolvedMediaItem[]> {
+    async resolve(urlToResolve: string,
+        options: Partial<UrlResolverOptions>
+    ): Promise<ResolvedMediaItem[]> {
         let canResolve = false;
         try {
             canResolve = await this.canResolve(urlToResolve);
@@ -40,8 +43,15 @@ export abstract class BaseUrlResolver {
         if (canResolve) {
             try {
                 this.setupEnvironment();
-                var resolveResults = await this.resolveInner(urlToResolve);
+                const resolveResults = await this.resolveInner(urlToResolve);
                 resolveResults.forEach(x => x.parent = x.parent || urlToResolve);
+                    
+                if (options.extractMetaInformation) {
+                    await Promise.all(resolveResults
+                        .filter(x => x.isPlayable)
+                        .map(this.fillMetaInfoInner, this));
+                }
+
                 return this.massageResolveResults(resolveResults);
             } catch (error) {
                 if (error instanceof HTTPError) {
@@ -59,6 +69,24 @@ export abstract class BaseUrlResolver {
             x.link = new URL(x.link).href;  //normalizing the url like escaping spaces
             return x;
         });
+    }
+
+    private async fillMetaInfoInner(resolveMediaItem: ResolvedMediaItem) {
+        try {
+            await this.fillMetaInfo(resolveMediaItem);
+        } catch (error) {
+            console.log(`Error occurred while fetching meta info for ${resolveMediaItem.link}`, error);
+        }
+
+    }
+
+    async fillMetaInfo(resolveMediaItem: ResolvedMediaItem) {
+        const headResponse = await this.gotInstance.head(resolveMediaItem.link, {
+            headers: resolveMediaItem.headers
+        });
+        resolveMediaItem.size = headResponse.headers['content-length'];
+        resolveMediaItem.lastModified = headResponse.headers['last-modified'];
+        resolveMediaItem.contentType = headResponse.headers['content-type'];
     }
 
     private setupEnvironment(): void {
@@ -123,7 +151,7 @@ export abstract class BaseUrlResolver {
         const result = await this.gotInstance('https://api.ipify.org?format=json', {
             responseType: 'json',
             resolveBodyOnly: true,
-        }) as { ip: string };        
+        }) as { ip: string };
         return result.ip;
     }
 }
@@ -134,7 +162,10 @@ export interface ResolvedMediaItem {
     isPlayable: boolean,
     link: string,
     parent: string,
-    headers: Record<string, string>
+    headers: Record<string, string>,
+    size?: string,
+    lastModified?: string,
+    contentType?: string
 }
 
 export interface BaseResolverOptions {
