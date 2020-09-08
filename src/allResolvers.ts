@@ -14,6 +14,7 @@ export * from "./libs/letsupload";
 export * from "./libs/linkrit";
 export * from "./libs/linkstaker";
 export * from "./libs/megaup";
+export * from "./libs/racaty";
 export * from "./libs/streamwire";
 export * from "./libs/uploadRaja";
 export * from "./libs/wicket";
