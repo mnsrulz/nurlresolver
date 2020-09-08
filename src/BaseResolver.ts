@@ -45,7 +45,7 @@ export abstract class BaseUrlResolver {
                 this.setupEnvironment();
                 const resolveResults = await this.resolveInner(urlToResolve);
                 resolveResults.forEach(x => x.parent = x.parent || urlToResolve);
-                    
+
                 if (options.extractMetaInformation) {
                     await Promise.all(resolveResults
                         .filter(x => x.isPlayable)
@@ -75,7 +75,7 @@ export abstract class BaseUrlResolver {
         try {
             await this.fillMetaInfo(resolveMediaItem);
         } catch (error) {
-            console.log(`Error occurred while fetching meta info for ${resolveMediaItem.link}`, error);
+            console.error(`${this.constructor.name}: `, 'Http error', resolveMediaItem.link, error.message);
         }
 
     }

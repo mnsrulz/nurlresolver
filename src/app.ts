@@ -8,6 +8,7 @@ import { UrlResolver } from "./UrlResolver";
 //     timeout: 30,
 //   });
 //   console.log(results);
+//   process.exit();
 // })();
 
 export = new UrlResolver();
