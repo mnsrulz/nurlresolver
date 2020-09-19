@@ -19,5 +19,6 @@ export * from "./libs/racaty";
 export * from "./libs/streamwire";
 export * from "./libs/uploadRaja";
 export * from "./libs/wicket";
+export * from "./libs/wstream";
 export * from "./libs/yourupload";
 export * from "./libs/zupload";
