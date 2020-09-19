@@ -1,6 +1,6 @@
 import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
 
-class WicketResolver extends BaseUrlResolver {
+export class WicketResolver extends BaseUrlResolver {
     constructor() {
         super({
             domains: [/https?:\/\/wicket/]
@@ -13,5 +13,3 @@ class WicketResolver extends BaseUrlResolver {
         return [result];
     }
 }
-
-module.exports = WicketResolver;
