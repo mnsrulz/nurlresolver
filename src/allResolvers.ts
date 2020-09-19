@@ -1,5 +1,6 @@
 export * from "./libs/cloudmailru";
 export * from "./libs/cric8cc";
+export * from "./libs/cric8cc.ipl";
 export * from "./libs/crnews";
 export * from "./libs/daddyLive";
 export * from "./libs/dlfiles";
