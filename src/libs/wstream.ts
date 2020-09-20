@@ -4,7 +4,7 @@ import * as unpacker from 'unpacker';
 export class WstreamResolver extends BaseUrlResolver {
     constructor() {
         super({
-            domains: [/https?:\/\/wstream/]
+            domains: [/https?:\/\/(wstream|streamcdn)/]
         });
     }
 
