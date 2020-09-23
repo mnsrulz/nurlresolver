@@ -1,7 +1,9 @@
 # nurlresolver
-Node version of popular urlresolver for python. Easy to integrate and can be plugin to your application easily. Plugin based implementation and easy to extend the functionalty.
+Direct link generator for many known content sharing sites. Avoid clicking numerous times to download links and also avoid seeing ads while downloading the content from sharing sites. Easy to integrate with nodejs application.
 
-# Ver 1.x Updates -- Type script support added
+# *[Live Demo](https://nurlresolver.netlify.app/)*
+
+# Fully written in Typescript
 
 **Installation**
 
@@ -12,29 +14,77 @@ npm install nurlresolver
 **Usage:**
 
 ```
+//Module loader
+const nUrlResolver = require('nurlresolver');
 
-var nUrlResolver = require('nurlresolver');
-const hdhub4u = 'https://hdhub4u.live';
-var results = await nUrlResolver.resolve(hdhub4u);
+OR
+
+//ES6 usage
+import nurlresolver from 'nurlresolver';
+const results = await nUrlResolver.resolve(linkToResolve);
+
+const linkToResolve = 'https://cloud.mail.ru/public/abcd/sAmPlE';
+const results = await nUrlResolver.resolve(linkToResolve);
 
 /*Output==>
 
-[
-    {
-        isPlayable:false
-        link:"https://hdhub4u.live/bigg-boss-2019-season-13/"
-        poster:"https://extraimage.net/images/2019/10/25/195e47abcdecdcfe2e272316eab63a09.jpg"
-        title:"Bigg Boss (2019) Season 13"
-    },...
+[  
+  {
+    link: 'https://cloclo3.cldmail.ru/public/get/generatedlink/no/FileName.extension',
+    title: 'FileName.extension',
+    isPlayable: true,
+    parent: 'https://cloud.mail.ru/public/abcd/sAmPlE'
+  }
 ]
 
 */
 
-var results = await nUrlResolver.resolveRecursive(link);
+const results = await nUrlResolver.resolveRecursive(link);
 //this is going to resolve the final playback links. Schema representation is same as above result. The only difference is it recursively resolve all the links as they get found.
 
 ```
 
+## Headers Support
+In some of the sharing sites, it's required to send some header information back. e.g. Referer is required in some sites or if a link generated from an ip which is only accessible from that ip (in this case the xforward header is added in the result output so that same header can be sent to the same site later on.)
+
+## Advance Options
+optionsextractMetaInformation | boolean | instruct the resolver to extract contenttype, lastmodifieddate and size of the file.
+```
+const results = await nUrlResolver.resolve(linkToResolve, {
+    extractMetaInformation: true
+});
+
+/*
+[
+  {
+    "link": "http://www5d.filecdn.pw/dkske911881kkk?download_token=SOME_TOKEN_VALUE",
+    "title": "FILE.EXTENSION",
+    "isPlayable": true,
+    "headers": {
+      "X-Real-IP": "XX.YY.ZZ.AA"
+    },
+    "parent": "https://dlfiles.online/dkske911881kkk",
+    "size": "900163682",
+    "lastModified": "Wed, 21 Sep 2019 12:09:06 GMT",
+    "contentType": "application/octet-stream"
+  }
+]
+*/
+
+```
+
+Supported sites
+* Google Drive
+* CloudMailRu
+* MegaupNet
+* Dlfiles
+* Doodvideo
+* Indishare
+* Racaty
+* uploadraja
+* ZuploadMe
+* Yourupload
+* etc. Refer [here](https://github.com/mnsrulz/nurlresolver/tree/master/src/libs) for complete implementation
 
 **Try it Online**
 https://repl.it/repls/HandsomeLightgraySmalltalk
