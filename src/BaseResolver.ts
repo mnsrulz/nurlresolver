@@ -108,7 +108,10 @@ export abstract class BaseUrlResolver {
         const form = await this.getHiddenForm(page, ix);
         if (form) {
             const response2 = await this.gotInstance.post(urlToPost, {
-                body: form
+                body: form,
+                headers:{
+                    Referer: urlToPost
+                }
             });
             return response2.body;
         }
