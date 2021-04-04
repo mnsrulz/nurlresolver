@@ -31,7 +31,7 @@ export class ExtraMoviesResolver extends BaseUrlResolver {
         var apiResponseAsJson = JSON.parse(apiResponse.body);
         var renderedContent = apiResponseAsJson.content.rendered;
 
-        const regex_self_links = /https?:\/\/(extramovies)/gi;
+        const regex_self_links = /https?:\/\/(extramovies|t.me)/gi;
 
         var obj = await this.xInstance(renderedContent, 'a', [{
             link: '@href',
@@ -72,9 +72,9 @@ export class ExtraMoviesResolver extends BaseUrlResolver {
                     links.push({ title, link: linktoadd } as ResolvedMediaItem);
                 } else if (queryData.id) {
                     const result = await this.xInstance(link, 'a', [{
-                        link: '@href',
-                        title: '@text'
+                        link: '@href'
                     }]) as ResolvedMediaItem[];
+                    result.forEach(instanceItem => instanceItem.title = title);
                     links = links.concat(result.filter(l => l.link && !l.link.match(regex_self_links)));
                 }
             } else if (u.host.startsWith('extramovies')) {
