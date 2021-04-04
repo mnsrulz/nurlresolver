@@ -98,10 +98,17 @@ export abstract class BaseUrlResolver {
         this.gotInstance = got.extend(gotoptions);
     }
 
-    async abstract resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]>;
+    abstract resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]>;
 
     protected async wait(ms: number): Promise<void> {
         return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    protected async postHiddenFormV2(page: string, ix?: number): Promise<string> {
+        ix = ix || 0;        
+        const pageForms = await this.xInstance(page, ['form@action']);
+        const requestedFormActionLink = pageForms[ix];
+        return await this.postHiddenForm(requestedFormActionLink, page, ix);        
     }
 
     protected async postHiddenForm(urlToPost: string, page: string, ix?: number): Promise<string> {
@@ -109,7 +116,7 @@ export abstract class BaseUrlResolver {
         if (form) {
             const response2 = await this.gotInstance.post(urlToPost, {
                 body: form,
-                headers:{
+                headers: {
                     Referer: urlToPost
                 }
             });
