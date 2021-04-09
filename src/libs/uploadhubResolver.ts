@@ -10,8 +10,8 @@ export class UploadhubResolver extends BaseUrlResolver {
     }
 
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
-        const response = await this.gotInstance(_urlToResolve);
-        const response2Body = await this.postHiddenForm(_urlToResolve, response.body);
+        const response = await this.gotInstance(_urlToResolve);        
+        const response2Body = await this.postHiddenForm(response.url, response.body);
         var link = await this.xInstance(response2Body, '#direct_link', 'a@href');
         const title = this.extractFileNameFromUrl(link);
         const result = {

@@ -118,7 +118,8 @@ export abstract class BaseUrlResolver {
                 body: form,
                 headers: {
                     Referer: urlToPost
-                }
+                },
+                followRedirect: false   //it can raise some unhandled error which can potentially cause whole application shutdown.
             });
             return response2.body;
         }
