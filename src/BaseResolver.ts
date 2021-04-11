@@ -38,7 +38,7 @@ export abstract class BaseUrlResolver {
         try {
             canResolve = await this.canResolve(urlToResolve);
         } catch (error) {
-            console.log('Error occurred while calling canresole BaseResolver');
+            console.log('Error occurred while calling canResolve BaseResolver');
         }
         if (canResolve) {
             try {
