@@ -64,10 +64,10 @@ export class UrlResolver {
     const timeoutPromise = new Promise(resolvedPromise => setTimeout(resolvedPromise, _options.timeout * 1000));
 
     const urlsToResolve = typeof urlToResolve === "string" ? [urlToResolve] : urlToResolve;
-    const actualPromise = await Promise.all(urlsToResolve.map(explode));
+    const actualPromise = Promise.all(urlsToResolve.map(explode));
 
     await Promise.race([timeoutPromise, actualPromise]);
-
+    
     return myPlayableResources;
 
     async function explode(urlToVisit: string) {
