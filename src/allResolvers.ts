@@ -25,3 +25,6 @@ export * from "./libs/zupload";
 export * from "./libs/workers.dev";
 export * from "./libs/hubCloudResolver";
 export * from "./libs/uploadhubResolver";
+export * from "./libs/uploadbaz";
+export * from "./libs/desiupload";
+export * from "./libs/uploadever";
