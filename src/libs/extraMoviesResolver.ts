@@ -53,7 +53,7 @@ export class ExtraMoviesResolver extends BaseUrlResolver {
 
             if (u.pathname.endsWith('drive.php')) {
                 var pageText = await this.gotInstance(link);
-                var regexExtralinks = /https:\/\/extralinks[^"]*/g
+                var regexExtralinks = /https?:\/\/extralinks[^"]*/g
                 var matchesLink = regexExtralinks.exec(pageText.body);
                 if (matchesLink) {
                     links.push({ title, link: matchesLink[0] } as ResolvedMediaItem);
