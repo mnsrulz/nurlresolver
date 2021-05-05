@@ -1,6 +1,7 @@
 import { ResolvedMediaItem, BaseUrlResolver } from "./BaseResolver";
 import * as allResolverImports from "./allResolvers";
 import { UrlResolverOptions } from "./UrlResolverOptions";
+const debug = require('debug')('nurl:UrlResolver');
 
 export class UrlResolver {
   private allResolvers: any[];
@@ -73,7 +74,7 @@ export class UrlResolver {
     async function explode(urlToVisit: string) {
       if (visitedUrls.includes(urlToVisit)) return;
       visitedUrls.push(urlToVisit);
-      console.log(urlToVisit);
+      debug(urlToVisit);
       var resolvedUrls = await instanceOfUrlResolver.resolve(urlToVisit, options,) as ResolvedMediaItem[];
       if (resolvedUrls) {
         var p: Promise<any>[] = [];
