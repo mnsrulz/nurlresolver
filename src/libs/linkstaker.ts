@@ -1,4 +1,5 @@
 import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
+const debug = require('debug')('nurl:LinkstakerResolver');
 
 export class LinkstakerResolver extends BaseUrlResolver {
     constructor() {
@@ -19,7 +20,6 @@ export class LinkstakerResolver extends BaseUrlResolver {
         if (link) {
             var gdriveUrl = new URL(link);
             if (gdriveUrl.hostname.toLowerCase().endsWith('googleusercontent.com')) {
-                console.log(`${_urlToResolve} : googleusercontent.com link found in the page, reconstructing the drive.google.com link.`);
                 const googleDocId = gdriveUrl.pathname.split('/').slice(-1)[0];
                 const constructedGoogleLInk = `https://drive.google.com/file/d/${googleDocId}/view`;
                 links.push({ link: constructedGoogleLInk, isPlayable: false } as ResolvedMediaItem);
@@ -34,7 +34,7 @@ export class LinkstakerResolver extends BaseUrlResolver {
                 links.push(result);
             }
         } else {
-            console.log(`${_urlToResolve} : No valid link found in the page.`);
+            debug(`${_urlToResolve} : No valid link found in the page.`);
         }
         return links;
     }

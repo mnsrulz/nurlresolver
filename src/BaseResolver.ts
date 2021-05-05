@@ -4,6 +4,7 @@ import * as xray from '@manishrawat4u/x-ray';
 import { CookieJar } from 'tough-cookie';
 import * as psl from 'psl';
 import { UrlResolverOptions } from './UrlResolverOptions';
+const debug = require('debug')('nurl:BaseUrlResolver');
 
 export abstract class BaseUrlResolver {
     protected domains: RegExp[];
@@ -38,7 +39,7 @@ export abstract class BaseUrlResolver {
         try {
             canResolve = await this.canResolve(urlToResolve);
         } catch (error) {
-            console.log('Error occurred while calling canResolve BaseResolver');
+            debug('Error occurred while calling canResolve BaseResolver');
         }
         if (canResolve) {
             try {
@@ -55,9 +56,9 @@ export abstract class BaseUrlResolver {
                 return this.massageResolveResults(resolveResults);
             } catch (error) {
                 if (error instanceof HTTPError) {
-                    console.error(`${this.constructor.name}: `, 'Http error.', urlToResolve, error.message);
+                    debug('http error %s %s', urlToResolve, error.message);
                 } else {
-                    console.error(`${this.constructor.name}: `, 'Unknown error', urlToResolve, error.message);
+                    debug('unknown error %s %s', urlToResolve, error.message);
                 }
             }
         }
