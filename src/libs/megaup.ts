@@ -1,4 +1,5 @@
 import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
+const debug = require('debug')('nurl:MegaupResolver');
 
 export class MegaupResolver extends BaseUrlResolver {
     constructor() {
@@ -13,7 +14,7 @@ export class MegaupResolver extends BaseUrlResolver {
         const response = await this.gotInstance(_urlToResolve);
 
         if (new URL(response.url).pathname.endsWith('error.html')) {
-            console.log(`${_urlToResolve} : File has been removed due to inactivity.`);
+            debug(`${_urlToResolve} : File has been removed due to inactivity.`);
         } else {
             const regex = /class='btn btn-default' href='([^']*)'/g;
             const el = regex.exec(response.body)![1];
