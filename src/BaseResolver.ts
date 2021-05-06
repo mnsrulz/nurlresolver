@@ -94,7 +94,7 @@ export abstract class BaseUrlResolver {
         let gotoptions: any = {};
         this.useCookies && (gotoptions.cookieJar = new CookieJar());
         gotoptions.headers = {
-            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:75.0) Gecko/20100101 Firefox/75.0'
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0'
         }
         this.gotInstance = got.extend(gotoptions);
     }
@@ -106,10 +106,10 @@ export abstract class BaseUrlResolver {
     }
 
     protected async postHiddenFormV2(page: string, ix?: number): Promise<string> {
-        ix = ix || 0;        
+        ix = ix || 0;
         const pageForms = await this.xInstance(page, ['form@action']);
         const requestedFormActionLink = pageForms[ix];
-        return await this.postHiddenForm(requestedFormActionLink, page, ix);        
+        return await this.postHiddenForm(requestedFormActionLink, page, ix);
     }
 
     protected async postHiddenForm(urlToPost: string, page: string, ix?: number): Promise<string> {
