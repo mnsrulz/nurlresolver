@@ -3,7 +3,8 @@ import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
 export class RacatyResolver extends BaseUrlResolver {
     constructor() {
         super({
-            domains: [/https?:\/\/racaty/]
+            domains: [/https?:\/\/racaty/],
+            speedRank: 60
         });
     }
 

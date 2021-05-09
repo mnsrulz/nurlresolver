@@ -3,7 +3,8 @@ import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
 export class UploadRajaResolver extends BaseUrlResolver {
     constructor() {
         super({
-            domains: [/https?:\/\/uploadraja/]
+            domains: [/https?:\/\/uploadraja/],
+            speedRank: 90
         });
     }
 
