@@ -3,7 +3,8 @@ import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
 export class YouruploadResolver extends BaseUrlResolver {
     constructor() {
         super({
-            domains: [/https?:\/\/yourupload\.com/, /https?:\/\/www\.yourupload\.com/]
+            domains: [/https?:\/\/yourupload\.com/, /https?:\/\/www\.yourupload\.com/],
+            speedRank: 60
         });
     }
 

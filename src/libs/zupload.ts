@@ -4,7 +4,8 @@ export class ZUploadResolver extends BaseUrlResolver {
     constructor() {
         super({
             domains: [/https?:\/\/zupload.me/],
-            useCookies: true
+            useCookies: true,
+            speedRank: 75
         });
     }
 

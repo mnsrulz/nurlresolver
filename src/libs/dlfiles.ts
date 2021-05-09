@@ -4,7 +4,8 @@ export class DlfilesResolver extends BaseUrlResolver {
     constructor() {
         super({
             domains: [/https?:\/\/dlfiles/],
-            useCookies: true
+            useCookies: true,
+            speedRank: 55
         });
     }
 

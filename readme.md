@@ -33,7 +33,8 @@ const results = await nUrlResolver.resolve(linkToResolve);
     link: 'https://cloclo3.cldmail.ru/public/get/generatedlink/no/FileName.extension',
     title: 'FileName.extension',
     isPlayable: true,
-    parent: 'https://cloud.mail.ru/public/abcd/sAmPlE'
+    parent: 'https://cloud.mail.ru/public/abcd/sAmPlE',
+    speedRank: 65 //0-100 better speed means higher rank
   }
 ]
 
@@ -64,6 +65,7 @@ const results = await nUrlResolver.resolve(linkToResolve, {
       "X-Real-IP": "XX.YY.ZZ.AA"
     },
     "parent": "https://dlfiles.online/dkske911881kkk",
+    "speedRank": 55,
     "size": "900163682",
     "lastModified": "Wed, 21 Sep 2019 12:09:06 GMT",
     "contentType": "application/octet-stream"

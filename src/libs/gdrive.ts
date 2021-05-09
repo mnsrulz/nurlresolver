@@ -4,7 +4,8 @@ export class GDriveResolver extends BaseUrlResolver {
     private googleDriveId: string;
     constructor() {
         super({
-            domains: [/https?:\/\/(drive|docs)\.google\.com/]
+            domains: [/https?:\/\/(drive|docs)\.google\.com/],
+            speedRank: 99
         });
         this.googleDriveId = '';
     }
