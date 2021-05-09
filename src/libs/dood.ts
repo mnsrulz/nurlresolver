@@ -3,7 +3,8 @@ import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
 export class DoodResolver extends BaseUrlResolver {
     constructor() {
         super({
-            domains: [/https?:\/\/dood/]
+            domains: [/https?:\/\/dood/],
+            speedRank: 55
         });
     }
 

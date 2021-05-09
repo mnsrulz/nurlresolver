@@ -5,7 +5,8 @@ export class DesiuploadResolver extends BaseUrlResolver {
     constructor() {
         super({
             domains: [/https?:\/\/(dl\d{0,}.desiupload)/],
-            useCookies: true
+            useCookies: true,
+            speedRank: 55
         });
     }
 

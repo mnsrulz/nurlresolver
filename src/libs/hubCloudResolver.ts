@@ -5,7 +5,8 @@ export class HubCloudResolver extends BaseUrlResolver {
 
     constructor() {
         super({
-            domains: [/https?:\/\/(hubcloud.link)/]
+            domains: [/https?:\/\/(hubcloud.link)/],
+            speedRank: 90
         });
     }
 

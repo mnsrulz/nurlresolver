@@ -4,7 +4,8 @@ import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
 export class CloudMailRuResolver extends BaseUrlResolver {
     constructor() {
         super({
-            domains: [/https?:\/\/cloud\.mail\.ru/]
+            domains: [/https?:\/\/cloud\.mail\.ru/],
+            speedRank: 65
         });
     }
 

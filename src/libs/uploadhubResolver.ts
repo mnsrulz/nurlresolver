@@ -5,7 +5,8 @@ export class UploadhubResolver extends BaseUrlResolver {
     constructor() {
         super({
             domains: [/https?:\/\/(uploadhub.ws)/],
-            useCookies: true
+            useCookies: true,
+            speedRank: 90
         });
     }
 

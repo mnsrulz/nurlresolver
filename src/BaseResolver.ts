@@ -9,6 +9,7 @@ const debug = require('debug')('nurl:BaseUrlResolver');
 export abstract class BaseUrlResolver {
     protected domains: RegExp[];
     protected gotInstance = got;
+    protected _speedRank: number;
 
     protected xInstance = xray();
     protected useCookies: boolean;
@@ -16,7 +17,7 @@ export abstract class BaseUrlResolver {
     constructor(options: BaseResolverOptions) {
         this.domains = options.domains;
         this.useCookies = options.useCookies || false;
-
+        this._speedRank = options.speedRank || 30;
     }
     /**
      * @param {string} urlToResolve
@@ -47,6 +48,7 @@ export abstract class BaseUrlResolver {
                 const resolveResults = await this.resolveInner(urlToResolve);
                 resolveResults.forEach(x => x.parent = x.parent || urlToResolve);
 
+                resolveResults.filter(x => x.isPlayable).forEach(x => x.speedRank = this._speedRank);
                 if (options.extractMetaInformation) {
                     await Promise.all(resolveResults
                         .filter(x => x.isPlayable)
@@ -177,10 +179,12 @@ export interface ResolvedMediaItem {
     headers: Record<string, string>,
     size?: string,
     lastModified?: string,
-    contentType?: string
+    contentType?: string,
+    speedRank: number
 }
 
 export interface BaseResolverOptions {
     domains: RegExp[],
-    useCookies?: boolean
+    useCookies?: boolean,
+    speedRank?: number
 }

@@ -5,7 +5,8 @@ export class UploadeverResolver extends BaseUrlResolver {
     constructor() {
         super({
             domains: [/https?:\/\/(uploadever)/],
-            useCookies: true
+            useCookies: true,
+            speedRank: 40
         });
     }
 

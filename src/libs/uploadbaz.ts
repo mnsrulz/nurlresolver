@@ -5,7 +5,8 @@ export class UploadbazResolver extends BaseUrlResolver {
     constructor() {
         super({
             domains: [/https?:\/\/(uploadbaz)/],
-            useCookies: true
+            useCookies: true,
+            speedRank: 40
         });
     }
 
