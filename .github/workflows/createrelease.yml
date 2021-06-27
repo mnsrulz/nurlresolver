@@ -1,0 +1,15 @@
+name: Create Release on tag push
+
+on:
+  push:
+    tags:
+    - '*'
+    
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}      
