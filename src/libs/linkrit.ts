@@ -10,8 +10,16 @@ export class LinkritResolver extends BaseUrlResolver {
 
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
         const response = await this.gotInstance(_urlToResolve);
+
+        //in linkrit pages it doesn't always ask to verify
+        let links = await this.xInstance(response.body, '.view-well a', [{
+            title: '@href',
+            link: '@text'
+        }]) as ResolvedMediaItem[];
+        if (links && links.length > 0) return links;
+
         const response2Body = await this.postHiddenForm(_urlToResolve, response.body);
-        const links = await this.xInstance(response2Body, '.view-well a', [{
+        links = await this.xInstance(response2Body, '.view-well a', [{
             title: '@href',
             link: '@text'
         }]) as ResolvedMediaItem[];
