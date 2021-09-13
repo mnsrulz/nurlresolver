@@ -59,7 +59,7 @@ export abstract class BaseUrlResolver {
             } catch (error) {
                 if (error instanceof HTTPError) {
                     debug('http error %s %s', urlToResolve, error.message);
-                } else {
+                } else if (error instanceof Error) {
                     debug('unknown error %s %s', urlToResolve, error.message);
                 }
             }
@@ -78,7 +78,9 @@ export abstract class BaseUrlResolver {
         try {
             await this.fillMetaInfo(resolveMediaItem);
         } catch (error) {
-            console.error(`${this.constructor.name}: `, 'Http error', resolveMediaItem.link, error.message);
+            if (error instanceof Error) {
+                console.error(`${this.constructor.name}: `, 'Http error', resolveMediaItem.link, error.message);
+            }
         }
 
     }
