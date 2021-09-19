@@ -13,11 +13,14 @@ export class ZUploadResolver extends BaseUrlResolver {
         var links = [];
         const response = await this.gotInstance(_urlToResolve);
         const response2Body = await this.postHiddenForm(_urlToResolve, response.body, 1);
-        const obj = await this.xInstance(response2Body, {
+        const obj = this.scrapeHtml(response2Body, {
             title: 'title',
-            link: 'a.link_button@href'
+            link: {
+                selector: 'a.link_button',
+                attr: 'href'
+            }
         }) as ResolvedMediaItem;
-        obj && (obj.isPlayable = true) && (obj.title=obj.title.replace(' - Zupload.me','')) && links.push(obj);
+        obj && (obj.isPlayable = true) && (obj.title = obj.title.replace(' - Zupload.me', '')) && links.push(obj);
         return links;
     }
 }

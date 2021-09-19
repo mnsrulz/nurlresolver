@@ -27,17 +27,18 @@ export class GDriveResolver extends BaseUrlResolver {
                 followRedirect: false
             });
 
-            var downloadlink1 = await this.xInstance(response.body, {
-                link: 'a#uc-download-link@href',
+            const { title } = this.scrapeHtml(response.body, {
                 title: 'span.uc-name-size a'
             });
+
+            var downloadlink1 = this.scrapeLinkHref(response.body, 'a#uc-download-link');
 
             var driveCookie = cookieJar.getCookiesSync(normalizeDriveUrl).find(x => x.domain === 'drive.google.com');
             //DEV NOTE: While using cookieJar for got, somehow the generated link in the end is not streamable.
             //So, that is the reason for this custom cookie implementation.
             if (driveCookie) {
                 var nextRequestCookies = `${driveCookie.key}=${driveCookie.value}`;
-                var reqMediaConfirm = await this.gotInstance('https://drive.google.com' + downloadlink1.link,
+                var reqMediaConfirm = await this.gotInstance('https://drive.google.com' + downloadlink1,
                     {
                         headers: {
                             cookie: nextRequestCookies
@@ -46,7 +47,6 @@ export class GDriveResolver extends BaseUrlResolver {
                     });
 
                 var link = reqMediaConfirm.headers.location;
-                const title = downloadlink1.title;
                 var result = { link, title, isPlayable: true } as ResolvedMediaItem;
                 links.push(result);
             }

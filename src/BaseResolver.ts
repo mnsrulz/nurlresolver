@@ -1,6 +1,10 @@
 import got, { HTTPError } from 'got';
 import * as FormData from 'form-data';
-import * as xray from '@manishrawat4u/x-ray';
+//import * as xray from '@manishrawat4u/x-ray';
+import scrapeIt = require("scrape-it");
+import util = require('util');
+//const scrapeItAsync = util.promisify(scrapeIt);
+import { parseAllLinks, ParseHiddenForm, transformScrapedFormToFormData } from './utils/helper';
 import { CookieJar } from 'tough-cookie';
 import * as psl from 'psl';
 import { UrlResolverOptions } from './UrlResolverOptions';
@@ -11,8 +15,11 @@ export abstract class BaseUrlResolver {
     protected gotInstance = got;
     protected _speedRank: number;
 
-    protected xInstance = xray();
+    //protected xInstance = xray();
     protected useCookies: boolean;
+
+    protected scrapeItAsync = util.promisify(scrapeIt);
+    protected scrapeHtml = scrapeIt.scrapeHTML;
 
     constructor(options: BaseResolverOptions) {
         this.domains = options.domains;
@@ -98,7 +105,7 @@ export abstract class BaseUrlResolver {
         let gotoptions: any = {};
         this.useCookies && (gotoptions.cookieJar = new CookieJar());
         gotoptions.headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0'
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0'
         }
         this.gotInstance = got.extend(gotoptions);
     }
@@ -109,12 +116,12 @@ export abstract class BaseUrlResolver {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    protected async postHiddenFormV2(page: string, ix?: number): Promise<string> {
-        ix = ix || 0;
-        const pageForms = await this.xInstance(page, ['form@action']);
-        const requestedFormActionLink = pageForms[ix];
-        return await this.postHiddenForm(requestedFormActionLink, page, ix);
-    }
+    // protected async postHiddenFormV2(page: string, ix?: number): Promise<string> {
+    //     ix = ix || 0;
+    //     const pageForms = await this.xInstance(page, ['form@action']);
+    //     const requestedFormActionLink = pageForms[ix];
+    //     return await this.postHiddenForm(requestedFormActionLink, page, ix);
+    // }
 
     protected async postHiddenForm(urlToPost: string, page: string, ix?: number): Promise<string> {
         const form = await this.getHiddenForm(page, ix);
@@ -133,22 +140,8 @@ export abstract class BaseUrlResolver {
 
     protected async getHiddenForm(page: string, ix?: number): Promise<FormData | undefined> {
         ix = ix || 0;
-        const pageForms = await this.xInstance(page, ['form@html']);
-        const requestedForm = pageForms[ix];
-        if (requestedForm) {
-            let form = new FormData();
-            var obj = await this.xInstance(requestedForm, {
-                n: ['*@name'],
-                v: ['*@value']
-            });
-            for (let index = 0; index < obj.n.length; index++) {
-                const n = obj.n[index];
-                const v = obj.v[index];
-                n !== undefined && v !== undefined &&
-                    n !== null && v !== null && form.append(n, v);
-            }
-            return form;
-        }
+        const scrapedform = ParseHiddenForm(page, ix);
+        return transformScrapedFormToFormData(scrapedform);
     }
 
     protected getSecondLevelDomain(someUrl: string): string | null {
@@ -170,6 +163,25 @@ export abstract class BaseUrlResolver {
         }) as { ip: string };
         return result.ip;
     }
+
+    protected scrapeLinkHref(html: string, selector: string) {
+        const { link } = this.scrapeHtml(html, {
+            link: {
+                selector: selector,
+                attr: 'href'
+            }
+        });
+        return link;
+    }
+
+    protected scrapeAllLinks(html: string, context: string) {
+        return parseAllLinks(html, context).map(x => {
+            return {
+                link: x.href,
+                title: x.text
+            } as ResolvedMediaItem;
+        });
+    }
 }
 
 export interface ResolvedMediaItem {
@@ -189,4 +201,28 @@ export interface BaseResolverOptions {
     domains: RegExp[],
     useCookies?: boolean,
     speedRank?: number
+}
+
+export class GenericFormBasedResolver extends BaseUrlResolver {
+    private _selector: string;
+    private _formIx: number;
+
+    constructor(options: BaseResolverOptions, selector: string, formIx?: number) {
+        super(options);
+        this._selector = selector;
+        this._formIx = formIx || 0;
+    }
+
+    async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
+        const response = await this.gotInstance(_urlToResolve);
+        const response2Body = await this.postHiddenForm(response.url, response.body, this._formIx);
+        const link = this.scrapeLinkHref(response2Body, this._selector);
+        const title = this.extractFileNameFromUrl(link);
+        const result = {
+            link,
+            title,
+            isPlayable: true
+        } as ResolvedMediaItem;
+        return [result];
+    }
 }
