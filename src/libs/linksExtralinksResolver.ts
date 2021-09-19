@@ -8,10 +8,7 @@ export class LinksExtralinksResolver extends BaseUrlResolver {
     }
 
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
-        const result = await this.xInstance(_urlToResolve, '.entry-content a', [{
-            link: '@href',
-            title: '@text'
-        }]) as ResolvedMediaItem[];
-        return result;
+        const response = await this.gotInstance(_urlToResolve);
+        return this.scrapeAllLinks(response.body, '.entry-content');        
     }
 }

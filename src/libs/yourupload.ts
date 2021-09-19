@@ -18,7 +18,9 @@ export class YouruploadResolver extends BaseUrlResolver {
         const fileLink = fileSourceRegex.exec(response.body)![1];
 
         if (!fileLink.endsWith('novideo.mp4')) {
-            const title = await this.xInstance(response.body, 'title');
+            const { title } = this.scrapeHtml(response.body, {
+                title: 'title'
+            });
             const link = new URL(fileLink, normalizedUrl).href;
             const result = { title, link, isPlayable: true } as ResolvedMediaItem;
             result.headers = { "referer": normalizedUrl };

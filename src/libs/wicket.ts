@@ -8,8 +8,14 @@ export class WicketResolver extends BaseUrlResolver {
     }
 
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
-        var link = await this.xInstance(_urlToResolve, 'iframe@src');
-        var result = { link, title: link } as ResolvedMediaItem
+        const { data } = await this.scrapeItAsync(_urlToResolve, {
+            output: {
+                selector: 'iframe',
+                attr: 'src'
+            }
+        });
+        const { output } = data as { output: string };
+        var result = { link: output, title: output } as ResolvedMediaItem;
         return [result];
     }
 }
