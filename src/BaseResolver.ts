@@ -175,13 +175,19 @@ export abstract class BaseUrlResolver {
     }
 
     protected scrapeAllLinks(html: string, context: string) {
-        return parseAllLinks(html, context).map(x => {
+        const allLInks = parseAllLinks(html, context).map(x => {
             return {
                 link: x.href,
                 title: x.text
             } as ResolvedMediaItem;
         });
+        return allLInks;
     }
+
+    protected nodeatob(str: string) {
+        return Buffer.from(str, 'base64').toString();
+    };
+
 }
 
 export interface ResolvedMediaItem {
