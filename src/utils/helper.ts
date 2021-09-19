@@ -62,7 +62,7 @@ export const parseAllLinks = (html: string, context: string) => {
             }
         }
     });
-    return output.data as ScrapedAnchorElement[];
+    return output as ScrapedAnchorElement[];
 }
 
 export interface ScrapedForm {
