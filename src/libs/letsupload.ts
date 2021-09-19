@@ -16,7 +16,7 @@ export class LetsuploadResolver extends BaseUrlResolver {
         var regexForInitialPageResult = regexForInitialPage.exec(response.body);
         var link1 = regexForInitialPageResult![1];
 
-        let title = await this.xInstance(response.body, 'div.title');
+        let { title } = this.scrapeHtml(response.body, { title: 'div.title' });
         title = title.trim();
         if (link1) {
             await this.wait(5000);

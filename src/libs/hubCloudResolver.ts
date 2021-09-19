@@ -12,7 +12,7 @@ export class HubCloudResolver extends BaseUrlResolver {
 
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
         const response = await this.gotInstance(_urlToResolve);
-        var link = await this.xInstance(response.body, 'a#download@href');
+        const link = this.scrapeLinkHref(response.body, 'a#download');
         const title = this.extractFileNameFromUrl(link);
         const result = {
             link,

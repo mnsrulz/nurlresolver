@@ -8,12 +8,13 @@ export class DaddyliveResolver extends BaseUrlResolver {
     }
 
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
-        const regexForChannelId = /https:\/\/daddylive.live\/(channels|embed)\/(.*)/
-        const channelId = regexForChannelId.exec(_urlToResolve)![2];
-        const normalizedUrl = `https://daddylive.live/embed/${channelId}`;
-        var result = await this.xInstance(normalizedUrl, {
-            link: 'iframe@src'
-        }) as ResolvedMediaItem;
-        return [result];
+        return []; //non working
+        // const regexForChannelId = /https:\/\/daddylive.live\/(channels|embed)\/(.*)/
+        // const channelId = regexForChannelId.exec(_urlToResolve)![2];
+        // const normalizedUrl = `https://daddylive.live/embed/${channelId}`;
+        // var result = await this.xInstance(normalizedUrl, {
+        //     link: 'iframe@src'
+        // }) as ResolvedMediaItem;
+        // return [result];
     }
 }

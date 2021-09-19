@@ -9,10 +9,9 @@ export class HblinksResolver extends BaseUrlResolver {
 
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
         const regex_links = /https?:\/\/(hblinks|hdhub4u)/gi;
-        const result = await this.xInstance(_urlToResolve,'a', [{
-            link: '@href',
-            title: '@text'
-        }]) as ResolvedMediaItem[];
-        return result.filter(l => l.link && !l.link.match(regex_links));
+        const response = await this.gotInstance(_urlToResolve);
+        const result = this.scrapeAllLinks(response.body, '.entry-content');
+        return result
+            .filter(l => l.link && !l.link.match(regex_links));
     }
 }
