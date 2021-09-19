@@ -9,85 +9,85 @@ export class ExtraMoviesResolver extends BaseUrlResolver {
     }
 
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
-        return []; //non working
-        // const pathname = new URL(_urlToResolve).pathname;
-        // if (pathname === '/') return [];
+        const pathname = new URL(_urlToResolve).pathname;
+        if (pathname === '/') return [];
 
-        // //else do the processing here
-        // var links = [] as ResolvedMediaItem[];
+        //else do the processing here
+        var links = [] as ResolvedMediaItem[];
+        const responsev1 = await this.gotInstance(_urlToResolve);
+        console.log(responsev1.url, responsev1.statusCode);
+        const obj1 = this.scrapeHtml(responsev1.body, {
+            shortLink: {
+                listItem: 'link',
+                data: {
+                    rel: {
+                        attr: 'rel'
+                    },
+                    href: {
+                        attr: 'href'
+                    }
+                }
+            }
+        }) as { shortLink: [{ rel: string, href: string }] };
 
-        // var obj1 = await this.xInstance(_urlToResolve, {
-        //     shortLink: 'link[rel="shortlink"]@href'
-        // });
+        var shortLink = obj1.shortLink.find(x => x.rel == 'shortlink')?.href;
+        if(!shortLink) throw new Error('Unable to parse shortlink for extramovies resolver');
+        var urlInstance = url.parse(shortLink, true);
+        var pageId = urlInstance && urlInstance.query["p"];
+        if (!pageId) return links;
 
-        // var shortLink = obj1.shortLink;
+        var extramoviesBaseUrl = `https://${urlInstance.host}`;
+        var apiUrl = `${extramoviesBaseUrl}/wp-json/wp/v2/posts/${pageId}`;
+        var apiResponse = await this.gotInstance(apiUrl);
+        var apiResponseAsJson = JSON.parse(apiResponse.body);
+        var renderedContent = apiResponseAsJson.content.rendered;
 
-        // var urlInstance = shortLink && url.parse(shortLink, true);
-        // var pageId = urlInstance && urlInstance.query["p"];
-        // if (!pageId) return links;
+        const regex_self_links = /https?:\/\/(extramovies|t.me)/gi;
 
-        // var extramoviesBaseUrl = `https://${urlInstance.host}`;
-        // var apiUrl = `${extramoviesBaseUrl}/wp-json/wp/v2/posts/${pageId}`;
-        // var apiResponse = await this.gotInstance(apiUrl);
-        // var apiResponseAsJson = JSON.parse(apiResponse.body);
-        // var renderedContent = apiResponseAsJson.content.rendered;
+        var obj = this.scrapeAllLinks(renderedContent, '');
+        for (const iterator of obj) {
+            const title = iterator.title;
+            const link = iterator.link.startsWith('http') ? iterator.link : `${extramoviesBaseUrl}${iterator.link}`;
+            if (!link) {
+                continue;
+            }
+            var u = new URL(link);
+            var regexNegate = /.*(wp-login|torrent|trailer)\.php$/ig
+            if (regexNegate.exec(u.pathname)) continue;
 
-        // const regex_self_links = /https?:\/\/(extramovies|t.me)/gi;
+            if (u.pathname.endsWith('drive.php')) {
+                var pageText = await this.gotInstance(link);
+                var regexExtralinks = /https?:\/\/extralinks[^"]*/g
+                var matchesLink = regexExtralinks.exec(pageText.body);
+                if (matchesLink) {
+                    links.push({ title, link: matchesLink[0] } as ResolvedMediaItem);
+                }
+            } else if (u.pathname.endsWith('doodstream.php')) {
+                var queryData = url.parse(link, true).query;
+                if (queryData.url) {
+                    var linktoadd = `https://dood.watch/d/${queryData.url}`;
+                    links.push({ title, link: linktoadd } as ResolvedMediaItem);
+                }
+            }
+            else if (u.pathname.endsWith('.php')) {
+                var queryData = url.parse(link, true).query;
+                if (queryData.link) {
+                    var linktoadd = Buffer.from(queryData.link as string, 'base64').toString();
+                    links.push({ title, link: linktoadd } as ResolvedMediaItem);
+                } else if (queryData.id) {
+                    const responseInner2 = this.gotInstance(link);
 
-        // var obj = await this.xInstance(renderedContent, 'a', [{
-        //     link: '@href',
-        //     title: '@text'
-        // }]) as ResolvedMediaItem[];
-        // // var obj = await this.xInstance(renderedContent, {
-        // //     title: ['a'],
-        // //     link: ['a@href']
-        // // });
-        // for (const iterator of obj) {
-        //     const title = iterator.title;
-        //     const link = iterator.link.startsWith('http') ? iterator.link : `${extramoviesBaseUrl}${iterator.link}`;
-        //     if (!link) {
-        //         continue;
-        //     }
-        //     var u = new URL(link);
-        //     var regexNegate = /.*(wp-login|torrent|trailer)\.php$/ig
-        //     if (regexNegate.exec(u.pathname)) continue;
+                    const result = this.scrapeAllLinks((await responseInner2).body, '');
+                    result.forEach(instanceItem => instanceItem.title = title);
+                    links = links.concat(result.filter(l => l.link && !l.link.match(regex_self_links)));
+                }
+            } else if (u.host.startsWith('extramovies')) {
+                //just skip if the link is linking back to some more extramovies link
+            } else {
+                links.push({ title, link } as ResolvedMediaItem);
+            }
+        }
 
-        //     if (u.pathname.endsWith('drive.php')) {
-        //         var pageText = await this.gotInstance(link);
-        //         var regexExtralinks = /https?:\/\/extralinks[^"]*/g
-        //         var matchesLink = regexExtralinks.exec(pageText.body);
-        //         if (matchesLink) {
-        //             links.push({ title, link: matchesLink[0] } as ResolvedMediaItem);
-        //         }
-        //     } else if (u.pathname.endsWith('doodstream.php')) {
-        //         var queryData = url.parse(link, true).query;
-        //         if (queryData.url) {
-        //             var linktoadd = `https://dood.watch/d/${queryData.url}`;
-        //             links.push({ title, link: linktoadd } as ResolvedMediaItem);
-        //         }
-        //     }
-        //     else if (u.pathname.endsWith('.php')) {
-        //         var queryData = url.parse(link, true).query;
-        //         if (queryData.link) {
-        //             var linktoadd = Buffer.from(queryData.link as string, 'base64').toString();
-        //             links.push({ title, link: linktoadd } as ResolvedMediaItem);
-        //         } else if (queryData.id) {
-        //             const result = await this.xInstance(link, 'a', [{
-        //                 link: '@href'
-        //             }]) as ResolvedMediaItem[];
-        //             result.forEach(instanceItem => instanceItem.title = title);
-        //             links = links.concat(result.filter(l => l.link && !l.link.match(regex_self_links)));
-        //         }
-        //     } else if (u.host.startsWith('extramovies')) {
-        //         //just skip if the link is linking back to some more extramovies link
-        //     } else {
-        //         links.push({ title, link } as ResolvedMediaItem);
-        //     }
-        // }
-
-        // for (let index = 0; index < obj.title.length; index++) {
-
-        // }
-        //return links;
+        return links;
     }
 }
