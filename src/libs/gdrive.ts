@@ -11,15 +11,15 @@ export class GDriveResolver extends BaseUrlResolver {
     }
 
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
-        var links = [];
+        const links = [];
 
-        const rx0 = /(drive|docs)\.google\.com\/open\?id\=(.*)/
+        const rx0 = /(drive|docs)\.google\.com\/open\?id=(.*)/
         const rx1 = /(drive|docs)\.google\.com\/file\/d\/(.*?)\//
-        const rx2 = /(drive|docs)\.google\.com\/uc\?id\=(.*?)\&/
+        const rx2 = /(drive|docs)\.google\.com\/uc\?id=(.*?)&/
 
-        var regexresult = rx0.exec(_urlToResolve) || rx1.exec(_urlToResolve) || rx2.exec(_urlToResolve)
+        const regexresult = rx0.exec(_urlToResolve) || rx1.exec(_urlToResolve) || rx2.exec(_urlToResolve)
         if (regexresult) {
-            var normalizeDriveUrl = `https://drive.google.com/uc?id=${regexresult[2]}&export=download`;
+            const normalizeDriveUrl = `https://drive.google.com/uc?id=${regexresult[2]}&export=download`;
             this.googleDriveId = regexresult[2];
             const cookieJar = new CookieJar();
             const response = await this.gotInstance(normalizeDriveUrl, {
@@ -31,14 +31,14 @@ export class GDriveResolver extends BaseUrlResolver {
                 title: 'span.uc-name-size a'
             });
 
-            var downloadlink1 = this.scrapeLinkHref(response.body, 'a#uc-download-link');
+            const downloadlink1 = this.scrapeLinkHref(response.body, 'a#uc-download-link');
 
-            var driveCookie = cookieJar.getCookiesSync(normalizeDriveUrl).find(x => x.domain === 'drive.google.com');
+            const driveCookie = cookieJar.getCookiesSync(normalizeDriveUrl).find(x => x.domain === 'drive.google.com');
             //DEV NOTE: While using cookieJar for got, somehow the generated link in the end is not streamable.
             //So, that is the reason for this custom cookie implementation.
             if (driveCookie) {
-                var nextRequestCookies = `${driveCookie.key}=${driveCookie.value}`;
-                var reqMediaConfirm = await this.gotInstance('https://drive.google.com' + downloadlink1,
+                const nextRequestCookies = `${driveCookie.key}=${driveCookie.value}`;
+                const reqMediaConfirm = await this.gotInstance('https://drive.google.com' + downloadlink1,
                     {
                         headers: {
                             cookie: nextRequestCookies
@@ -46,15 +46,15 @@ export class GDriveResolver extends BaseUrlResolver {
                         followRedirect: false
                     });
 
-                var link = reqMediaConfirm.headers.location;
-                var result = { link, title, isPlayable: true } as ResolvedMediaItem;
+                const link = reqMediaConfirm.headers.location;
+                const result = { link, title, isPlayable: true } as ResolvedMediaItem;
                 links.push(result);
             }
         }
         return links;
     }
 
-    async fillMetaInfo(resolveMediaItem: ResolvedMediaItem) {
+    async fillMetaInfo(resolveMediaItem: ResolvedMediaItem): Promise<void> {
         // const headerswithrange = resolveMediaItem.headers || {};
         // headerswithrange['Range'] = 'bytes=0-0';
         // const rangeresponse = await this.gotInstance(resolveMediaItem.link, {

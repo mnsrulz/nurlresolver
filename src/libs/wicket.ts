@@ -15,7 +15,7 @@ export class WicketResolver extends BaseUrlResolver {
             }
         });
         const { output } = data as { output: string };
-        var result = { link: output, title: output } as ResolvedMediaItem;
+        const result = { link: output, title: output } as ResolvedMediaItem;
         return [result];
     }
 }

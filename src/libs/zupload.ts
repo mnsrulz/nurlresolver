@@ -10,7 +10,7 @@ export class ZUploadResolver extends BaseUrlResolver {
     }
 
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
-        var links = [];
+        const links = [];
         const response = await this.gotInstance(_urlToResolve);
         const response2Body = await this.postHiddenForm(_urlToResolve, response.body, 1);
         const obj = this.scrapeHtml(response2Body, {

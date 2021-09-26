@@ -14,7 +14,7 @@ export class YouruploadResolver extends BaseUrlResolver {
         const videoId = mediaIdRegex.exec(_urlToResolve)![2];
         const normalizedUrl = `http://www.yourupload.com/embed/${videoId}`;
         const response = await this.gotInstance(normalizedUrl);
-        const fileSourceRegex = /file\s*:\s*(?:\'|\")(.+?)(?:\'|\")/g
+        const fileSourceRegex = /file\s*:\s*(?:'|")(.+?)(?:'|")/g
         const fileLink = fileSourceRegex.exec(response.body)![1];
 
         if (!fileLink.endsWith('novideo.mp4')) {

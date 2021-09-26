@@ -17,7 +17,7 @@ export class FreespinResolver extends BaseUrlResolver {
                 "X-Requested-With": "XMLHttpRequest"
             }
         });
-        var result = { link: JSON.parse(response2.body).url } as ResolvedMediaItem;
+        const result = { link: JSON.parse(response2.body).url } as ResolvedMediaItem;
         return [result];
     }
 }
