@@ -4,7 +4,8 @@ Direct link generator for many known content sharing sites. Avoid clicking numer
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/mnsrulz/nurlresolver/blob/master/LICENSE)
 [![npm latest package](https://img.shields.io/npm/v/nurlresolver/latest.svg)](https://www.npmjs.com/package/nurlresolver)
 [![npm downloads](https://img.shields.io/npm/dm/nurlresolver.svg)](https://www.npmjs.com/package/nurlresolver)
-
+[![github forks](https://img.shields.io/github/forks/mnsrulz/nurlresolver.svg)](https://github.com/mnsrulz/nurlresolver/network/members)
+[![github stars](https://img.shields.io/github/stars/mnsrulz/nurlresolver.svg)](https://github.com/mnsrulz/nurlresolver/stargazers)
 
 # *[Live Demo](https://nurlresolver.netlify.app/)*
 
