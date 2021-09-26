@@ -27,10 +27,4 @@ export class Cric8ccIplStreamResolver extends BaseUrlResolver {
         // result.headers = { "Referer": _urlToResolve };
         // return [result];
     }
-
-    nodeatob(str: string) {
-        return Buffer.from(str, 'base64').toString();
-        // return Buffer.from(str).toString('base64');
-    };
-
 }
