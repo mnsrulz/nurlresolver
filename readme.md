@@ -1,6 +1,11 @@
 # nurlresolver
 Direct link generator for many known content sharing sites. Avoid clicking numerous times to download links and also avoid seeing ads while downloading the content from sharing sites. Easy to integrate with nodejs application.
 
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/mnsrulz/nurlresolver/blob/master/LICENSE)
+[![npm latest package](https://img.shields.io/npm/v/nurlresolver/latest.svg)](https://www.npmjs.com/package/nurlresolver)
+[![npm downloads](https://img.shields.io/npm/dm/nurlresolver.svg)](https://www.npmjs.com/package/nurlresolver)
+
+
 # *[Live Demo](https://nurlresolver.netlify.app/)*
 
 # Fully written in Typescript
