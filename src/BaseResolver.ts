@@ -1,21 +1,19 @@
 import got, { HTTPError } from 'got';
 import * as FormData from 'form-data';
-//import * as xray from '@manishrawat4u/x-ray';
 import scrapeIt = require("scrape-it");
 import util = require('util');
-//const scrapeItAsync = util.promisify(scrapeIt);
 import { parseAllLinks, ParseHiddenForm, transformScrapedFormToFormData } from './utils/helper';
 import { CookieJar } from 'tough-cookie';
 import * as psl from 'psl';
 import { UrlResolverOptions } from './UrlResolverOptions';
-const debug = require('debug')('nurl:BaseUrlResolver');
+import _debug from 'debug';
+const logger = _debug('nurl:BaseUrlResolver');
 
 export abstract class BaseUrlResolver {
     protected domains: RegExp[];
     protected gotInstance = got;
     protected _speedRank: number;
 
-    //protected xInstance = xray();
     protected useCookies: boolean;
 
     protected scrapeItAsync = util.promisify(scrapeIt);
@@ -47,12 +45,15 @@ export abstract class BaseUrlResolver {
         try {
             canResolve = await this.canResolve(urlToResolve);
         } catch (error) {
-            debug('Error occurred while calling canResolve BaseResolver');
+            logger('Error occurred while calling canResolve BaseResolver');
         }
         if (canResolve) {
             try {
                 this.setupEnvironment();
-                const resolveResults = await this.resolveInner(urlToResolve);
+                let resolveResults: ResolvedMediaItem[] = [];
+                const _resolveResults = await this.resolveInner(urlToResolve);
+                resolveResults = resolveResults.concat(_resolveResults);
+
                 resolveResults.forEach(x => x.parent = x.parent || urlToResolve);
 
                 resolveResults.filter(x => x.isPlayable).forEach(x => x.speedRank = this._speedRank);
@@ -65,9 +66,9 @@ export abstract class BaseUrlResolver {
                 return this.massageResolveResults(resolveResults);
             } catch (error) {
                 if (error instanceof HTTPError) {
-                    debug('http error %s %s', urlToResolve, error.message);
+                    logger('http error %s %s', urlToResolve, error.message);
                 } else if (error instanceof Error) {
-                    debug('unknown error %s %s', urlToResolve, error.message);
+                    logger('unknown error %s %s', urlToResolve, error.message);
                 }
             }
         }
@@ -92,7 +93,7 @@ export abstract class BaseUrlResolver {
 
     }
 
-    async fillMetaInfo(resolveMediaItem: ResolvedMediaItem) {
+    async fillMetaInfo(resolveMediaItem: ResolvedMediaItem): Promise<void> {
         const headResponse = await this.gotInstance.head(resolveMediaItem.link, {
             headers: resolveMediaItem.headers
         });
@@ -102,15 +103,16 @@ export abstract class BaseUrlResolver {
     }
 
     private setupEnvironment(): void {
-        let gotoptions: any = {};
-        this.useCookies && (gotoptions.cookieJar = new CookieJar());
-        gotoptions.headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0'
-        }
+        const gotoptions: CustomGotOptions = {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0'
+            }
+        };
+        this.useCookies && (gotoptions.cookieJar = new CookieJar());        
         this.gotInstance = got.extend(gotoptions);
     }
 
-    abstract resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]>;
+    abstract resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[] | ResolvedMediaItem>;
 
     protected async wait(ms: number): Promise<void> {
         return new Promise(resolve => setTimeout(resolve, ms));
@@ -145,8 +147,8 @@ export abstract class BaseUrlResolver {
     }
 
     protected getSecondLevelDomain(someUrl: string): string | null {
-        var hostname = new URL(someUrl);
-        var parsed = psl.parse(hostname.hostname) as psl.ParsedDomain;
+        const hostname = new URL(someUrl);
+        const parsed = psl.parse(hostname.hostname) as psl.ParsedDomain;
         return parsed.sld;
     }
 
@@ -186,7 +188,7 @@ export abstract class BaseUrlResolver {
 
     protected nodeatob(str: string) {
         return Buffer.from(str, 'base64').toString();
-    };
+    }
 
 }
 
@@ -231,4 +233,10 @@ export class GenericFormBasedResolver extends BaseUrlResolver {
         } as ResolvedMediaItem;
         return [result];
     }
+}
+
+interface CustomGotOptions
+{
+    headers: Record<string, string>, 
+    cookieJar?: CookieJar
 }

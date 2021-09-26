@@ -1,5 +1,5 @@
 import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
-import * as unpacker from 'unpacker';
+// import * as unpacker from 'unpacker';
 
 export class StreamwireResolver extends BaseUrlResolver {
     constructor() {

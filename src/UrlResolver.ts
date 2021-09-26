@@ -1,7 +1,9 @@
 import { ResolvedMediaItem, BaseUrlResolver } from "./BaseResolver";
 import * as allResolverImports from "./allResolvers";
 import { UrlResolverOptions } from "./UrlResolverOptions";
-const debug = require('debug')('nurl:UrlResolver');
+import _debug = require('debug');
+const debug = _debug('nurl:BaseUrlResolver');
+
 
 export class UrlResolver {
   private allResolvers: any[];
@@ -57,33 +59,32 @@ export class UrlResolver {
     const _options = Object.assign({
       timeout: 30
     }, options);
-
-    const instanceOfUrlResolver = this;
+    
     const myPlayableResources: ResolvedMediaItem[] = [];
     const visitedUrls: string[] = [];
 
     const timeoutPromise = new Promise(resolvedPromise => setTimeout(resolvedPromise, _options.timeout * 1000));
 
-    const urlsToResolve = typeof urlToResolve === "string" ? [urlToResolve] : urlToResolve;
-    const actualPromise = Promise.all(urlsToResolve.map(explode));
-
-    await Promise.race([timeoutPromise, actualPromise]);
-    
-    return myPlayableResources;
-
-    async function explode(urlToVisit: string) {
+    const explode = async (urlToVisit: string) => {
       if (visitedUrls.includes(urlToVisit)) return;
       visitedUrls.push(urlToVisit);
       debug(urlToVisit);
-      var resolvedUrls = await instanceOfUrlResolver.resolve(urlToVisit, options,) as ResolvedMediaItem[];
+      const resolvedUrls = await this.resolve(urlToVisit, options,) as ResolvedMediaItem[];
       if (resolvedUrls) {
-        var p: Promise<any>[] = [];
+        const p: Promise<any>[] = [];
         for (const resolvedUrl of resolvedUrls) {
           resolvedUrl.isPlayable ? myPlayableResources.push(resolvedUrl) : p.push(explode(resolvedUrl.link));
         }
         await Promise.all(p);
       }
     }
+
+    const urlsToResolve = typeof urlToResolve === "string" ? [urlToResolve] : urlToResolve;
+    const actualPromise = Promise.all(urlsToResolve.map(explode));
+
+    await Promise.race([timeoutPromise, actualPromise]);
+
+    return myPlayableResources;
   }
 }
 

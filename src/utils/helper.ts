@@ -15,9 +15,9 @@ import * as FormData from 'form-data';
 //     return result.rs[ix || 0].action;
 // }
 
-export const ParseHiddenForm = (html: string, ix?: number) => ParseForms(html).output[ix || 0];
+export const ParseHiddenForm = (html: string, ix?: number): ScrapedForm => ParseForms(html).output[ix || 0];
 
-export const ParseForms = (html: string) => {
+export const ParseForms = (html: string): { output: ScrapedForm[] } => {
     const result = scrapeIt.scrapeHTML(html, {
         output: {
             listItem: 'form',
@@ -41,8 +41,8 @@ export const ParseForms = (html: string) => {
     return result;
 }
 
-export const transformScrapedFormToFormData = (scrapedForm: ScrapedForm) => {
-    let form = new FormData();
+export const transformScrapedFormToFormData = (scrapedForm: ScrapedForm): FormData => {
+    const form = new FormData();
     for (const { name, value } of scrapedForm.kv) {
         name !== undefined && value !== undefined &&
             name !== null && value !== null && form.append(name, value);
@@ -50,8 +50,8 @@ export const transformScrapedFormToFormData = (scrapedForm: ScrapedForm) => {
     return form;
 }
 
-export const parseAllLinks = (html: string, context: string) => {
-    const {output} = scrapeIt.scrapeHTML(html, {
+export const parseAllLinks = (html: string, context: string): ScrapedAnchorElement[] => {
+    const { output } = scrapeIt.scrapeHTML(html, {
         output: {
             listItem: `${context} a`,
             data: {

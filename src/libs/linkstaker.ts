@@ -1,5 +1,4 @@
 import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
-const debug = require('debug')('nurl:LinkstakerResolver');
 
 export class LinkstakerResolver extends BaseUrlResolver {
     constructor() {

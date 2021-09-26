@@ -10,23 +10,23 @@ export class CloudMailRuResolver extends BaseUrlResolver {
     }
 
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
-        var links = [] as ResolvedMediaItem[];
+        const links = [] as ResolvedMediaItem[];
 
         const response = await this.gotInstance(_urlToResolve);
         //var title = await this.xInstance(response.body, 'title');
-        var regex01 = /"weblink_get"\s*:\s*\[.+?"url"\s*:\s*"([^"]+)/gs
-        var regexWeblinkVideo = /"weblink_video"\s*:\s*\[.+?"url"\s*:\s*"([^"]+)/gs
-        var regex03 = /public\/(.*)/g
-        var link1 = regex01.exec(response.body)![1];
-        var link3 = regex03.exec(_urlToResolve)![1];
-        var webLinkVideo = regexWeblinkVideo.exec(response.body)![1];
+        const regex01 = /"weblink_get"\s*:\s*\[.+?"url"\s*:\s*"([^"]+)/gs
+        const regexWeblinkVideo = /"weblink_video"\s*:\s*\[.+?"url"\s*:\s*"([^"]+)/gs
+        const regex03 = /public\/(.*)/g
+        const link1 = regex01.exec(response.body)![1];
+        const link3 = regex03.exec(_urlToResolve)![1];
+        const webLinkVideo = regexWeblinkVideo.exec(response.body)![1];
         if (link1 && link3 && webLinkVideo) {
-            var tempLink = `${link1}/${link3}`;
-            var headers = await this.gotInstance.head(tempLink);
+            const tempLink = `${link1}/${link3}`;
+            const headers = await this.gotInstance.head(tempLink);
             if (headers.statusCode === 200) {
                 const finalLink = headers.url;
                 const title = this.extractFileNameFromUrl(finalLink);
-                var result = <ResolvedMediaItem>{
+                const result = <ResolvedMediaItem>{
                     link: finalLink,
                     title: title,
                     isPlayable: true
@@ -34,7 +34,6 @@ export class CloudMailRuResolver extends BaseUrlResolver {
                 links.push(result);
             }
         }
-
         return links;
     }
 }

@@ -10,7 +10,7 @@ export class WorkersDevResolver extends BaseUrlResolver {
 
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
         const title = this.extractFileNameFromUrl(_urlToResolve);
-        var result = {
+        const result = {
             isPlayable: true,
             link: _urlToResolve,
             title

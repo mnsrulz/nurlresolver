@@ -1,5 +1,6 @@
 import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
-const debug = require('debug')('nurl:MegaupResolver');
+import _debug from 'debug';
+const debug = _debug('nurl:BaseUrlResolver');
 
 export class MegaupResolver extends BaseUrlResolver {
     constructor() {
@@ -10,7 +11,7 @@ export class MegaupResolver extends BaseUrlResolver {
     }
 
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
-        let links = [] as ResolvedMediaItem[];
+        const links = [] as ResolvedMediaItem[];
         const response = await this.gotInstance(_urlToResolve);
 
         if (new URL(response.url).pathname.endsWith('error.html')) {
@@ -21,10 +22,10 @@ export class MegaupResolver extends BaseUrlResolver {
             if (el) {
                 await this.wait(6000);
                 const response2 = await this.gotInstance(el, { followRedirect: false });
-                var link = response2.headers['location'];
+                const link = response2.headers['location'];
                 if (link) {
                     const title = this.extractFileNameFromUrl(link);
-                    var result = { link, title, isPlayable: true } as ResolvedMediaItem;
+                    const result = { link, title, isPlayable: true } as ResolvedMediaItem;
                     links.push(result);                
                 }
             }

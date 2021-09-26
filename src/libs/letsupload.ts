@@ -9,19 +9,19 @@ export class LetsuploadResolver extends BaseUrlResolver {
     }
 
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
-        var links = [];
+        const links = [];
         const response = await this.gotInstance(_urlToResolve);
-        var regexForInitialPage = /class='btn btn-free' href='([^']*)/g
+        const regexForInitialPage = /class='btn btn-free' href='([^']*)/g
 
-        var regexForInitialPageResult = regexForInitialPage.exec(response.body);
-        var link1 = regexForInitialPageResult![1];
+        const regexForInitialPageResult = regexForInitialPage.exec(response.body);
+        const link1 = regexForInitialPageResult![1];
 
         let { title } = this.scrapeHtml(response.body, { title: 'div.title' });
         title = title.trim();
         if (link1) {
             await this.wait(5000);
             const response2 = await this.gotInstance(link1, { followRedirect: false });
-            var el = '';
+            let el = '';
             if (response2.statusCode === 302) {
                 el = response2.headers['location'] as string;
             } else {
@@ -37,7 +37,7 @@ export class LetsuploadResolver extends BaseUrlResolver {
                 }
             }
             if (el) {
-                var result = { link: el, title: title, isPlayable: true } as ResolvedMediaItem;
+                const result = { link: el, title: title, isPlayable: true } as ResolvedMediaItem;
                 links.push(result);
             }
         }
