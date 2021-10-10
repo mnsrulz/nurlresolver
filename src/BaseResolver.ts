@@ -108,7 +108,7 @@ export abstract class BaseUrlResolver {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0'
             }
         };
-        this.useCookies && (gotoptions.cookieJar = new CookieJar());        
+        this.useCookies && (gotoptions.cookieJar = new CookieJar());
         this.gotInstance = got.extend(gotoptions);
     }
 
@@ -176,14 +176,22 @@ export abstract class BaseUrlResolver {
         return link;
     }
 
-    protected scrapeAllLinks(html: string, context: string) {
-        const allLInks = parseAllLinks(html, context).map(x => {
-            return {
-                link: x.href,
-                title: x.text
-            } as ResolvedMediaItem;
+    protected scrapeAllLinks(html: string, context: string, baseUrl: string = '') {
+        const parsedLinks: ResolvedMediaItem[] = [];
+        parseAllLinks(html, context).forEach(x => {
+            if (baseUrl && baseUrl.startsWith('http') && !x.href.startsWith('http')) {
+                parsedLinks.push({
+                    link: new URL(x.href, baseUrl).href,
+                    title: x.text
+                } as ResolvedMediaItem);
+            } else {
+                parsedLinks.push({
+                    link: x.href,
+                    title: x.text
+                } as ResolvedMediaItem);
+            }
         });
-        return allLInks;
+        return parsedLinks;
     }
 
     protected nodeatob(str: string) {
@@ -235,8 +243,7 @@ export class GenericFormBasedResolver extends BaseUrlResolver {
     }
 }
 
-interface CustomGotOptions
-{
-    headers: Record<string, string>, 
+interface CustomGotOptions {
+    headers: Record<string, string>,
     cookieJar?: CookieJar
 }

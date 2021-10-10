@@ -74,9 +74,8 @@ export class ExtraMoviesResolver extends BaseUrlResolver {
                     const linktoadd = Buffer.from(queryData.link as string, 'base64').toString();
                     links.push({ title, link: linktoadd } as ResolvedMediaItem);
                 } else if (queryData.id) {
-                    const responseInner2 = this.gotInstance(link);
-
-                    const result = this.scrapeAllLinks((await responseInner2).body, '');
+                    const responseInner2 = await this.gotInstance(link);
+                    const result = this.scrapeAllLinks(responseInner2.body, '', responseInner2.url);
                     result.forEach(instanceItem => instanceItem.title = title);
                     links.push(...result.filter(l => l.link && !l.link.match(regex_self_links)));
                 }
