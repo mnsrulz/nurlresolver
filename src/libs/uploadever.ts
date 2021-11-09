@@ -4,7 +4,7 @@ import { BaseUrlResolver, GenericFormBasedResolver, ResolvedMediaItem } from "..
 export class UploadeverResolver extends GenericFormBasedResolver {
     constructor() {
         super({
-            domains: [/https?:\/\/(uploadever)/],
+            domains: [/https?:\/\/(uploadever|uploadbuzz)/],
             useCookies: true,
             speedRank: 40
         }, '.download-button a');
