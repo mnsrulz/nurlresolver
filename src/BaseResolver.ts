@@ -1,4 +1,4 @@
-import got, { HTTPError } from 'got';
+import got, { HTTPError, Response } from 'got';
 import * as FormData from 'form-data';
 import scrapeIt = require("scrape-it");
 import util = require('util');
@@ -124,8 +124,9 @@ export abstract class BaseUrlResolver {
     //     const requestedFormActionLink = pageForms[ix];
     //     return await this.postHiddenForm(requestedFormActionLink, page, ix);
     // }
-
-    protected async postHiddenForm(urlToPost: string, page: string, ix?: number): Promise<string> {
+    protected async postHiddenForm(urlToPost: string, page: string, ix?: number, resolveBody?: true): Promise<string>
+    protected async postHiddenForm(urlToPost: string, page: string, ix?: number, resolveBody?: false): Promise<Response<string>>
+    protected async postHiddenForm(urlToPost: string, page: string, ix?: number, resolveBody: boolean = true): Promise<string | Response<string>> {
         const form = await this.getHiddenForm(page, ix);
         if (form) {
             const response2 = await this.gotInstance.post(urlToPost, {
@@ -135,7 +136,7 @@ export abstract class BaseUrlResolver {
                 },
                 followRedirect: false   //it can raise some unhandled error which can potentially cause whole application shutdown.
             });
-            return response2.body;
+            return resolveBody ? response2.body : response2;
         }
         throw new Error('No form found to post.');
     }
