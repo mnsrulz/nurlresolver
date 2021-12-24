@@ -32,3 +32,4 @@ export * from "./libs/uploadever";
 export * from "./libs/gofile";
 export * from "./libs/linksExtralinksResolver";
 export * from "./libs/send.cm";
+export * from "./libs/ClicknUploadResolver";

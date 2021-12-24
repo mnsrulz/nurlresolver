@@ -12,7 +12,7 @@ export class FreespinResolver extends BaseUrlResolver {
         const form = await this.getHiddenForm(response.body);
         await this.wait(5000);
         const response2 = await this.gotInstance.post('https://freespinwins.com/links/go', {
-            body: form,
+            form: form,
             headers: {
                 "X-Requested-With": "XMLHttpRequest"
             }
