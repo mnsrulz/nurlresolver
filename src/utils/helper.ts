@@ -1,5 +1,4 @@
 import scrapeIt = require("scrape-it");
-import * as FormData from 'form-data';
 
 // export const ParseFormActionUrl = (html: string, ix?: number) => {
 //     const result = scrapeIt.scrapeHTML(html, {
@@ -41,11 +40,11 @@ export const ParseForms = (html: string): { output: ScrapedForm[] } => {
     return result;
 }
 
-export const transformScrapedFormToFormData = (scrapedForm: ScrapedForm): FormData => {
-    const form = new FormData();
+export const transformScrapedFormToFormData = (scrapedForm: ScrapedForm): Record<string, any> => {
+    const form: Record<string, any>={};
     for (const { name, value } of scrapedForm.kv) {
         name !== undefined && value !== undefined &&
-            name !== null && value !== null && form.append(name, value);
+            name !== null && value !== null && (form[name] = value);
     }
     return form;
 }

@@ -1,5 +1,4 @@
 import got, { HTTPError, Response } from 'got';
-import * as FormData from 'form-data';
 import scrapeIt = require("scrape-it");
 import util = require('util');
 import { parseAllLinks, ParseHiddenForm, transformScrapedFormToFormData } from './utils/helper';
@@ -130,7 +129,7 @@ export abstract class BaseUrlResolver {
         const form = await this.getHiddenForm(page, ix);
         if (form) {
             const response2 = await this.gotInstance.post(urlToPost, {
-                body: form,
+                form: form,
                 headers: {
                     Referer: urlToPost
                 },
@@ -141,7 +140,7 @@ export abstract class BaseUrlResolver {
         throw new Error('No form found to post.');
     }
 
-    protected async getHiddenForm(page: string, ix?: number): Promise<FormData | undefined> {
+    protected async getHiddenForm(page: string, ix?: number): Promise<Record<string, any> | undefined> {
         ix = ix || 0;
         const scrapedform = ParseHiddenForm(page, ix);
         return transformScrapedFormToFormData(scrapedform);
