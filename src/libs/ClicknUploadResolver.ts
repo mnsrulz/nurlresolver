@@ -40,7 +40,7 @@ export class ClicknUploadResolver extends BaseUrlResolver {
             }
         });
 
-        const rxResult = /window\.open\('([^']*')/.exec(output.download);
+        const rxResult = /window\.open\('([^']*)'/.exec(output.download);
         if(rxResult){
             const link = rxResult[1];
             const title = this.extractFileNameFromUrl(link);
