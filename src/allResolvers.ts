@@ -34,3 +34,4 @@ export * from "./libs/linksExtralinksResolver";
 export * from "./libs/send.cm";
 export * from "./libs/ClicknUploadResolver";
 export * from "./libs/StreamlareResolver";
+export * from "./libs/movipk";
