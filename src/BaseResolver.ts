@@ -17,6 +17,7 @@ export abstract class BaseUrlResolver {
 
     protected scrapeItAsync = util.promisify(scrapeIt);
     protected scrapeHtml = scrapeIt.scrapeHTML;
+    protected _cookieJar?: CookieJar;
 
     constructor(options: BaseResolverOptions) {
         this.domains = options.domains;
@@ -107,7 +108,11 @@ export abstract class BaseUrlResolver {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0'
             }
         };
-        this.useCookies && (gotoptions.cookieJar = new CookieJar());
+        if(this.useCookies){
+            this._cookieJar = new CookieJar();
+            gotoptions.cookieJar = this._cookieJar;
+        }
+        
         this.gotInstance = got.extend(gotoptions);
     }
 
