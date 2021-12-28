@@ -4,7 +4,7 @@ export class SemdCmResolver extends BaseUrlResolver {
     constructor() {
         super({
             domains: [/https?:\/\/send\.cm\//],
-            speedRank: 90
+            speedRank: 80
         });
     }
 
