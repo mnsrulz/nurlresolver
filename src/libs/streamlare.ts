@@ -4,7 +4,8 @@ export class StreamlareResolver extends BaseUrlResolver {
     constructor() {
         super({
             domains: [/https?:\/\/streamlare/],
-            useCookies: true
+            useCookies: true,
+            speedRank: 75
         });
     }
 

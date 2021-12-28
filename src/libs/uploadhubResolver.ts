@@ -5,7 +5,7 @@ export class UploadhubResolver extends GenericFormBasedResolver {
         super({
             domains: [/https?:\/\/(uploadhub.ws)/],
             useCookies: true,
-            speedRank: 90
+            speedRank: 60
         }, '#direct_link a');
     }
 }
