@@ -17,9 +17,9 @@ export class StreamlareResolver extends BaseUrlResolver {
                 attr: ':file'
             }
         });
-        const title = JSON.parse(fileEmbed).name;
+        const title = `${JSON.parse(fileEmbed).name}.mp4`;
         const jsontopost = { id: JSON.parse(fileEmbed).hashid };
-
+        
         const u1 = new URL('/api/video/get', _urlToResolve);
 
         const response2 = await this.gotInstance.post(u1.href, {
