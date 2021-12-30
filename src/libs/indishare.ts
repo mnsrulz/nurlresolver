@@ -1,4 +1,4 @@
-import { GenericFormBasedResolver } from "../BaseResolver";
+import { GenericFormBasedResolver, ResolvedMediaItem } from "../BaseResolver";
 
 export class IndishareResolver extends GenericFormBasedResolver {
     constructor() {
@@ -10,6 +10,12 @@ export class IndishareResolver extends GenericFormBasedResolver {
     }
 
     async canResolve(_urlToResolve: string): Promise<boolean> {
-        return this.getSecondLevelDomain(_urlToResolve) === 'indishare';
+        return ['techmyntra', 'indishare'].includes(this.getSecondLevelDomain(_urlToResolve) || '');
+    }
+
+    async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
+        const u = new URL(_urlToResolve);
+        u.host = 'techmyntra.net';
+        return super.resolveInner(u.href);
     }
 }
