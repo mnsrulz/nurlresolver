@@ -13,7 +13,6 @@ export class ClicknUploadResolver extends BaseUrlResolver {
         const response = await this.gotInstance(_urlToResolve);
         const response2 = await this.postHiddenForm(response.url, response.body, 0, false);
         const parsedCode = this.parseCaptchaCode(response2.body);
-        console.log(`clicknupload parsed captcha code is: ${parsedCode}, ss`);
         const formToPost = await this.getHiddenForm(response2.body, 0);
 
         if (formToPost) {
@@ -22,8 +21,7 @@ export class ClicknUploadResolver extends BaseUrlResolver {
         }
 
         const urlToPost = response2.url;
-        console.log('waiting for 15 seconds...')
-
+        
         await this.wait(15000);
         const response3 = await this.gotInstance.post(urlToPost, {
             form: formToPost,
