@@ -17,9 +17,9 @@ export class CloudMailRuResolver extends BaseUrlResolver {
         const regex01 = /"weblink_get"\s*:\s*\[.+?"url"\s*:\s*"([^"]+)/gs
         const regexWeblinkVideo = /"weblink_video"\s*:\s*\[.+?"url"\s*:\s*"([^"]+)/gs
         const regex03 = /public\/(.*)/g
-        const link1 = regex01.exec(response.body)![1];
-        const link3 = regex03.exec(_urlToResolve)![1];
-        const webLinkVideo = regexWeblinkVideo.exec(response.body)![1];
+        const link1 = regex01.exec(response.body)?.[1];
+        const link3 = regex03.exec(_urlToResolve)?.[1];
+        const webLinkVideo = regexWeblinkVideo.exec(response.body)?.[1];
         if (link1 && link3 && webLinkVideo) {
             const tempLink = `${link1}/${link3}`;
             const headers = await this.gotInstance.head(tempLink);
