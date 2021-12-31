@@ -14,7 +14,7 @@ export class LetsuploadResolver extends BaseUrlResolver {
         const regexForInitialPage = /class='btn btn-free' href='([^']*)/g
 
         const regexForInitialPageResult = regexForInitialPage.exec(response.body);
-        const link1 = regexForInitialPageResult![1];
+        const link1 = regexForInitialPageResult?.[1];
 
         let { title } = this.scrapeHtml(response.body, { title: 'div.title' });
         title = title.trim();
@@ -29,11 +29,11 @@ export class LetsuploadResolver extends BaseUrlResolver {
                 const regex02 = /window\.location\.href="([^"]*)"/g
                 const regex01Result = regex01.exec(response2.body);
 
-                if (regex01Result && regex01Result![1]) {
-                    el = regex01Result![1];
+                if (regex01Result && regex01Result?.[1]) {
+                    el = regex01Result?.[1];
                 } else {
                     const regex02Result = regex02.exec(response2.body);
-                    regex02Result && (el = regex02Result![1]);
+                    regex02Result && (el = regex02Result?.[1]);
                 }
             }
             if (el) {

@@ -6,7 +6,7 @@ const debug = _debug('nurl:BaseUrlResolver');
 
 
 export class UrlResolver {
-  private allResolvers: any[];
+  private allResolvers: {new(): BaseUrlResolver;}[];
   constructor() {
     //do filtering of the resolvers here
     this.allResolvers = Object.values(allResolverImports).filter((x) =>
@@ -34,10 +34,10 @@ export class UrlResolver {
     return result;
     async function _() {
       const urlsToResolve = typeof urlToResolve === "string" ? [urlToResolve] : urlToResolve;
-      const promises: Promise<any>[] = [];
+      const promises: Promise<ResolvedMediaItem[]>[] = [];
       for (const iteratorurl of urlsToResolve) {
         for (const resolver of _allResolvers) {
-          const element: BaseUrlResolver = new resolver();
+          const element = new resolver();
           const promise = element.resolve(iteratorurl, _options).then(resolvedItems => result = [...result, ...resolvedItems]);
           promises.push(promise);
         }
@@ -71,7 +71,7 @@ export class UrlResolver {
       debug(urlToVisit);
       const resolvedUrls = await this.resolve(urlToVisit, options,) as ResolvedMediaItem[];
       if (resolvedUrls) {
-        const p: Promise<any>[] = [];
+        const p: Promise<void>[] = [];
         for (const resolvedUrl of resolvedUrls) {
           resolvedUrl.isPlayable ? myPlayableResources.push(resolvedUrl) : p.push(explode(resolvedUrl.link));
         }

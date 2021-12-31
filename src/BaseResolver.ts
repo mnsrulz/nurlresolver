@@ -130,7 +130,7 @@ export abstract class BaseUrlResolver {
     // }
     protected async postHiddenForm(urlToPost: string, page: string, ix?: number, resolveBody?: true): Promise<string>
     protected async postHiddenForm(urlToPost: string, page: string, ix?: number, resolveBody?: false): Promise<Response<string>>
-    protected async postHiddenForm(urlToPost: string, page: string, ix?: number, resolveBody: boolean = true): Promise<string | Response<string>> {
+    protected async postHiddenForm(urlToPost: string, page: string, ix?: number, resolveBody = true): Promise<string | Response<string>> {
         const form = await this.getHiddenForm(page, ix);
         if (form) {
             const response2 = await this.gotInstance.post(urlToPost, {
@@ -145,7 +145,7 @@ export abstract class BaseUrlResolver {
         throw new Error('No form found to post.');
     }
 
-    protected async getHiddenForm(page: string, ix?: number): Promise<Record<string, any> | undefined> {
+    protected async getHiddenForm(page: string, ix?: number): Promise<Record<string, string> | undefined> {
         ix = ix || 0;
         const scrapedform = ParseHiddenForm(page, ix);
         return transformScrapedFormToFormData(scrapedform);
@@ -181,7 +181,7 @@ export abstract class BaseUrlResolver {
         return link;
     }
 
-    protected scrapeAllLinks(html: string, context: string, baseUrl: string = '') {
+    protected scrapeAllLinks(html: string, context: string, baseUrl = '') {
         const parsedLinks: ResolvedMediaItem[] = [];
         parseAllLinks(html, context).forEach(x => {
             if (baseUrl && baseUrl.startsWith('http') && !x.href.startsWith('http')) {

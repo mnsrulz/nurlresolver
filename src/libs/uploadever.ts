@@ -1,5 +1,4 @@
-import { BaseUrlResolver, GenericFormBasedResolver, ResolvedMediaItem } from "../BaseResolver";
-
+import { GenericFormBasedResolver } from "../BaseResolver";
 
 export class UploadeverResolver extends GenericFormBasedResolver {
     constructor() {
