@@ -11,7 +11,7 @@ export class GoFileResolver extends BaseUrlResolver {
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
         const initialResponse = await this.gotInstance(_urlToResolve);
         const rxp = /gofile\.io\/d\/(\w*)/;
-        const gofileId = rxp.exec(initialResponse.url)![1]; //extract go fileid
+        const gofileId = rxp.exec(initialResponse.url)?.[1]; //extract go fileid
         const apiUrl = `https://api.gofile.io/getUpload?c=${gofileId}`;
         const { data } = await this.gotInstance<ResponsePayload>(apiUrl, {
             resolveBodyOnly: true,

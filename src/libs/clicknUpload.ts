@@ -17,7 +17,7 @@ export class ClicknUploadResolver extends BaseUrlResolver {
 
         if (formToPost) {
             formToPost['code'] = parsedCode;
-            formToPost['adblock_detected'] = 0;
+            formToPost['adblock_detected'] = '0';
         }
 
         const urlToPost = response2.url;
