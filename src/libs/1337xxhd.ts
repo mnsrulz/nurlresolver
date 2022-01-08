@@ -14,7 +14,7 @@ export class XhdResolver extends BaseUrlResolver {
                 listItem: '.su-button-center a',
                 data: {
                     link: { attr: 'href' },
-                    text: ''
+                    title: ''
                 }
             }
         });
