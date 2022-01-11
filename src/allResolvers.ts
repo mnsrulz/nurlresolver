@@ -37,3 +37,4 @@ export * from "./libs/movipk";
 export * from "./libs/megaup";
 export * from "./libs/saveLinks";
 export * from "./libs/1337xxhd";
+export * from "./libs/dnsmaster";
