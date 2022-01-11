@@ -1,6 +1,6 @@
 {
   "name": "nurlresolver",
-  "version": "2.7.3",
+  "version": "2.8.1",
   "description": "url resolver for node",
   "main": "./dist/app.js",
   "types": "./dist/app.d.ts",
