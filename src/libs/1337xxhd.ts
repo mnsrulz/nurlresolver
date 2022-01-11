@@ -11,13 +11,14 @@ export class XhdResolver extends BaseUrlResolver {
         const responsev1 = await this.gotInstance(_urlToResolve);
         const obj1: { links: ResolvedMediaItem[]; } = this.scrapeHtml(responsev1.body, {
             links: {
-                listItem: '.su-button-center a',
+                listItem: 'a',
                 data: {
                     link: { attr: 'href' },
                     title: ''
                 }
             }
         });
-        return obj1.links.filter(x => !x.link.startsWith('https://t.me'));
+        const rx = /http(s)?:\/\/(1337xhd|t\.me)/;
+        return obj1.links.filter(x => x.link.startsWith('http') && !rx.test(x.link));
     }
 }
