@@ -1,3 +1,6 @@
+import _debug = require('debug');
+const debug = _debug('nurl:ClicknUploadResolver');
+
 import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
 
 export class ClicknUploadResolver extends BaseUrlResolver {
@@ -21,8 +24,15 @@ export class ClicknUploadResolver extends BaseUrlResolver {
         }
 
         const urlToPost = response2.url;
-        
+        let elapsedSecond = 1;
+        const logTimer = setInterval(() => { 
+            debug(`Wating ${elapsedSecond++}/15 seconds for ${_urlToResolve}`) 
+        }, 1000);
+
         await this.wait(15000);
+
+        clearInterval(logTimer);
+        
         const response3 = await this.gotInstance.post(urlToPost, {
             form: formToPost,
             headers: {
@@ -31,7 +41,7 @@ export class ClicknUploadResolver extends BaseUrlResolver {
             followRedirect: false   //it can raise some unhandled error which can potentially cause whole application shutdown.
         });
 
-        const output:{download: string} = this.scrapeHtml(response3.body, {
+        const output: { download: string } = this.scrapeHtml(response3.body, {
             download: {
                 selector: '#downloadbtn',
                 attr: 'onclick'
@@ -39,7 +49,7 @@ export class ClicknUploadResolver extends BaseUrlResolver {
         });
 
         const rxResult = /window\.open\('([^']*)'/.exec(output.download);
-        if(rxResult){
+        if (rxResult) {
             const link = rxResult[1];
             const title = this.extractFileNameFromUrl(link);
             const result = {
@@ -52,24 +62,24 @@ export class ClicknUploadResolver extends BaseUrlResolver {
         return [];
     }
 
-    private parseCaptchaCode(html:string): string{
-        const result: {code: [{codeValue: string, codePosition: number}]} = this.scrapeHtml(html, {
+    private parseCaptchaCode(html: string): string {
+        const result: { code: [{ codeValue: string, codePosition: number }] } = this.scrapeHtml(html, {
             // code: "td[align=right]",
             // codeValues: {
             //   listItem: 'td[align=right] span'
             // },
             code: {
-              listItem: 'td[align=right] span',
-              data: {
-                codeValue: {},
-                codePosition: {
-                  attr: 'style',
-                  convert: (x) => {
-                    const rxResult = /padding-left:(\d*)px/.exec(x);
-                    return rxResult && parseInt(rxResult[1]);
-                  }
+                listItem: 'td[align=right] span',
+                data: {
+                    codeValue: {},
+                    codePosition: {
+                        attr: 'style',
+                        convert: (x) => {
+                            const rxResult = /padding-left:(\d*)px/.exec(x);
+                            return rxResult && parseInt(rxResult[1]);
+                        }
+                    }
                 }
-              }
             },
             // tag: {
             //   listItem: 'td[align=right] span',
@@ -89,11 +99,11 @@ export class ClicknUploadResolver extends BaseUrlResolver {
             //     }
             //   },
             // }
-          });
+        });
 
-          return result.code
-          .sort((a, b) => a.codePosition - b.codePosition)
-          .map(x=>x.codeValue)
-          .join('');
+        return result.code
+            .sort((a, b) => a.codePosition - b.codePosition)
+            .map(x => x.codeValue)
+            .join('');
     }
 }
