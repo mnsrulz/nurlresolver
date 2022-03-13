@@ -9,19 +9,19 @@ export class SemdCmResolver extends BaseUrlResolver {
     }
 
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
+        const results = [];
         const response = await this.gotInstance(_urlToResolve);
-        const { link, title } = this.scrapeHtml(response.body, {
-            title: 'li.nav-item',
-            link: {
-                selector: 'source',
-                attr: 'src'
-            }
-        });
-        const result = {
-            link,
-            title,
-            isPlayable: true
-        } as ResolvedMediaItem;
-        return [result];
+        const { headers } = await this.postHiddenForm('https://send.cm', response.body, 0, false);
+        if (headers.location) {
+            const link = headers.location;
+            const title = this.extractFileNameFromUrl(link);
+            const result = {
+                link,
+                title,
+                isPlayable: true
+            } as ResolvedMediaItem;
+            results.push(result);
+        }
+        return results;
     }
 }
