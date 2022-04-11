@@ -5,7 +5,7 @@ export class DesiuploadResolver extends GenericFormBasedResolver {
         super({
             domains: [/https?:\/\/(dl\d{0,}.desiupload)/],
             useCookies: true,
-            speedRank: 55
+            speedRank: 85
         }, '.downloadbtn a', 1);
     }
 }
