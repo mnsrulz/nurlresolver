@@ -7,7 +7,7 @@ export class ClicknUploadResolver extends BaseUrlResolver {
     constructor() {
         super({
             domains: [/https?:\/\/clicknupload/],
-            speedRank: 80,
+            speedRank: 70,
             useCookies: true
         });
     }
