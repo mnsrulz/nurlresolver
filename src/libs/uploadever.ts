@@ -5,7 +5,7 @@ export class UploadeverResolver extends GenericFormBasedResolver {
         super({
             domains: [/https?:\/\/(uploadever|uploadbuzz)/],
             useCookies: true,
-            speedRank: 40
+            speedRank: 85
         }, '.download-button a');
     }
 }
