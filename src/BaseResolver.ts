@@ -83,14 +83,7 @@ export abstract class BaseUrlResolver {
     }
 
     private async fillMetaInfoInner(resolveMediaItem: ResolvedMediaItem) {
-        try {
-            await this.fillMetaInfo(resolveMediaItem);
-        } catch (error) {
-            if (error instanceof Error) {
-                console.error(`${this.constructor.name}: `, 'Http error', resolveMediaItem.link, error.message);
-            }
-        }
-
+        await this.fillMetaInfo(resolveMediaItem);
     }
 
     async fillMetaInfo(resolveMediaItem: ResolvedMediaItem): Promise<void> {
