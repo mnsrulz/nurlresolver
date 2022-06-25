@@ -16,7 +16,7 @@ export class movipkResolver extends BaseUrlResolver {
                 listItem: '.movieplay iframe',
                 data: {
                     link: {
-                        attr: 'data-src'
+                        attr: 'src'
                     }
                 }
             }

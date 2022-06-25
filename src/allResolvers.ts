@@ -40,3 +40,4 @@ export * from "./libs/1337xxhd";
 export * from "./libs/dnsmaster";
 export * from "./libs/pandafiles";
 export * from "./libs/videobin";
+export * from "./libs/dlmovies";
