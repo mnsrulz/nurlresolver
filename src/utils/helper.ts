@@ -41,7 +41,7 @@ export const ParseForms = (html: string): { output: ScrapedForm[] } => {
 }
 
 export const transformScrapedFormToFormData = (scrapedForm: ScrapedForm): Record<string, string> => {
-    const form: Record<string, string>={};
+    const form: Record<string, string> = {};
     for (const { name, value } of scrapedForm.kv) {
         name !== undefined && value !== undefined &&
             name !== null && value !== null && (form[name] = value);
@@ -62,6 +62,16 @@ export const parseAllLinks = (html: string, context: string): ScrapedAnchorEleme
         }
     });
     return output as ScrapedAnchorElement[];
+}
+
+export const getHiddenForm = (page: string, ix?: number) => {
+    ix = ix || 0;
+    const scrapedform = ParseHiddenForm(page, ix);
+    return transformScrapedFormToFormData(scrapedform);
+}
+
+export const getHiddenFormActionRaw = (page: string, ix?: number) => {
+    return ParseHiddenForm(page, ix).action;
 }
 
 export interface ScrapedForm {

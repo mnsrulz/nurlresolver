@@ -1,7 +1,7 @@
-import got, { HTTPError, Response } from 'got';
+import got, { Got, HTTPError, Response } from 'got';
 import scrapeIt = require("scrape-it");
 import util = require('util');
-import { parseAllLinks, ParseHiddenForm, transformScrapedFormToFormData } from './utils/helper';
+import { parseAllLinks, ParseHiddenForm, transformScrapedFormToFormData, getHiddenForm, getHiddenFormActionRaw } from './utils/helper';
 import { CookieJar } from 'tough-cookie';
 import * as psl from 'psl';
 import { UrlResolverOptions } from './UrlResolverOptions';
@@ -101,11 +101,11 @@ export abstract class BaseUrlResolver {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0'
             }
         };
-        if(this.useCookies){
+        if (this.useCookies) {
             this._cookieJar = new CookieJar();
             gotoptions.cookieJar = this._cookieJar;
         }
-        
+
         this.gotInstance = got.extend(gotoptions);
     }
 
@@ -115,16 +115,14 @@ export abstract class BaseUrlResolver {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    // protected async postHiddenFormV2(page: string, ix?: number): Promise<string> {
-    //     ix = ix || 0;
-    //     const pageForms = await this.xInstance(page, ['form@action']);
-    //     const requestedFormActionLink = pageForms[ix];
-    //     return await this.postHiddenForm(requestedFormActionLink, page, ix);
-    // }
+    protected createmyresponse(initUrl: string): Promise<MyInternalResponse> {
+        return MyInternalResponse.create(initUrl, got);
+    }
+
     protected async postHiddenForm(urlToPost: string, page: string, ix?: number, resolveBody?: true): Promise<string>
     protected async postHiddenForm(urlToPost: string, page: string, ix?: number, resolveBody?: false): Promise<Response<string>>
     protected async postHiddenForm(urlToPost: string, page: string, ix?: number, resolveBody = true): Promise<string | Response<string>> {
-        const form = await this.getHiddenForm(page, ix);
+        const form = getHiddenForm(page, ix);
         if (form) {
             const response2 = await this.gotInstance.post(urlToPost, {
                 form: form,
@@ -138,11 +136,9 @@ export abstract class BaseUrlResolver {
         throw new Error('No form found to post.');
     }
 
-    protected async getHiddenForm(page: string, ix?: number): Promise<Record<string, string> | undefined> {
-        ix = ix || 0;
-        const scrapedform = ParseHiddenForm(page, ix);
-        return transformScrapedFormToFormData(scrapedform);
-    }
+    // protected async getHiddenForm(page: string, ix?: number): Promise<Record<string, string> | undefined> {
+    //     this.getHiddenForm
+    // }
 
     protected getSecondLevelDomain(someUrl: string): string | null {
         const hostname = new URL(someUrl);
@@ -244,4 +240,51 @@ export class GenericFormBasedResolver extends BaseUrlResolver {
 interface CustomGotOptions {
     headers: Record<string, string>,
     cookieJar?: CookieJar
+}
+
+class MyInternalResponse {
+    private _got: Got;
+    private _response: Response<string> | undefined;
+    public get lastUrl(): string | undefined {
+        return this._response?.url;
+    }
+    public get response(): Response<string> | undefined {
+        return this._response;
+    }
+    private constructor(got: Got) {
+        this._got = got;
+    }
+
+    private async getinit(initUrl: string): Promise<MyInternalResponse> {
+        const response = await this._got(initUrl);
+        this._response = response;
+        return this;
+    }
+
+    public static async create(initUrl: string, got: Got): Promise<MyInternalResponse> {
+        const m = new MyInternalResponse(got);
+        return m.getinit(initUrl);
+    }
+
+    public async posthiddenform(ix?: number): Promise<MyInternalResponse> {
+        if (!this._response || !this.lastUrl) throw new Error('unable to process empty body');
+        const form = getHiddenForm(this._response.body, ix);
+        const actionUrl = getHiddenFormActionRaw(this._response.body, ix);
+        const finalactionUrl = new URL(actionUrl, this.lastUrl).href;
+        if (form) {
+            console.log(`Posting the following form to url: ${finalactionUrl}`);
+            console.log(JSON.stringify(form, null, 4));
+            const response2 = await this._got.post(finalactionUrl, {
+                form: form,
+                headers: {
+                    Referer: this.lastUrl
+                },
+                followRedirect: false   //it can raise some unhandled error which can potentially cause whole application shutdown.
+            });
+
+            this._response = response2;
+            return this;
+        }
+        throw new Error('No form found to post.');
+    }
 }
