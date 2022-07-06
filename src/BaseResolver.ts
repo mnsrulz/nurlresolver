@@ -95,18 +95,40 @@ export abstract class BaseUrlResolver {
         resolveMediaItem.contentType = headResponse.headers['content-type'];
     }
 
-    private setupEnvironment(): void {
+    protected setupEnvironment(): void {
         const gotoptions: CustomGotOptions = {
             headers: {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0'
             }
         };
         if (this.useCookies) {
+            console.log('setting up the cookies jar')
             this._cookieJar = new CookieJar();
             gotoptions.cookieJar = this._cookieJar;
         }
 
-        this.gotInstance = got.extend(gotoptions);
+        this.gotInstance = got.extend({
+            hooks: {
+                beforeRequest: [
+                    (options) => {
+                        console.log(`${options.method} - ${options.url.href}`)
+                        options.method== 'POST' && console.log(JSON.stringify(options.form, null, 4));
+                        console.log(JSON.stringify(options.headers, null, 4));
+                    }
+                ],
+                afterResponse: [
+                    (response, retryWithMergedOptions) => {
+                        //console.log(JSON.stringify(response.rawHeaders, null, 4));
+                        // No changes otherwise
+                        return response;
+                    }
+                ]
+            },
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0'
+            },
+            cookieJar: this._cookieJar
+        });
     }
 
     abstract resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[] | ResolvedMediaItem>;
@@ -115,8 +137,8 @@ export abstract class BaseUrlResolver {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    protected createmyresponse(initUrl: string): Promise<MyInternalResponse> {
-        return MyInternalResponse.create(initUrl, got);
+    protected async createmyresponse(initUrl: string): Promise<MyInternalResponse> {
+        return await MyInternalResponse.create(initUrl, this.gotInstance);
     }
 
     protected async postHiddenForm(urlToPost: string, page: string, ix?: number, resolveBody?: true): Promise<string>
@@ -263,7 +285,7 @@ class MyInternalResponse {
 
     public static async create(initUrl: string, got: Got): Promise<MyInternalResponse> {
         const m = new MyInternalResponse(got);
-        return m.getinit(initUrl);
+        return await m.getinit(initUrl);
     }
 
     public async posthiddenform(ix?: number): Promise<MyInternalResponse> {
@@ -272,8 +294,8 @@ class MyInternalResponse {
         const actionUrl = getHiddenFormActionRaw(this._response.body, ix);
         const finalactionUrl = new URL(actionUrl, this.lastUrl).href;
         if (form) {
-            console.log(`Posting the following form to url: ${finalactionUrl}`);
-            console.log(JSON.stringify(form, null, 4));
+            //console.log(`Posting the following form to url: ${finalactionUrl}`);
+            //console.log(JSON.stringify(form, null, 4));
             const response2 = await this._got.post(finalactionUrl, {
                 form: form,
                 headers: {
