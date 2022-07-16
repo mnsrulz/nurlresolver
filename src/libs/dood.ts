@@ -4,25 +4,28 @@ export class DoodResolver extends BaseUrlResolver {
     constructor() {
         super({
             domains: [/https?:\/\/dood/],
-            speedRank: 55
+            speedRank: 55,
+            useCookies: true
         });
     }
 
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
-        return [];  //not working
-        // var result = await this.xInstance(_urlToResolve, {
-        //     title: 'title',
-        //     link: 'div.download-content a@href'
-        // }) as ResolvedMediaItem;
-        // await this.wait(1000);  //lets wait for one second.
-        // var downloadLinkPage = await this.gotInstance(result.link);
-        // var contentPage = downloadLinkPage.body;
-        // const regex01 = /window\.open\('(https[^']*)'/
-        // var finalDownloadLink = regex01.exec(contentPage)![1];
-        // result.isPlayable = true;
-        // result.title = this.extractFileNameFromUrl(finalDownloadLink);
-        // result.link = finalDownloadLink;
-        // result.headers = { "referer": _urlToResolve };
-        // return [result];
+        const identifier = new URL(_urlToResolve).pathname.split('/').pop();
+        const result = await this.gotInstance(`https://dood.so/d/${identifier}`); //dood.so works but not watch
+        await this.wait(1000);  //this could be trickier
+        const allLinks = this.scrapeAllLinks(result.body, '.download-content', result.url);
+        const response2 = await this.gotInstance(allLinks[0].link);
+        const rx = /window\.open\('(http[^']*)'/
+        const matches = rx.exec(response2.body);
+        const link = matches?.[1];
+
+        if (link) {
+            const title = this.extractFileNameFromUrl(link);
+            const result = { link, title: title, isPlayable: true } as ResolvedMediaItem;
+            result.headers = { 'Referer': response2.url };
+            return [result];
+        } else {
+            return [];
+        }
     }
 }
