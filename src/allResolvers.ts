@@ -44,3 +44,6 @@ export * from "./libs/dlmovies";
 export * from "./libs/hdMoviesFlix";
 export * from "./libs/coinflare";
 export * from "./libs/veryFastDownload";
+export * from "./libs/mflixurl";
+export * from "./libs/fichier";
+export * from "./libs/bayfiles";
