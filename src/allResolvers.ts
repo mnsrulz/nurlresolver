@@ -42,3 +42,4 @@ export * from "./libs/pandafiles";
 export * from "./libs/videobin";
 export * from "./libs/dlmovies";
 export * from "./libs/hdMoviesFlix";
+export * from "./libs/coinflare";
