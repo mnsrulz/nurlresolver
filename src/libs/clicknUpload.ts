@@ -26,7 +26,7 @@ export class ClicknUploadResolver extends BaseUrlResolver {
         const urlToPost = response2.url;
         let elapsedSecond = 1;
         const logTimer = setInterval(() => { 
-            debug(`Wating ${elapsedSecond++}/15 seconds for ${_urlToResolve}`) 
+            debug(`Waiting ${elapsedSecond++}/15 seconds for ${_urlToResolve}`) 
         }, 1000);
 
         await this.wait(15000);
