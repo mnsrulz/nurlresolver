@@ -101,11 +101,11 @@ export abstract class BaseUrlResolver {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0'
             }
         };
-        if(this.useCookies){
+        if (this.useCookies) {
             this._cookieJar = new CookieJar();
             gotoptions.cookieJar = this._cookieJar;
         }
-        
+
         this.gotInstance = got.extend(gotoptions);
     }
 
@@ -165,7 +165,7 @@ export abstract class BaseUrlResolver {
     }
 
     protected scrapeLinkHref(html: string, selector: string) {
-        const { link } = this.scrapeHtml(html, {
+        const { link }: { link: string } = this.scrapeHtml(html, {
             link: {
                 selector: selector,
                 attr: 'href'

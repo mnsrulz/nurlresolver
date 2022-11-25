@@ -41,7 +41,7 @@ export const ParseForms = (html: string): { output: ScrapedForm[] } => {
 }
 
 export const transformScrapedFormToFormData = (scrapedForm: ScrapedForm): Record<string, string> => {
-    const form: Record<string, string>={};
+    const form: Record<string, string> = {};
     for (const { name, value } of scrapedForm.kv) {
         name !== undefined && value !== undefined &&
             name !== null && value !== null && (form[name] = value);
@@ -60,9 +60,24 @@ export const parseAllLinks = (html: string, context: string): ScrapedAnchorEleme
                 }
             }
         }
-    });
-    return output as ScrapedAnchorElement[];
+    }) as { output: ScrapedAnchorElement[] };
+    return output;
 }
+
+export const parseScripts = (html: string, context: string = '') => {
+    const parsedScripts: { output: [{ s: string }] } = scrapeIt.scrapeHTML(html, {
+        output: {
+            listItem: `${context} script`,
+            data: {
+                s: {
+                    how: 'html'
+                }
+            }
+        }
+    });
+    return parsedScripts.output.map(x => x.s);
+}
+
 
 export interface ScrapedForm {
     action: string,
