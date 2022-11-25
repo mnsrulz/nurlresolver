@@ -11,6 +11,7 @@ export * from "./libs/freespinwins";
 export * from "./libs/gdrive";
 export * from "./libs/hblinks";
 export * from "./libs/indishare";
+export * from "./libs/indishareV2";
 export * from "./libs/letsupload";
 export * from "./libs/linkrit";
 export * from "./libs/megaup";
