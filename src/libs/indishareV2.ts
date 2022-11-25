@@ -4,7 +4,8 @@ export class indishareResolverV2 extends BaseUrlResolver {
     constructor() {
         super({
             domains: [/https?:\/\/dl\d{1,2}.indishare/],
-            useCookies: true
+            useCookies: true,
+            speedRank: 55
         });
     }
 
