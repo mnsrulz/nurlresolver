@@ -48,6 +48,8 @@ export abstract class BaseUrlResolver {
             logger('Error occurred while calling canResolve BaseResolver');
         }
         if (canResolve) {
+            let isResolved = false;
+            let startTime = performance.now();
             try {
                 this.setupEnvironment();
                 let resolveResults: ResolvedMediaItem[] = [];
@@ -62,14 +64,19 @@ export abstract class BaseUrlResolver {
                         .filter(x => x.isPlayable)
                         .map(this.fillMetaInfoInner, this));
                 }
-
-                return this.massageResolveResults(resolveResults);
+                const result = this.massageResolveResults(resolveResults);
+                isResolved = true;
+                return result;
             } catch (error) {
                 if (error instanceof HTTPError) {
                     logger('http error %s %s', urlToResolve, error.message);
                 } else if (error instanceof Error) {
                     logger('unknown error %s %s', urlToResolve, error.message);
                 }
+            }
+            finally {
+                const timeTook = (performance.now() - startTime);
+                logger('%s %s %sms', isResolved ? 'OK' : 'ERROR', urlToResolve, timeTook.toFixed(0));
             }
         }
         return [];
@@ -99,6 +106,10 @@ export abstract class BaseUrlResolver {
         const gotoptions: CustomGotOptions = {
             headers: {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0'
+            }, timeout: {
+                request: 10000  //by default let every individual request time out after 10 seconds
+            }, retry: {
+                limit: 0
             }
         };
         if (this.useCookies) {
@@ -243,5 +254,12 @@ export class GenericFormBasedResolver extends BaseUrlResolver {
 
 interface CustomGotOptions {
     headers: Record<string, string>,
-    cookieJar?: CookieJar
+    cookieJar?: CookieJar,
+    timeout?: {
+        request?: number,
+        connect?: number
+    },
+    retry?: {
+        limit?: number
+    }
 }
