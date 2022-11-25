@@ -11,7 +11,7 @@ export class bayfilesResolver extends BaseUrlResolver {
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
         const response = await this.gotInstance(_urlToResolve);
         const link = this.scrapeLinkHref(response.body, '#download-url');
-        console.log(link);
+        //console.log(link);
         if (link) {
             const title = this.extractFileNameFromUrl(link);
             return [

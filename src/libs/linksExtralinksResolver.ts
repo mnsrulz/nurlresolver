@@ -8,10 +8,8 @@ export class LinksExtralinksResolver extends BaseUrlResolver {
     }
 
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
-        console.log('coming3...')
         const response = await this.gotInstance(_urlToResolve);
         const result = this.scrapeAllLinks(response.body, '.entry-content');
-        console.log(result);
         result.forEach(x => {
             //find the link query param and extract result
             const link = new URL(x.link, response.url).searchParams.get('link');

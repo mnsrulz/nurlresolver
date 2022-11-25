@@ -47,3 +47,4 @@ export * from "./libs/veryFastDownload";
 export * from "./libs/mflixurl";
 export * from "./libs/fichier";
 export * from "./libs/bayfiles";
+export * from "./libs/highload";

@@ -16,7 +16,7 @@ export class HubCloudResolver extends BaseUrlResolver {
         if (!link) {
             const regex01 = /var url = '(https[^']*)';/g
             const regex01Result = regex01.exec(response.body);
-            link = regex01Result?.[1];
+            link = regex01Result?.[1] || '';
         }
         const title = this.extractFileNameFromUrl(link);
         const result = {
