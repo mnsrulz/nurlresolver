@@ -9,6 +9,7 @@ export * from "./libs/extralinks";
 export * from "./libs/extraMoviesResolver";
 export * from "./libs/freespinwins";
 export * from "./libs/gdrive";
+export * from "./libs/gdriveV2";
 export * from "./libs/hblinks";
 export * from "./libs/indishare";
 export * from "./libs/indishareV2";
