@@ -15,7 +15,7 @@ export class CloudMailRuResolver extends BaseUrlResolver {
         const regex01 = /"weblink_get":({[^}]*})/gs
         const regex02 = /public\/(.*)/g
         const jsonObject = regex01.exec(response.body)?.[1] || '';
-        const {url} = JSON.parse(jsonObject);
+        const { url } = JSON.parse(jsonObject);
         const videoId = regex02.exec(_urlToResolve)?.[1];
 
         if (url && videoId) {
@@ -29,6 +29,7 @@ export class CloudMailRuResolver extends BaseUrlResolver {
                     title: title,
                     isPlayable: true
                 };
+                result.headers = { 'User-Agent': this.defaultUserAgent };
                 links.push(result);
             }
         }
