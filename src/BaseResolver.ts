@@ -18,6 +18,7 @@ export abstract class BaseUrlResolver {
     protected scrapeItAsync = util.promisify(scrapeIt);
     protected scrapeHtml = scrapeIt.scrapeHTML;
     protected _cookieJar?: CookieJar;
+    protected defaultUserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0';
 
     constructor(options: BaseResolverOptions) {
         this.domains = options.domains;
@@ -48,7 +49,7 @@ export abstract class BaseUrlResolver {
             logger('Error occurred while calling canResolve BaseResolver');
         }
         if (canResolve) {
-            let isResolved = false;
+            let status = 'ERROR';
             let startTime = performance.now();
             try {
                 this.setupEnvironment();
@@ -65,7 +66,7 @@ export abstract class BaseUrlResolver {
                         .map(this.fillMetaInfoInner, this));
                 }
                 const result = this.massageResolveResults(resolveResults);
-                isResolved = true;
+                status = result.length > 0 ? 'OK' : 'NOT FOUND';
                 return result;
             } catch (error) {
                 if (error instanceof HTTPError) {
@@ -76,7 +77,7 @@ export abstract class BaseUrlResolver {
             }
             finally {
                 const timeTook = (performance.now() - startTime);
-                logger('%s %s %sms', isResolved ? 'OK' : 'ERROR', urlToResolve, timeTook.toFixed(0));
+                logger('%s %s %sms', status, urlToResolve, timeTook.toFixed(0));
             }
         }
         return [];
@@ -105,7 +106,7 @@ export abstract class BaseUrlResolver {
     private setupEnvironment(): void {
         const gotoptions: CustomGotOptions = {
             headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0'
+                'User-Agent': this.defaultUserAgent
             }, timeout: {
                 request: 10000  //by default let every individual request time out after 10 seconds
             }, retry: {
