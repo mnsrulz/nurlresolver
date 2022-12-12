@@ -1,4 +1,5 @@
 import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
+import { URL } from 'url'; 
 
 export class YouruploadResolver extends BaseUrlResolver {
     constructor() {
@@ -17,10 +18,10 @@ export class YouruploadResolver extends BaseUrlResolver {
         const fileSourceRegex = /file\s*:\s*(?:'|")(.+?)(?:'|")/g
         const fileLink = fileSourceRegex.exec(response.body)?.[1];
 
-        if (fileLink && !fileLink?.endsWith('novideo.mp4')) {
+        if (fileLink && !fileLink?.endsWith('novideo.mp4') && !fileLink.endsWith('watermark.png')) {
             const { title } = this.scrapeHtml(response.body, {
                 title: 'title'
-            });
+            }) as { title: string };
             const link = new URL(fileLink, normalizedUrl).href;
             const result = { title, link, isPlayable: true } as ResolvedMediaItem;
             result.headers = { "referer": normalizedUrl };
