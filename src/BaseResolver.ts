@@ -6,6 +6,8 @@ import { CookieJar } from 'tough-cookie';
 import * as psl from 'psl';
 import { UrlResolverOptions } from './UrlResolverOptions';
 import _debug from 'debug';
+import { URL } from 'url'; 
+import { performance } from "perf_hooks";
 const logger = _debug('nurl:BaseUrlResolver');
 
 export abstract class BaseUrlResolver {
@@ -50,7 +52,7 @@ export abstract class BaseUrlResolver {
         }
         if (canResolve) {
             let status = 'ERROR';
-            let startTime = performance.now();
+            const startTime = performance.now();
             try {
                 this.setupEnvironment();
                 let resolveResults: ResolvedMediaItem[] = [];
