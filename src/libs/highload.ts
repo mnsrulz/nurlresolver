@@ -52,7 +52,7 @@ export class highloadResolver extends BaseUrlResolver {
 
         if (context.decode) {
             const link = `${context.decode}`;
-            const title = this.extractFileNameFromUrl(link);
+            const title = this.extractFileNameFromUrl(_urlToResolve);
             links.push({ link, isPlayable: true, title } as ResolvedMediaItem)
         }
         return links;

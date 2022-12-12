@@ -1,4 +1,4 @@
-import { BaseUrlResolver, GenericFormBasedResolver, ResolvedMediaItem } from "../BaseResolver";
+import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
 
 export class indishareResolverV2 extends BaseUrlResolver {
     constructor() {

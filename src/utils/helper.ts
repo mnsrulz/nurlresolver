@@ -64,7 +64,7 @@ export const parseAllLinks = (html: string, context: string): ScrapedAnchorEleme
     return output;
 }
 
-export const parseScripts = (html: string, context: string = '') => {
+export const parseScripts = (html: string, context = '') => {
     const parsedScripts: { output: [{ s: string }] } = scrapeIt.scrapeHTML(html, {
         output: {
             listItem: `${context} script`,
