@@ -187,6 +187,13 @@ export abstract class BaseUrlResolver {
         });
         return link;
     }
+    
+    protected scrapePageTitle(html: string) {
+        const { title }: { title: string } = this.scrapeHtml(html, {
+            title: 'title'
+        });
+        return title;
+    }
 
     protected scrapeAllLinks(html: string, context: string, baseUrl = '') {
         const parsedLinks: ResolvedMediaItem[] = [];

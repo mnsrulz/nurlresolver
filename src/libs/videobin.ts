@@ -17,7 +17,7 @@ export class VideobinResolver extends BaseUrlResolver {
         if (hrefmatches) {
             for (const link of hrefmatches) {
                 if (link.indexOf('m3u8') > 0) continue;
-                const title = this.extractFileNameFromUrl(link);
+                const title = `${this.scrapePageTitle(response.body)}.mp4`; //this.extractFileNameFromUrl(link);
                 const result = {
                     link,
                     title,
