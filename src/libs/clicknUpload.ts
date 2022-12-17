@@ -16,7 +16,7 @@ export class ClicknUploadResolver extends BaseUrlResolver {
         const response = await this.gotInstance(_urlToResolve);
         const response2 = await this.postHiddenForm(response.url, response.body, 0, false);
         const parsedCode = this.parseCaptchaCode(response2.body);
-        const formToPost = await this.getHiddenForm(response2.body, 0);
+        const formToPost = this.getHiddenForm(response2.body, 0);
 
         if (formToPost) {
             formToPost['code'] = parsedCode;

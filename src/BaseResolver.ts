@@ -138,7 +138,7 @@ export abstract class BaseUrlResolver {
     protected async postHiddenForm(urlToPost: string, page: string, ix?: number, resolveBody?: true): Promise<string>
     protected async postHiddenForm(urlToPost: string, page: string, ix?: number, resolveBody?: false): Promise<Response<string>>
     protected async postHiddenForm(urlToPost: string, page: string, ix?: number, resolveBody = true): Promise<string | Response<string>> {
-        const form = await this.getHiddenForm(page, ix);
+        const form = this.getHiddenForm(page, ix);
         if (form) {
             const response2 = await this.gotInstance.post(urlToPost, {
                 form: form,
@@ -152,7 +152,7 @@ export abstract class BaseUrlResolver {
         throw new Error('No form found to post.');
     }
 
-    protected async getHiddenForm(page: string, ix?: number): Promise<Record<string, string> | undefined> {
+    protected getHiddenForm(page: string, ix?: number): Record<string, string> | undefined {
         ix = ix || 0;
         const scrapedform = ParseHiddenForm(page, ix);
         return transformScrapedFormToFormData(scrapedform);

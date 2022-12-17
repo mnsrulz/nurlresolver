@@ -51,3 +51,4 @@ export * from "./libs/fichier";
 export * from "./libs/bayfiles";
 export * from "./libs/highload";
 export * from "./libs/hexupload";
+export * from "./libs/dropDownload";
