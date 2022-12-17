@@ -11,7 +11,7 @@ export class PandafilesResolver extends BaseUrlResolver {
 
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem | ResolvedMediaItem[]> {
         const response = await this.gotInstance(_urlToResolve);
-        const form = await this.getHiddenForm(response.body);
+        const form = this.getHiddenForm(response.body);
         form && (form['op'] = 'download2');
         const resp = await this.gotInstance.post(response.url, { form: form });
         const link = this.scrapeLinkHref(resp.body, '#direct_link a');

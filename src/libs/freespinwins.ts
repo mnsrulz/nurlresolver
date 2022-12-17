@@ -9,7 +9,7 @@ export class FreespinResolver extends BaseUrlResolver {
 
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
         const response = await this.gotInstance(_urlToResolve);
-        const form = await this.getHiddenForm(response.body);
+        const form = this.getHiddenForm(response.body);
         await this.wait(5000);
         const response2 = await this.gotInstance.post('https://freespinwins.com/links/go', {
             form: form,
