@@ -1,4 +1,4 @@
-import got, { HTTPError, Response } from 'got';
+import got, { ExtendOptions, Got, HTTPError, Response } from 'got';
 import scrapeIt = require("scrape-it");
 import util = require('util');
 import { parseAllLinks, ParseHiddenForm, transformScrapedFormToFormData } from './utils/helper';
@@ -6,7 +6,7 @@ import { CookieJar } from 'tough-cookie';
 import * as psl from 'psl';
 import { UrlResolverOptions } from './UrlResolverOptions';
 import _debug from 'debug';
-import { URL } from 'url'; 
+import { URL } from 'url';
 import { performance } from "perf_hooks";
 const logger = _debug('nurl:BaseUrlResolver');
 
@@ -20,7 +20,7 @@ export abstract class BaseUrlResolver {
     protected scrapeItAsync = util.promisify(scrapeIt);
     protected scrapeHtml = scrapeIt.scrapeHTML;
     protected _cookieJar?: CookieJar;
-    protected defaultUserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0';
+    protected defaultUserAgent = 'Mozilla/5.0 (Linux; Android 7.0; 5060 Build/NRD90M; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/58.0.3029.83 Mobile Safari/537.36';
 
     constructor(options: BaseResolverOptions) {
         this.domains = options.domains;
@@ -106,15 +106,38 @@ export abstract class BaseUrlResolver {
     }
 
     private setupEnvironment(): void {
-        const gotoptions: CustomGotOptions = {
+        const gotoptions: Got | ExtendOptions = {
+            http2: false,
             headers: {
-                'User-Agent': this.defaultUserAgent
+                // 'User-Agent': this.defaultUserAgent,
+                // 'Accept': '*/*',
+                'Accept-Encoding': 'gzip, deflate'                
             }, timeout: {
                 request: 10000  //by default let every individual request time out after 10 seconds
             }, retry: {
                 limit: 0
+            },
+            hooks: {
+                beforeRequest: [
+                    (options) => {
+                        if (options.headers['cookie']) {
+                            //console.log(options.headers['cookie']);
+                            const cs = `${options.headers['cookie']}`;
+                            const ncs = cs.split(';').reverse().join('; ');
+                            //console.log(ncs);
+                            options.headers['Cookie'] = ncs.trim();
+                            delete options.headers.cookie;
+                        }
+                        options.headers['User-Agent'] = this.defaultUserAgent;
+                        delete options.headers['user-agent'];
+                        options.headers['Accept'] = '*/*'
+                        options.headers['Connection'] = 'keep-alive'
+                        console.log(options.headers);
+                    }
+                ]
             }
         };
+
         if (this.useCookies) {
             this._cookieJar = new CookieJar();
             gotoptions.cookieJar = this._cookieJar;
@@ -187,7 +210,16 @@ export abstract class BaseUrlResolver {
         });
         return link;
     }
-    
+
+    protected scrapeText(html: string, selector: string) {
+        const { link }: { link: string } = this.scrapeHtml(html, {
+            link: {
+                selector: selector
+            }
+        });
+        return link;
+    }
+
     protected scrapePageTitle(html: string) {
         const { title }: { title: string } = this.scrapeHtml(html, {
             title: 'title'
