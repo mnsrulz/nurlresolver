@@ -6,7 +6,7 @@ import { CookieJar } from 'tough-cookie';
 import * as psl from 'psl';
 import { UrlResolverOptions } from './UrlResolverOptions';
 import _debug from 'debug';
-import { URL } from 'url'; 
+import { URL } from 'url';
 import { performance } from "perf_hooks";
 const logger = _debug('nurl:BaseUrlResolver');
 
@@ -187,7 +187,7 @@ export abstract class BaseUrlResolver {
         });
         return link;
     }
-    
+
     protected scrapePageTitle(html: string) {
         const { title }: { title: string } = this.scrapeHtml(html, {
             title: 'title'
@@ -203,7 +203,7 @@ export abstract class BaseUrlResolver {
                     link: new URL(x.href, baseUrl).href,
                     title: x.text
                 } as ResolvedMediaItem);
-            } else {
+            } else if (x.href.startsWith('http')) {
                 parsedLinks.push({
                     link: x.href,
                     title: x.text
