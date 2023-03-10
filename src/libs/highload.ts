@@ -34,9 +34,9 @@ export class highloadResolver extends BaseUrlResolver {
             },
             document: {
                 write: () => console.log,
-                getElementsByTagName: () => { },
-                addEventListener: () => { },
-                getElementById: () => { }
+                getElementsByTagName: console.log,
+                addEventListener: console.log,
+                getElementById: console.log
             }
         });
 

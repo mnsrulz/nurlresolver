@@ -13,7 +13,7 @@ export class coinflareResolver extends BaseUrlResolver {
         const docId = parseInt(new URL(_urlToResolve).pathname.split('/')[1]);
         const jsDocumentUrl = `https://coinflare.org/wp-json/wp/v2/posts/${docId}`;
         const body = await this.gotInstance<Doc>(jsDocumentUrl).json<Doc>();
-        let links = this.scrapeAllLinks(body.content.rendered, '.mb-container');
+        const links = this.scrapeAllLinks(body.content.rendered, '.mb-container');
         return links;
     }
 }
