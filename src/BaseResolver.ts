@@ -1,7 +1,7 @@
 import got, { HTTPError, Response } from 'got';
 import scrapeIt = require("scrape-it");
 import util = require('util');
-import { parseAllLinks, ParseHiddenForm, transformScrapedFormToFormData } from './utils/helper';
+import { parseAllLinks, parseHiddenForm, transformScrapedFormToFormData } from './utils/helper';
 import { CookieJar } from 'tough-cookie';
 import * as psl from 'psl';
 import { UrlResolverOptions } from './UrlResolverOptions';
@@ -154,7 +154,7 @@ export abstract class BaseUrlResolver {
 
     protected getHiddenForm(page: string, ix?: number): Record<string, string> | undefined {
         ix = ix || 0;
-        const scrapedform = ParseHiddenForm(page, ix);
+        const scrapedform = parseHiddenForm(page, ix);
         return transformScrapedFormToFormData(scrapedform);
     }
 

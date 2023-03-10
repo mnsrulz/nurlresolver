@@ -1,5 +1,5 @@
 import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
-import { ParseHiddenForm } from "../utils/helper";
+import { parseHiddenForm } from "../utils/helper";
 
 export class gDriveV2Resolver extends BaseUrlResolver {
     private googleDriveId: string;
@@ -30,7 +30,7 @@ export class gDriveV2Resolver extends BaseUrlResolver {
                 title: 'span.uc-name-size a'
             }) as { title: string };
 
-            const parsedForm = ParseHiddenForm(response.body);
+            const parsedForm = parseHiddenForm(response.body);
             const reqMediaConfirm = await this.gotInstance(parsedForm.action, {
                 followRedirect: false
             });

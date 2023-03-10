@@ -1,22 +1,8 @@
 import scrapeIt = require("scrape-it");
 
-// export const ParseFormActionUrl = (html: string, ix?: number) => {
-//     const result = scrapeIt.scrapeHTML(html, {
-//         rs: {
-//             listItem: "form",
-//             data: {
-//                 action: {
-//                     attr: 'action'
-//                 }
-//             }
-//         }
-//     }) as { rs: [{ action: string }] };
-//     return result.rs[ix || 0].action;
-// }
+export const parseHiddenForm = (html: string, ix?: number): ScrapedForm => parseForms(html).output[ix || 0];
 
-export const ParseHiddenForm = (html: string, ix?: number): ScrapedForm => ParseForms(html).output[ix || 0];
-
-export const ParseForms = (html: string): { output: ScrapedForm[] } => {
+export const parseForms = (html: string): { output: ScrapedForm[] } => {
     const result = scrapeIt.scrapeHTML(html, {
         output: {
             listItem: 'form',
