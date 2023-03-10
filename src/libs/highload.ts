@@ -11,6 +11,8 @@ var res2 = res.replace("MjMyM2U3MmUwMTM3ZTkxODVmMWE2MWY0OTlhZDE2Mjc=", "");
 var decode = atob(res2);
 `;
 
+const emptyFunction =() => { return; }
+
 export class highloadResolver extends BaseUrlResolver {
     constructor() {
         super({
@@ -33,10 +35,10 @@ export class highloadResolver extends BaseUrlResolver {
                 navigator: {},
             },
             document: {
-                write: () => console.log,
-                getElementsByTagName: console.log,
-                addEventListener: console.log,
-                getElementById: console.log
+                write: emptyFunction,
+                getElementsByTagName: emptyFunction,
+                addEventListener: emptyFunction,
+                getElementById: emptyFunction
             }
         });
 
