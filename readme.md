@@ -33,7 +33,7 @@ const results = await nUrlResolver.resolve(linkToResolve);
 
 
 ***Output***
-```json
+```js
 [  
   {
     link: 'https://cloclo3.cldmail.ru/public/get/generatedlink/no/FileName.extension',
