@@ -31,7 +31,7 @@ export class FilepressResolver extends BaseUrlResolver {
             const result = await gdResolver.resolve(gdurl, {});
             //alright so here we construct two result one for filepress and one for google drive
             if (result.length > 0) {
-                const clonedResult = Object.assign({}, result[0]);;
+                const clonedResult = Object.assign({}, result[0]);
                 clonedResult.parent = _urlToResolve;
                 return [result[0], clonedResult];
             }
