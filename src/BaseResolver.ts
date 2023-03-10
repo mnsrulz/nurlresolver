@@ -1,9 +1,8 @@
 import got, { HTTPError, Response } from 'got';
 import scrapeIt = require("scrape-it");
 import util = require('util');
-import { parseAllLinks, parseHiddenForm, transformScrapedFormToFormData } from './utils/helper';
+import * as helper from './utils/helper';
 import { CookieJar } from 'tough-cookie';
-import * as psl from 'psl';
 import { UrlResolverOptions } from './UrlResolverOptions';
 import _debug from 'debug';
 import { URL } from 'url';
@@ -21,6 +20,19 @@ export abstract class BaseUrlResolver {
     protected scrapeHtml = scrapeIt.scrapeHTML;
     protected _cookieJar?: CookieJar;
     protected defaultUserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0';
+
+    protected getSecondLevelDomain = helper.getSecondLevelDomain;
+    protected getHiddenForm = helper.parseHiddenFormV2;
+    protected scrapeLinkHref = helper.scrapeLinkHref;
+    protected scrapePageTitle = helper.scrapePageTitle;
+    protected extractFileNameFromUrl = helper.extractFileNameFromUrl;
+    protected wait = helper.wait;
+    protected nodeatob = helper.nodeatob;
+    protected getServerPublicIp = helper.getServerPublicIp;
+    protected scrapeAllLinks(html: string, context: string, baseUrl = '') {
+        return helper.parseAllLinks(html, context, baseUrl)
+            .map(x => { return { link: x.link, title: x.title } as ResolvedMediaItem });
+    }
 
     constructor(options: BaseResolverOptions) {
         this.domains = options.domains;
@@ -106,7 +118,7 @@ export abstract class BaseUrlResolver {
     }
 
     private setupEnvironment(): void {
-        const gotoptions: CustomGotOptions = {
+        const gotOptions: CustomGotOptions = {
             headers: {
                 'User-Agent': this.defaultUserAgent
             }, timeout: {
@@ -117,24 +129,14 @@ export abstract class BaseUrlResolver {
         };
         if (this.useCookies) {
             this._cookieJar = new CookieJar();
-            gotoptions.cookieJar = this._cookieJar;
+            gotOptions.cookieJar = this._cookieJar;
         }
 
-        this.gotInstance = got.extend(gotoptions);
+        this.gotInstance = got.extend(gotOptions);
     }
 
     abstract resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[] | ResolvedMediaItem>;
 
-    protected async wait(ms: number): Promise<void> {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    // protected async postHiddenFormV2(page: string, ix?: number): Promise<string> {
-    //     ix = ix || 0;
-    //     const pageForms = await this.xInstance(page, ['form@action']);
-    //     const requestedFormActionLink = pageForms[ix];
-    //     return await this.postHiddenForm(requestedFormActionLink, page, ix);
-    // }
     protected async postHiddenForm(urlToPost: string, page: string, ix?: number, resolveBody?: true): Promise<string>
     protected async postHiddenForm(urlToPost: string, page: string, ix?: number, resolveBody?: false): Promise<Response<string>>
     protected async postHiddenForm(urlToPost: string, page: string, ix?: number, resolveBody = true): Promise<string | Response<string>> {
@@ -151,72 +153,6 @@ export abstract class BaseUrlResolver {
         }
         throw new Error('No form found to post.');
     }
-
-    protected getHiddenForm(page: string, ix?: number): Record<string, string> | undefined {
-        ix = ix || 0;
-        const scrapedform = parseHiddenForm(page, ix);
-        return transformScrapedFormToFormData(scrapedform);
-    }
-
-    protected getSecondLevelDomain(someUrl: string): string | null {
-        const hostname = new URL(someUrl);
-        const parsed = psl.parse(hostname.hostname) as psl.ParsedDomain;
-        return parsed.sld;
-    }
-
-    protected extractFileNameFromUrl(someUrl: string): string {
-        let fileName = `${new URL(someUrl).pathname.split('/').slice(-1)[0]}`;
-        fileName = decodeURIComponent(fileName);
-        return fileName;
-    }
-
-    protected async getServerPublicIp(): Promise<string> {
-        const result = await this.gotInstance('https://api.ipify.org?format=json', {
-            responseType: 'json',
-            resolveBodyOnly: true,
-        }) as { ip: string };
-        return result.ip;
-    }
-
-    protected scrapeLinkHref(html: string, selector: string) {
-        const { link }: { link: string } = this.scrapeHtml(html, {
-            link: {
-                selector: selector,
-                attr: 'href'
-            }
-        });
-        return link;
-    }
-
-    protected scrapePageTitle(html: string) {
-        const { title }: { title: string } = this.scrapeHtml(html, {
-            title: 'title'
-        });
-        return title;
-    }
-
-    protected scrapeAllLinks(html: string, context: string, baseUrl = '') {
-        const parsedLinks: ResolvedMediaItem[] = [];
-        parseAllLinks(html, context).forEach(x => {
-            if (baseUrl && baseUrl.startsWith('http') && !x.href.startsWith('http')) {
-                parsedLinks.push({
-                    link: new URL(x.href, baseUrl).href,
-                    title: x.text
-                } as ResolvedMediaItem);
-            } else if (x.href.startsWith('http')) {
-                parsedLinks.push({
-                    link: x.href,
-                    title: x.text
-                } as ResolvedMediaItem);
-            }
-        });
-        return parsedLinks;
-    }
-
-    protected nodeatob(str: string) {
-        return Buffer.from(str, 'base64').toString();
-    }
-
 }
 
 export interface ResolvedMediaItem {
