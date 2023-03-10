@@ -9,8 +9,6 @@ Direct link generator for many known content sharing sites. Avoid clicking numer
 
 # *[Live Demo](https://nurlresolver.netlify.app/)*
 
-# Fully written in Typescript
-
 **Installation**
 
 ```
@@ -19,21 +17,23 @@ npm install nurlresolver
 
 **Usage:**
 
-```
-//Module loader
+***Module loader***
+```js
 const nUrlResolver = require('nurlresolver');
+```
 
-OR
-
-//ES6 usage
-import nurlresolver from 'nurlresolver';
+***ES6 usage***
+```js
+import nUrlResolver from 'nurlresolver';
 const results = await nUrlResolver.resolve(linkToResolve);
 
 const linkToResolve = 'https://cloud.mail.ru/public/abcd/sAmPlE';
 const results = await nUrlResolver.resolve(linkToResolve);
+```
 
-/*Output==>
 
+***Output***
+```json
 [  
   {
     link: 'https://cloclo3.cldmail.ru/public/get/generatedlink/no/FileName.extension',
@@ -44,21 +44,35 @@ const results = await nUrlResolver.resolve(linkToResolve);
   }
 ]
 
-*/
+```
 
+**Resolve link recursively:**
+
+```js
 const results = await nUrlResolver.resolveRecursive(link);
-//this is going to resolve the final playback links. Schema representation is same as above result. The only difference is it recursively resolve all the links as they get found.
-
+/*
+This is going to resolve the final playback links.
+Schema representation is same as above result.
+The only difference is it recursively resolve all the links as they get found.
+*/
 ```
 
 ## Headers Support
 In some of the sharing sites, it's required to send some header information back. e.g. Referer is required in some sites or if a link generated from an ip which is only accessible from that ip (in this case the xforward header is added in the result output so that same header can be sent to the same site later on.)
 
 ## Advance Options
-optionsextractMetaInformation | boolean | instruct the resolver to extract contenttype, lastmodifieddate and size of the file.
-```
+***options***
+
+| Name      | Type | Description     |
+| :---        |    :----:   |          ---: |
+| extractMetaInformation      | boolean       | instruct the resolver to extract contenttype, lastmodifieddate and size of the file.   |
+| timeout   | number        | timeout in seconds      |
+
+
+```js
 const results = await nUrlResolver.resolve(linkToResolve, {
-    extractMetaInformation: true
+    extractMetaInformation: true,
+    timeout: 30 //returns the results at maximum after 30 seconds.
 });
 
 /*
@@ -78,10 +92,9 @@ const results = await nUrlResolver.resolve(linkToResolve, {
   }
 ]
 */
-
 ```
 
-Supported sites
+**Supported sites**
 * Google Drive
 * CloudMailRu
 * MegaupNet
