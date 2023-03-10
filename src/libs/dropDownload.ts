@@ -28,7 +28,7 @@ export class dropDownloadResolver extends BaseUrlResolver {
         if (form2ToPost) {
             form2ToPost['code'] = captcha;
             form2ToPost['adblock_detected'] = '0';
-        };
+        }
         const response3 = await this.gotInstance.post(response2.url, {
             form: form2ToPost,
             headers: {
