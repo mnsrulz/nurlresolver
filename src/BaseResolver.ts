@@ -26,6 +26,7 @@ export abstract class BaseUrlResolver {
     protected scrapeLinkHref = helper.scrapeLinkHref;
     protected scrapePageTitle = helper.scrapePageTitle;
     protected scrapeInnerText = helper.scrapeInnerText;
+    protected parseAllLinks = helper.parseAllLinks;
     protected extractFileNameFromUrl = helper.extractFileNameFromUrl;
     protected wait = helper.wait;
     protected nodeatob = helper.nodeatob;
