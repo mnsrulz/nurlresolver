@@ -20,7 +20,7 @@ export class movipkResolver extends BaseUrlResolver {
                     }
                 }
             }
-        });
+        }) as {links: {link: string}[]};
 
         for (const { link } of links) {
             result.push({ link } as ResolvedMediaItem);

@@ -114,6 +114,13 @@ export const scrapePageTitle = (html: string) => {
     return title;
 }
 
+export const scrapeInnerText = (html: string, selector: string) => {
+    const { title }: { title: string } = scrapeIt.scrapeHTML(html, {
+        title: selector
+    });
+    return title;
+}
+
 export const getSecondLevelDomain = (someUrl: string) => {
     const hostname = new URL(someUrl);
     const parsed = psl.parse(hostname.hostname) as psl.ParsedDomain;

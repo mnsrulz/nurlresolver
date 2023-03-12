@@ -19,7 +19,7 @@ export class NinjastreamResolver extends BaseUrlResolver {
                 selector: 'meta[name="csrf-token"]',
                 attr: 'content'
             }
-        });
+        }) as { fileEmbed: string, csrfToken: string };
         const title = JSON.parse(fileEmbed).name;
         const jsontopost = { id: JSON.parse(fileEmbed).hashid };
 
@@ -36,7 +36,7 @@ export class NinjastreamResolver extends BaseUrlResolver {
 
         const result = JSON.parse(response2);
         if (result.status == 'success') {
-            const link =`${result.result['playlist']}`;
+            const link = `${result.result['playlist']}`;
             return { link, title, isPlayable: true } as ResolvedMediaItem;
         }
         return [];

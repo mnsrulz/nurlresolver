@@ -16,7 +16,7 @@ export class StreamlareResolver extends BaseUrlResolver {
                 selector: 'file-embed',
                 attr: ':file'
             }
-        });
+        }) as {fileEmbed: string};
         const title = `${JSON.parse(fileEmbed).name}.mp4`;
         const jsontopost = { id: JSON.parse(fileEmbed).hashid };
 

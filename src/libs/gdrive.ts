@@ -27,9 +27,7 @@ export class GDriveResolver extends BaseUrlResolver {
                 followRedirect: false
             });
 
-            const { title } = this.scrapeHtml(response.body, {
-                title: 'span.uc-name-size a'
-            });
+            const title = this.scrapeInnerText(response.body, 'span.uc-name-size a');
 
             const downloadlink1 = this.scrapeLinkHref(response.body, 'a#uc-download-link');
 

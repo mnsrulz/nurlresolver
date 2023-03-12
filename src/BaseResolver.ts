@@ -25,6 +25,7 @@ export abstract class BaseUrlResolver {
     protected getHiddenForm = helper.parseHiddenFormV2;
     protected scrapeLinkHref = helper.scrapeLinkHref;
     protected scrapePageTitle = helper.scrapePageTitle;
+    protected scrapeInnerText = helper.scrapeInnerText;
     protected extractFileNameFromUrl = helper.extractFileNameFromUrl;
     protected wait = helper.wait;
     protected nodeatob = helper.nodeatob;
