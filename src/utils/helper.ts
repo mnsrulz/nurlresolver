@@ -59,8 +59,8 @@ export const parseAllLinks = (html: string, context: string, baseUrl = '') => {
         output: {
             listItem: `${context} a`,
             data: {
-                text: '',
-                href: {
+                title: '',
+                link: {
                     attr: 'href'
                 }
             }
@@ -68,12 +68,12 @@ export const parseAllLinks = (html: string, context: string, baseUrl = '') => {
     }) as { output: ScrapedAnchorElement[] };
 
     output.forEach(x => {
-        if (baseUrl && baseUrl.startsWith('http') && !x.link.startsWith('http')) {
+        if (baseUrl && baseUrl.startsWith('http') && !x.link?.startsWith('http')) {
             result.push({
                 link: new URL(x.link, baseUrl).href,
                 title: x.title
             });
-        } else if (x.link.startsWith('http')) {
+        } else if (x.link?.startsWith('http')) {
             result.push({
                 link: x.link,
                 title: x.title
