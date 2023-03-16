@@ -21,6 +21,7 @@
     "@types/tough-cookie": "^4.0.2",
     "@typescript-eslint/eslint-plugin": "^5.54.1",
     "@typescript-eslint/parser": "^5.54.1",
+    "ava": "^5.2.0",
     "eslint": "^8.35.0",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
@@ -28,12 +29,20 @@
   },
   "scripts": {
     "lint": "eslint . --ext .ts",
-    "test": "echo \"Error: no test specified\"",
+    "test": "ava",
     "build": "tsc",
     "build:watch": "tsc -w",
     "prepublishOnly": "tsc",
     "start:debug": "tsnd --respawn src/app.debug.ts"
   },
+  "ava": {
+		"extensions": [
+			"ts"
+		],
+		"require": [
+			"ts-node/register"
+		]
+	},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mnsrulz/nurlresolver.git"

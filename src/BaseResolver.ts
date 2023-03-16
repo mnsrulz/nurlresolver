@@ -22,11 +22,13 @@ export abstract class BaseUrlResolver {
     protected defaultUserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0';
 
     protected getSecondLevelDomain = helper.getSecondLevelDomain;
+    protected isValidHttpUrl = helper.isValidHttpUrl;
     protected getHiddenForm = helper.parseHiddenFormV2;
     protected scrapeLinkHref = helper.scrapeLinkHref;
     protected scrapePageTitle = helper.scrapePageTitle;
     protected scrapeInnerText = helper.scrapeInnerText;
     protected parseAllLinks = helper.parseAllLinks;
+    protected parseElementAttributes = helper.parseElementAttributes;
     protected extractFileNameFromUrl = helper.extractFileNameFromUrl;
     protected wait = helper.wait;
     protected nodeatob = helper.nodeatob;

@@ -29,8 +29,8 @@ export class ExtraMoviesResolver extends BaseUrlResolver {
             }
         }) as { shortLink: [{ rel: string, href: string }] };
 
-const shortLink = obj1.shortLink.find(x => x.rel == 'shortlink')?.href;
-        if(!shortLink) throw new Error('Unable to parse shortlink for extramovies resolver');
+        const shortLink = obj1.shortLink.find(x => x.rel == 'shortlink')?.href;
+        if (!shortLink) throw new Error('Unable to parse shortlink for extramovies resolver');
         const urlInstance = url.parse(shortLink, true);
         const pageId = urlInstance && urlInstance.query["p"];
         if (!pageId) return links;
@@ -38,16 +38,21 @@ const shortLink = obj1.shortLink.find(x => x.rel == 'shortlink')?.href;
         const extramoviesBaseUrl = `https://${urlInstance.host}`;
         const apiUrl = `${extramoviesBaseUrl}/wp-json/wp/v2/posts/${pageId}`;
         const apiResponse = await this.gotInstance(apiUrl);
-        const htmlResponse = await this.gotInstance(shortLink);
-        const parsedLinksFromHtml = this.scrapeAllLinks(htmlResponse.body, '.entry-content');
-        
+        const parsedLinksFromHtml = this.scrapeAllLinks(responsev1.body, '.entry-content');
+
         const apiResponseAsJson = JSON.parse(apiResponse.body);
         const renderedContent = apiResponseAsJson.content.rendered;
-        
+
         const regex_self_links = /https?:\/\/(extramovies|t.me)/gi;
 
         const obj = this.scrapeAllLinks(renderedContent, '');
-        for (const iterator of obj.concat(parsedLinksFromHtml)) {
+        const iframeSrc = this.parseElementAttributes(responsev1.body, 'iframe', 'data-src')
+                            .filter(this.isValidHttpUrl)
+                            .map(x => {
+                                return { link: x, title: this.getSecondLevelDomain(x) } as ResolvedMediaItem;
+                            });
+
+        for (const iterator of obj.concat(parsedLinksFromHtml).concat(iframeSrc)) {
             const title = iterator.title;
             const link = iterator.link.startsWith('http') ? iterator.link : `${extramoviesBaseUrl}${iterator.link}`;
             if (!link) {
