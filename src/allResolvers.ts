@@ -54,3 +54,4 @@ export * from "./libs/hexupload";
 export * from "./libs/dropDownload";
 export * from "./libs/filepress";
 export * from "./libs/uppitResolver";
+export * from "./libs/streamtapeResolver";

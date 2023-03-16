@@ -83,6 +83,21 @@ export const parseAllLinks = (html: string, context: string, baseUrl = '') => {
     return result;
 }
 
+export const parseElementAttributes = (html: string, context: string, attribute: string) => {
+    const { output } = scrapeIt.scrapeHTML(html, {
+        output: {
+            listItem: `${context}`,
+            data: {
+                value: {
+                    attr: attribute
+                }
+            }
+        }
+    }) as { output: { value: string }[] };
+
+    return output.map(x => x.value);
+}
+
 export const parseScripts = (html: string, context = '') => {
     const parsedScripts: { output: [{ s: string }] } = scrapeIt.scrapeHTML(html, {
         output: {
@@ -125,6 +140,15 @@ export const getSecondLevelDomain = (someUrl: string) => {
     const hostname = new URL(someUrl);
     const parsed = psl.parse(hostname.hostname) as psl.ParsedDomain;
     return parsed.sld;
+}
+
+export const isValidHttpUrl = (someUrl: string) => {
+    try {
+        new URL(someUrl);
+    } catch (_) {
+        return false;
+    }
+    return true;
 }
 
 export const extractFileNameFromUrl = (someUrl: string) => {
