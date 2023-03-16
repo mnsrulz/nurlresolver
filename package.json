@@ -1,6 +1,6 @@
 {
   "name": "nurlresolver",
-  "version": "2.16.2",
+  "version": "2.17.0",
   "description": "url resolver for node",
   "main": "./dist/app.js",
   "types": "./dist/app.d.ts",
@@ -36,13 +36,13 @@
     "start:debug": "tsnd --respawn src/app.debug.ts"
   },
   "ava": {
-		"extensions": [
-			"ts"
-		],
-		"require": [
-			"ts-node/register"
-		]
-	},
+    "extensions": [
+      "ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ]
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mnsrulz/nurlresolver.git"
