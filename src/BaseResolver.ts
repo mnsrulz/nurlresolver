@@ -19,7 +19,7 @@ export abstract class BaseUrlResolver {
     protected scrapeItAsync = util.promisify(scrapeIt);
     protected scrapeHtml = scrapeIt.scrapeHTML;
     protected _cookieJar?: CookieJar;
-    protected defaultUserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0';
+    protected defaultUserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/111.0';
 
     protected getSecondLevelDomain = helper.getSecondLevelDomain;
     protected isValidHttpUrl = helper.isValidHttpUrl;
@@ -33,6 +33,7 @@ export abstract class BaseUrlResolver {
     protected wait = helper.wait;
     protected nodeatob = helper.nodeatob;
     protected getServerPublicIp = helper.getServerPublicIp;
+    protected parseScripts = helper.parseScripts;
     protected scrapeAllLinks(html: string, context: string, baseUrl = '') {
         return helper.parseAllLinks(html, context, baseUrl)
             .map(x => { return { link: x.link, title: x.title } as ResolvedMediaItem });
