@@ -113,7 +113,7 @@ https://repl.it/repls/HandsomeLightgraySmalltalk
 
 **Testing**
 ```
-TODO
+npm run test
 ```
 
 **License**
