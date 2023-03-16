@@ -6,14 +6,6 @@ on:
     - '*'
     
 jobs:
-  create-release:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: ncipollo/release-action@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}      
-          
   build:
     runs-on: ubuntu-latest
     strategy:
@@ -30,6 +22,15 @@ jobs:
       - run: npm ci
       - run: npm test
 
+  create-release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}      
+          
   publish-npm:
     needs: build
     runs-on: ubuntu-latest
