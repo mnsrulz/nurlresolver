@@ -16,7 +16,7 @@ export class LetsuploadResolver extends BaseUrlResolver {
         const link1 = regexForInitialPageResult?.[1];
         if (link1) {
             const response2 = await this.gotInstance(link1, { followRedirect: false });
-            const rxFileId = /showFileInformation\(([\d]*[^\)])\)/g
+            const rxFileId = /showFileInformation\(([\d]*[^)])\)/g
             const regexForInitialPageResult = rxFileId.exec(response2.body);
             const fileId = regexForInitialPageResult?.[1];
             const finalLink = `https://letsupload.io/account/direct_download/${fileId}`;
