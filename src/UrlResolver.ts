@@ -6,7 +6,7 @@ const debug = _debug('nurl:BaseUrlResolver');
 
 
 export class UrlResolver {
-  private allResolvers: {new(): BaseUrlResolver;}[];
+  private allResolvers: { new(): BaseUrlResolver; }[];
   constructor() {
     //do filtering of the resolvers here
     this.allResolvers = Object.values(allResolverImports).filter((x) =>
@@ -26,7 +26,7 @@ export class UrlResolver {
     const _options = Object.assign({
       timeout: 30
     }, options);
-    const _allResolvers = this.allResolvers;
+    const _allResolvers = _options.customResolvers ? [...this.allResolvers, ..._options.customResolvers] : this.allResolvers;
     let result: ResolvedMediaItem[] = [];
     const timeoutPromise = new Promise(resolve => setTimeout(resolve, _options.timeout * 1000));
     const actualPromise = _();
@@ -59,7 +59,7 @@ export class UrlResolver {
     const _options = Object.assign({
       timeout: 30
     }, options);
-    
+
     const myPlayableResources: ResolvedMediaItem[] = [];
     const visitedUrls: string[] = [];
 

@@ -1,4 +1,5 @@
 import { UrlResolver } from "./UrlResolver";
+export * from './BaseResolver';
+export * as utils from './utils/helper';
 
-
-export = new UrlResolver();
+export default new UrlResolver();
