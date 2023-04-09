@@ -15,7 +15,7 @@ export class FilepressResolver extends BaseUrlResolver {
         const workingUrl = initialResponse.url;
         const parsedUrl = new URL(workingUrl);
         const fileId = parsedUrl.pathname.split('/').pop();
-        const apiResponse = await this.gotInstance.post(`https://api.${parsedUrl.hostname}/api/file/downlaod/`, {
+        const apiResponse = await this.gotInstance.post(`https://${parsedUrl.hostname}/api/file/downlaod/`, {
             json: {
                 id: fileId,
                 method: "publicDownlaod"
@@ -24,7 +24,7 @@ export class FilepressResolver extends BaseUrlResolver {
                 "referer": workingUrl
             }
         }).json<{ data: string }>();
-
+        
         if (apiResponse.data) {
             const gdResolver = new gDriveV2Resolver();
             const gdurl = `https://drive.google.com/file/d/${apiResponse.data}/view`;
