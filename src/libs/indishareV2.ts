@@ -16,10 +16,13 @@ export class indishareResolverV2 extends BaseUrlResolver {
         });
         const link01 = this.scrapeLinkHref(resp01.body, 'section .container a');
         const resp02 = await this.gotInstance(link01);
-        const links02 = this.scrapeLinkHref(resp02.body, 'body a');
-        const resp03 = await this.gotInstance(links02);
-        const resp04 = await this.postHiddenForm(links02, resp03.body)
-        const link = this.scrapeLinkHref(resp04, '#direct_link a')
+        const rx = /location\.replace\('(http[^']*)'/;
+        const rxresult = rx.exec(resp02.body);
+        const link02 = rxresult![1];
+        const resp03 = await this.gotInstance(link02);
+        const formResult = await this.postHiddenForm(resp03.url, resp03.body);
+        const link = this.scrapeLinkHref(formResult, '#direct_link a')
+
         if (link) {
             const title = this.extractFileNameFromUrl(link);
             links.push({ link, title, isPlayable: true } as ResolvedMediaItem);
