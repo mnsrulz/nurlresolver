@@ -20,6 +20,7 @@ export class SemdCmResolver extends BaseUrlResolver {
                 title,
                 isPlayable: true
             } as ResolvedMediaItem;
+            result.headers = { 'referer': _urlToResolve };
             results.push(result);
         }
         return results;
