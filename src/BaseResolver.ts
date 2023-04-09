@@ -1,4 +1,4 @@
-import got, { HTTPError, Response } from 'got';
+import got, { HTTPError, OptionsOfTextResponseBody, Response } from 'got';
 import scrapeIt from "scrape-it";
 import * as helper from './utils/helper.js';
 import { CookieJar } from 'tough-cookie';
@@ -114,7 +114,7 @@ export abstract class BaseUrlResolver {
 
     async fillMetaInfo(resolveMediaItem: ResolvedMediaItem): Promise<void> {
         const headResponse = await this.gotInstance.head(resolveMediaItem.link, {
-            headers: resolveMediaItem.headers
+            headers: resolveMediaItem.headers || {}
         });
         resolveMediaItem.size = headResponse.headers['content-length'];
         resolveMediaItem.lastModified = headResponse.headers['last-modified'];
@@ -122,7 +122,11 @@ export abstract class BaseUrlResolver {
     }
 
     private setupEnvironment(): void {
-        const gotOptions: CustomGotOptions = {
+        const rejectUnauthorized = process.env.NODE_TLS_REJECT_UNAUTHORIZED;
+        const gotOptions: OptionsOfTextResponseBody = {
+            https: {
+                rejectUnauthorized: rejectUnauthorized == '1'
+            },
             headers: {
                 'User-Agent': this.defaultUserAgent
             }, timeout: {
@@ -199,17 +203,5 @@ export class GenericFormBasedResolver extends BaseUrlResolver {
             isPlayable: true
         } as ResolvedMediaItem;
         return [result];
-    }
-}
-
-interface CustomGotOptions {
-    headers: Record<string, string>,
-    cookieJar?: CookieJar,
-    timeout?: {
-        request?: number,
-        connect?: number
-    },
-    retry?: {
-        limit?: number
     }
 }
