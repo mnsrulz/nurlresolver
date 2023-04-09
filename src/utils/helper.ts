@@ -1,5 +1,5 @@
-import psl = require("psl");
-import scrapeIt = require("scrape-it");
+import psl from "psl";
+import scrapeIt from "scrape-it";
 import got from 'got';
 const map = new Map();
 

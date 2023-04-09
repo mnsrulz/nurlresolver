@@ -1,4 +1,4 @@
-import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
+import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver.js";
 import * as url from 'url';
 
 export class ExtraMoviesResolver extends BaseUrlResolver {

@@ -1,7 +1,7 @@
-import { BaseUrlResolver } from "./BaseResolver";
+import { BaseUrlResolver } from "./BaseResolver.js";
 
 export type UrlResolverOptions = {
   timeout: number;
   extractMetaInformation: boolean;
-  customResolvers: {new(): BaseUrlResolver;}[];//BaseUrlResolver[];  
+  customResolvers: { new(): BaseUrlResolver; }[];
 };

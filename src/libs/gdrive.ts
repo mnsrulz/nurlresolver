@@ -1,4 +1,4 @@
-import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
+import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver.js";
 import { CookieJar } from 'tough-cookie';
 export class GDriveResolver extends BaseUrlResolver {
     private googleDriveId: string;

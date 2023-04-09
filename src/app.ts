@@ -1,6 +1,7 @@
-import { UrlResolver } from "./UrlResolver";
-export * from './BaseResolver';
-export * as utils from './utils/helper';
+import { UrlResolver } from "./UrlResolver.js";
+export * from './BaseResolver.js';
+export * as utils from './utils/helper.js';
 
 const nurlresolver = new UrlResolver();
 export default nurlresolver;
+export {nurlresolver};

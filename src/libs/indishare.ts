@@ -1,4 +1,4 @@
-import { GenericFormBasedResolver, ResolvedMediaItem } from "../BaseResolver";
+import { GenericFormBasedResolver, ResolvedMediaItem } from "../BaseResolver.js";
 
 export class IndishareResolver extends GenericFormBasedResolver {
     constructor() {

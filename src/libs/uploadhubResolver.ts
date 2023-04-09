@@ -1,4 +1,4 @@
-import { GenericFormBasedResolver } from "../BaseResolver";
+import { GenericFormBasedResolver } from "../BaseResolver.js";
 
 export class UploadhubResolver extends GenericFormBasedResolver {
     constructor() {

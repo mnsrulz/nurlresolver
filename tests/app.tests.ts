@@ -1,4 +1,4 @@
-import nurl, { BaseUrlResolver, ResolvedMediaItem } from '../src/app';
+import nurl, { BaseUrlResolver, ResolvedMediaItem } from '../src/app.js';
 import test from 'ava';
 
 test('resolve is defined', t => {

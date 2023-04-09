@@ -1,4 +1,4 @@
-import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
+import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver.js";
 import { URL } from 'url';
 
 export class coinflareResolver extends BaseUrlResolver {

@@ -1,4 +1,4 @@
-import { UrlResolver } from "./UrlResolver";
+import { UrlResolver } from "./UrlResolver.js";
 
 (async () => {
     const resolver = new UrlResolver();

@@ -1,5 +1,5 @@
-import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
-import { parseHiddenForm } from "../utils/helper";
+import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver.js";
+import { parseHiddenForm } from "../utils/helper.js";
 
 export class gDriveV2Resolver extends BaseUrlResolver {
     private googleDriveId: string;

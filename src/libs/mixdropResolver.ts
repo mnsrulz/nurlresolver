@@ -1,4 +1,4 @@
-import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
+import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver.js";
 import { createContext, runInContext } from 'vm';
 
 export class mixdropResolver extends BaseUrlResolver {
