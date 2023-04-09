@@ -9,6 +9,8 @@ Direct link generator for many known content sharing sites. Avoid clicking numer
 
 # *[Live Demo](https://nurlresolver.netlify.app/)*
 
+**Warning:** This package is native [ESM](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) and no longer provides a CommonJS export. If your project uses CommonJS, you will have to [convert to ESM](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c) or use the [dynamic `import()`](https://v8.dev/features/dynamic-import) function. Please don't open issues for questions regarding CommonJS / ESM.
+
 **Installation**
 
 ```
@@ -16,12 +18,6 @@ npm install nurlresolver
 ```
 
 **Usage:**
-
-***Module loader***
-```js
-const nUrlResolver = require('nurlresolver');
-```
-
 ***ES6 usage***
 ```js
 import nUrlResolver from 'nurlresolver';
@@ -64,9 +60,10 @@ In some of the sharing sites, it's required to send some header information back
 ***options***
 
 | Name      | Type | Description     |
-| :---        |    :----:   |          ---: |
-| extractMetaInformation      | boolean       | instruct the resolver to extract contenttype, lastmodifieddate and size of the file.   |
-| timeout   | number        | timeout in seconds      |
+| :---        |    :----:   |          ---: 
+| extractMetaInformation      | boolean       | instruct the resolver to extract contenttype, lastmodifieddate and size of the file.   
+| timeout   | number        | timeout in seconds      
+| customResolvers   | array        | custom resolvers you can inject for resolving urls. Refer to [app.tests](tests/app.tests.ts) for implementation samples      
 
 
 ```js
@@ -74,8 +71,9 @@ const results = await nUrlResolver.resolve(linkToResolve, {
     extractMetaInformation: true,
     timeout: 30 //returns the results at maximum after 30 seconds.
 });
-
-/*
+```
+***Output***
+```js
 [
   {
     "link": "http://www5d.filecdn.pw/dkske911881kkk?download_token=SOME_TOKEN_VALUE",
@@ -91,7 +89,6 @@ const results = await nUrlResolver.resolve(linkToResolve, {
     "contentType": "application/octet-stream"
   }
 ]
-*/
 ```
 
 **Supported sites**
