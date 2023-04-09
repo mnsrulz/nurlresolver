@@ -27,6 +27,7 @@
     "@typescript-eslint/parser": "^5.54.1",
     "ava": "^5.2.0",
     "eslint": "^8.35.0",
+    "nodemon": "^2.0.22",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.0.4"
@@ -37,7 +38,7 @@
     "build": "tsc",
     "build:watch": "tsc -w",
     "prepublishOnly": "tsc",
-    "start:debug": "tsnd --respawn src/app.debug.ts"
+    "start:debug": "nodemon -I --exec node --experimental-specifier-resolution=node --loader ts-node/esm src/app.debug.ts"
   },
   "ava": {
     "files": [
