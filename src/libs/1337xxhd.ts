@@ -1,4 +1,4 @@
-import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
+import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver.js";
 
 export class XhdResolver extends BaseUrlResolver {
     constructor() {

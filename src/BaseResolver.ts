@@ -1,9 +1,8 @@
 import got, { HTTPError, Response } from 'got';
-import scrapeIt = require("scrape-it");
-import util = require('util');
-import * as helper from './utils/helper';
+import scrapeIt from "scrape-it";
+import * as helper from './utils/helper.js';
 import { CookieJar } from 'tough-cookie';
-import { UrlResolverOptions } from './UrlResolverOptions';
+import { UrlResolverOptions } from './UrlResolverOptions.js';
 import _debug from 'debug';
 import { URL } from 'url';
 import { performance } from "perf_hooks";
@@ -16,7 +15,7 @@ export abstract class BaseUrlResolver {
 
     protected useCookies: boolean;
 
-    protected scrapeItAsync = util.promisify(scrapeIt);
+    protected scrapeItAsync = scrapeIt;
     protected scrapeHtml = scrapeIt.scrapeHTML;
     protected _cookieJar?: CookieJar;
     protected defaultUserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/111.0';

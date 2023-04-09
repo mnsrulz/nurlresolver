@@ -1,5 +1,5 @@
 import test from 'ava';
-import { parseElementAttributes, parseAllLinks, isValidHttpUrl } from './../src/utils/helper';
+import { parseElementAttributes, parseAllLinks, isValidHttpUrl, getSecondLevelDomain } from './../src/utils/helper.js';
 
 const data = `
 <html>
@@ -26,4 +26,8 @@ test('parseAllLinks should return valid links', async t => {
 
 test('isValidUrl should return valid links', async t => {
     isValidHttpUrl('http://example.com') && !isValidHttpUrl('test') ? t.pass() : t.fail();
+});
+
+test('second level domain should return valid domain', t=>{
+    t.is(getSecondLevelDomain('http://ww.abc.com'), 'abc');
 });

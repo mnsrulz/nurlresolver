@@ -1,6 +1,6 @@
-import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
+import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver.js";
 import { createContext, runInContext } from 'vm';
-import { parseScripts } from '../utils/helper';
+import { parseScripts } from '../utils/helper.js';
 
 //got this from the https://highload.to/assets/js/master.js
 const masterScript = `
