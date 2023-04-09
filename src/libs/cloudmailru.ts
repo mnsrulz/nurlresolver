@@ -1,5 +1,5 @@
 
-import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
+import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver.js";
 
 export class CloudMailRuResolver extends BaseUrlResolver {
     constructor() {

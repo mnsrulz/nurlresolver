@@ -1,7 +1,7 @@
-import _debug = require('debug');
-const debug = _debug('nurl:ClicknUploadResolver');
+import debug from 'debug';
+const _debug = debug('nurl:ClicknUploadResolver');
 
-import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
+import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver.js";
 
 export class ClicknUploadResolver extends BaseUrlResolver {
     constructor() {
@@ -26,7 +26,7 @@ export class ClicknUploadResolver extends BaseUrlResolver {
         const urlToPost = response2.url;
         let elapsedSecond = 1;
         const logTimer = setInterval(() => { 
-            debug(`Waiting ${elapsedSecond++}/15 seconds for ${_urlToResolve}`) 
+            _debug(`Waiting ${elapsedSecond++}/15 seconds for ${_urlToResolve}`) 
         }, 1000);
 
         await this.wait(15000);

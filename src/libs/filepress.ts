@@ -1,5 +1,5 @@
-import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver";
-import { gDriveV2Resolver } from './gdriveV2';
+import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver.js";
+import { gDriveV2Resolver } from './gdriveV2.js';
 
 export class FilepressResolver extends BaseUrlResolver {
     constructor() {
