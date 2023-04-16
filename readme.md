@@ -60,7 +60,7 @@ In some of the sharing sites, it's required to send some header information back
 ***options***
 
 | Name      | Type | Description     |
-| :---        |    :----:   |          ---: 
+| :---        |    :----:   |          :--- 
 | extractMetaInformation      | boolean       | instruct the resolver to extract contenttype, lastmodifieddate and size of the file.   
 | timeout   | number        | timeout in seconds      
 | customResolvers   | array        | custom resolvers you can inject for resolving urls. Refer to [app.tests](tests/app.tests.ts) for implementation samples      
