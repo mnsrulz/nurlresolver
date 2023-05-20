@@ -170,3 +170,11 @@ export interface ScrapedAnchorElement {
     link: string,
     title: string
 }
+
+export const parseGoogleFileId = (_url: string) => {
+    const rx0 = /(drive|docs)\.google\.com\/open\?id=(.*)/
+    const rx1 = /(drive|docs)\.google\.com\/file\/d\/(.*?)\//
+    const rx2 = /(drive|docs)\.google\.com\/uc\?id=(.*?)&/
+    const regexresult = rx0.exec(_url) || rx1.exec(_url) || rx2.exec(_url)
+    return regexresult![2];
+}
