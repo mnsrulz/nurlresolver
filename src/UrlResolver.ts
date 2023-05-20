@@ -25,6 +25,7 @@ export class UrlResolver {
     const _options = Object.assign({
       timeout: 30
     }, options);
+    const instance = this;
     const _allResolvers = _options.customResolvers ? [...this.allResolvers, ..._options.customResolvers] : this.allResolvers;
     let result: ResolvedMediaItem[] = [];
     const timeoutPromise = new Promise(resolve => setTimeout(resolve, _options.timeout * 1000));
@@ -37,7 +38,7 @@ export class UrlResolver {
       for (const iteratorurl of urlsToResolve) {
         for (const resolver of _allResolvers) {
           const element = new resolver();
-          const promise = element.resolve(iteratorurl, _options).then(resolvedItems => result = [...result, ...resolvedItems]);
+          const promise = element.resolve(iteratorurl, _options, instance).then(resolvedItems => result = [...result, ...resolvedItems]);
           promises.push(promise);
         }
       }

@@ -1,5 +1,5 @@
 import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver.js";
-import { parseHiddenForm } from "../utils/helper.js";
+import { parseHiddenForm, parseGoogleFileId } from "../utils/helper.js";
 
 export class gDriveV2Resolver extends BaseUrlResolver {
     private googleDriveId: string;
@@ -13,16 +13,9 @@ export class gDriveV2Resolver extends BaseUrlResolver {
 
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
         const links = [];
-
-        const rx0 = /(drive|docs)\.google\.com\/open\?id=(.*)/
-        const rx1 = /(drive|docs)\.google\.com\/file\/d\/(.*?)\//
-        const rx2 = /(drive|docs)\.google\.com\/uc\?id=(.*?)&/
-
-        const regexresult = rx0.exec(_urlToResolve) || rx1.exec(_urlToResolve) || rx2.exec(_urlToResolve)
-        if (regexresult) {
-            const normalizeDriveUrl = `https://drive.google.com/uc?id=${regexresult[2]}&export=download`;
-            this.googleDriveId = regexresult[2];
-
+        this.googleDriveId = parseGoogleFileId(_urlToResolve)
+        if (this.googleDriveId) {
+            const normalizeDriveUrl = `https://drive.google.com/uc?id=${this.googleDriveId}&export=download`;
             const googleApiKey = this._resolverOptions?.googleDrive?.apiKey;
             if (googleApiKey) {
                 const driveUrlWithApiKey = `https://www.googleapis.com/drive/v3/files/${this.googleDriveId}?alt=media&key=${googleApiKey}`;
