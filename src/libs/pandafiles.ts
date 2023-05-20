@@ -3,7 +3,7 @@ import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver.js";
 export class PandafilesResolver extends BaseUrlResolver {
     constructor() {
         super({
-            domains: [/https?:\/\/(pandafiles|uptomega)/],
+            domains: [/https?:\/\/(pandafiles)/],
             useCookies: true,
             speedRank: 50
         });

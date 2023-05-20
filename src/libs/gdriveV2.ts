@@ -22,22 +22,37 @@ export class gDriveV2Resolver extends BaseUrlResolver {
         if (regexresult) {
             const normalizeDriveUrl = `https://drive.google.com/uc?id=${regexresult[2]}&export=download`;
             this.googleDriveId = regexresult[2];
-            const response = await this.gotInstance(normalizeDriveUrl, {
-                followRedirect: false
-            });
 
-            const { title } = this.scrapeHtml(response.body, {
-                title: 'span.uc-name-size a'
-            }) as { title: string };
+            const googleApiKey = this._resolverOptions?.googleDrive?.apiKey;
+            if (googleApiKey) {
+                const driveUrlWithApiKey = `https://www.googleapis.com/drive/v3/files/${this.googleDriveId}?alt=media&key=${googleApiKey}`;
 
-            const parsedForm = parseHiddenForm(response.body);
-            const reqMediaConfirm = await this.gotInstance(parsedForm.action, {
-                followRedirect: false
-            });
-            const link = reqMediaConfirm.headers.location;
-            if (link) {
-                const result = { link, title, isPlayable: true } as ResolvedMediaItem;
+                const driveUrlInfoWithApiKey = `https://www.googleapis.com/drive/v3/files/${this.googleDriveId}?supportsAllDrives=true&fields=name&key=${googleApiKey}`
+                const response = await this.gotInstance(driveUrlInfoWithApiKey, {
+                    followRedirect: false
+                }).json<{ name: string }>();
+
+                const title = response.name;
+                const result = { link: driveUrlWithApiKey, title, isPlayable: true } as ResolvedMediaItem;
                 links.push(result);
+            } else {
+                const response = await this.gotInstance(normalizeDriveUrl, {
+                    followRedirect: false
+                });
+
+                const { title } = this.scrapeHtml(response.body, {
+                    title: 'span.uc-name-size a'
+                }) as { title: string };
+
+                const parsedForm = parseHiddenForm(response.body);
+                const reqMediaConfirm = await this.gotInstance(parsedForm.action, {
+                    followRedirect: false
+                });
+                const link = reqMediaConfirm.headers.location;
+                if (link) {
+                    const result = { link, title, isPlayable: true } as ResolvedMediaItem;
+                    links.push(result);
+                }
             }
         }
         return links;
