@@ -4,4 +4,7 @@ export type UrlResolverOptions = {
   timeout: number;
   extractMetaInformation: boolean;
   customResolvers: { new(): BaseUrlResolver; }[];
+  googleDrive: {
+    apiKey: string
+  }
 };

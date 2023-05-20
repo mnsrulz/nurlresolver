@@ -19,7 +19,7 @@ export abstract class BaseUrlResolver {
     protected scrapeHtml = scrapeIt.scrapeHTML;
     protected _cookieJar?: CookieJar;
     protected defaultUserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/111.0';
-
+    protected _resolverOptions?: Partial<UrlResolverOptions>;
     protected getSecondLevelDomain = helper.getSecondLevelDomain;
     protected isValidHttpUrl = helper.isValidHttpUrl;
     protected getHiddenForm = helper.parseHiddenFormV2;
@@ -61,6 +61,7 @@ export abstract class BaseUrlResolver {
         options: Partial<UrlResolverOptions>
     ): Promise<ResolvedMediaItem[]> {
         let canResolve = false;
+        this._resolverOptions = options;
         try {
             canResolve = await this.canResolve(urlToResolve);
         } catch (error) {

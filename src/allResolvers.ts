@@ -55,3 +55,4 @@ export * from "./libs/dropDownload.js";
 export * from "./libs/filepress.js";
 export * from "./libs/uppitResolver.js";
 export * from "./libs/streamtapeResolver.js";
+export * from "./libs/uptomegaResolver.js";
