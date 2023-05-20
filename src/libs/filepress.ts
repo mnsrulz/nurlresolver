@@ -5,7 +5,7 @@ export class FilepressResolver extends BaseUrlResolver {
     constructor() {
         super({
             domains: [/https?:\/\/filepress/],
-            speedRank: 99
+            speedRank: 95
         });
     }
 

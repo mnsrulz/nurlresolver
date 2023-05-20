@@ -5,7 +5,7 @@ export class YouruploadResolver extends BaseUrlResolver {
     constructor() {
         super({
             domains: [/https?:\/\/yourupload\.com/, /https?:\/\/www\.yourupload\.com/],
-            speedRank: 60
+            speedRank: 80
         });
     }
 
