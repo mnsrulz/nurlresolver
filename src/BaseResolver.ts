@@ -6,6 +6,7 @@ import { UrlResolverOptions } from './UrlResolverOptions.js';
 import _debug from 'debug';
 import { URL } from 'url';
 import { performance } from "perf_hooks";
+import { UrlResolver } from './UrlResolver.js';
 const logger = _debug('nurl:BaseUrlResolver');
 
 export abstract class BaseUrlResolver {
@@ -20,6 +21,7 @@ export abstract class BaseUrlResolver {
     protected _cookieJar?: CookieJar;
     protected defaultUserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/111.0';
     protected _resolverOptions?: Partial<UrlResolverOptions>;
+    protected _context?: UrlResolver;
     protected getSecondLevelDomain = helper.getSecondLevelDomain;
     protected isValidHttpUrl = helper.isValidHttpUrl;
     protected getHiddenForm = helper.parseHiddenFormV2;
@@ -58,10 +60,12 @@ export abstract class BaseUrlResolver {
      * @param {string} urlToResolve
      */
     async resolve(urlToResolve: string,
-        options: Partial<UrlResolverOptions>
+        options: Partial<UrlResolverOptions>,
+        context?: UrlResolver
     ): Promise<ResolvedMediaItem[]> {
         let canResolve = false;
         this._resolverOptions = options;
+        this._context = context;
         try {
             canResolve = await this.canResolve(urlToResolve);
         } catch (error) {
