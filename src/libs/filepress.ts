@@ -36,4 +36,7 @@ export class FilepressResolver extends BaseUrlResolver {
         }
         return [];
     }
+    async fillMetaInfo(resolveMediaItem: ResolvedMediaItem): Promise<void> {
+        //do nothing...
+    }
 }
