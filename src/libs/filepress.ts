@@ -26,7 +26,7 @@ export class FilepressResolver extends BaseUrlResolver {
          
         if (apiResponse.data) {
             const gdurl = `https://drive.google.com/file/d/${apiResponse.data}/view`;
-            const result = await this._context?.resolve(gdurl);
+            const result = await this._context?.resolveRecursive(gdurl, this._resolverOptions);
             //alright so here we construct two result one for filepress and one for google drive
             if (result && result.length > 0) {
                 const clonedResult = Object.assign({}, result[0]);
