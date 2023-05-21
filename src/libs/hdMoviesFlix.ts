@@ -5,7 +5,7 @@ import { URL } from 'url';
 export class hdMoviesFlixResolver extends BaseUrlResolver {
     constructor() {
         super({
-            domains: [/https?:\/\/hdmoviesflix/]
+            domains: [/https?:\/\/(hdmoviesflix|moviesflix)/]
         });
     }
 
