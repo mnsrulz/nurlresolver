@@ -56,3 +56,4 @@ export * from "./libs/filepress.js";
 export * from "./libs/uppitResolver.js";
 export * from "./libs/streamtapeResolver.js";
 export * from "./libs/uptomegaResolver.js";
+export * from "./libs/uploadFlix.js";
