@@ -15,7 +15,7 @@ export class LinkritResolver extends BaseUrlResolver {
         let links = this.scrapeAllLinks(response.body, '.view-well');
         if (links && links.length > 0) return links;
 
-        const response2Body = await this.postHiddenForm(_urlToResolve, response.body);
+        const response2Body = await this.postHiddenForm(response.url, response.body);
         links = this.scrapeAllLinks(response2Body, '.view-well');
         return links;
     }
