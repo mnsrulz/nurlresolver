@@ -58,3 +58,5 @@ export * from "./libs/streamtapeResolver.js";
 export * from "./libs/uptomegaResolver.js";
 export * from "./libs/uploadFlix.js";
 export * from "./libs/filePost.js";
+export * from "./libs/gdflix.js";
+export * from "./libs/ahvsh.js";
