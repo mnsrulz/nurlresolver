@@ -135,7 +135,7 @@ export abstract class BaseUrlResolver {
             headers: {
                 'User-Agent': this.defaultUserAgent
             }, timeout: {
-                request: this._resolverOptions?.timeout || 20000  //by default let every individual request time out after 20 seconds
+                request: (this._resolverOptions?.timeout || 20) * 1000   //by default let every individual request time out after 20 seconds
             }, retry: {
                 limit: 0
             }
