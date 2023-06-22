@@ -18,6 +18,8 @@ export class indishareResolverV2 extends BaseUrlResolver {
         const resp02 = await this.gotInstance(link01);
         const rx = /location\.replace\('(http[^']*)'/;
         const rxresult = rx.exec(resp02.body);
+        if(!rxresult) return [];
+        
         const link02 = rxresult![1];
         const resp03 = await this.gotInstance(link02);
         const formResult = await this.postHiddenForm(resp03.url, resp03.body);

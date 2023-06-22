@@ -13,7 +13,9 @@ export class dropDownloadResolver extends BaseUrlResolver {
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
         const response = await this.gotInstance(_urlToResolve);
         const formToPost = this.getHiddenForm(response.body);
-        formToPost && (formToPost['method_free'] = 'Free Download >>');
+        if (!formToPost) return [];
+        
+        formToPost['method_free'] = 'Free Download >>';
         const urlToPost = response.url;
         const response2 = await this.gotInstance.post(urlToPost, {
             form: formToPost,

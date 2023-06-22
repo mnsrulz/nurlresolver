@@ -38,7 +38,7 @@
     "build": "tsc",
     "build:watch": "tsc -w",
     "prepublishOnly": "tsc",
-    "start:debug": "nodemon -I --exec node --experimental-specifier-resolution=node --loader ts-node/esm src/app.debug.ts"
+    "start:debug": "nodemon -I --exec DEBUG=nurl* node --experimental-specifier-resolution=node --loader ts-node/esm src/app.debug.ts"
   },
   "ava": {
     "files": [
