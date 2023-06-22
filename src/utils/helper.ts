@@ -45,6 +45,7 @@ export const parseForms = (html: string) => {
 }
 
 export const transformScrapedFormToFormData = (scrapedForm: ScrapedForm) => {
+    if(!scrapedForm?.kv) return;
     const form: Record<string, string> = {};
     for (const { name, value } of scrapedForm.kv) {
         name !== undefined && value !== undefined &&
