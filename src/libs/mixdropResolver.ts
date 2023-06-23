@@ -10,10 +10,13 @@ export class mixdropResolver extends BaseUrlResolver {
     }
 
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
-        const response = await this.gotInstance(_urlToResolve);
+        const u = new URL(_urlToResolve);
+        if(u.pathname.startsWith('/f/'))
+            u.pathname = u.pathname.replace('/f/','/e/');
+        const response = await this.gotInstance(u.href);
         const parsedScripts = this.parseScripts(response.body);
         for (const s of parsedScripts) {
-            if (s.trimLeft().startsWith('MDCore')) {
+            if (s.trimStart().startsWith('MDCore')) {
                 const context = createContext({
                     MDCore: {}
                 });

@@ -37,22 +37,23 @@ export class ExtraMoviesResolver extends BaseUrlResolver {
 
         const extramoviesBaseUrl = `https://${urlInstance.host}`;
         const apiUrl = `${extramoviesBaseUrl}/wp-json/wp/v2/posts/${pageId}`;
-        const apiResponse = await this.gotInstance(apiUrl);
+        const apiResponse = await this.gotInstance(apiUrl).json<{content: {rendered:string}}>();
         const parsedLinksFromHtml = this.scrapeAllLinks(responsev1.body, '.entry-content');
 
-        const apiResponseAsJson = JSON.parse(apiResponse.body);
-        const renderedContent = apiResponseAsJson.content.rendered;
+        const renderedContent = apiResponse.content.rendered;
 
         const regex_self_links = /https?:\/\/(extramovies|t.me)/gi;
 
         const obj = this.scrapeAllLinks(renderedContent, '');
-        const iframeSrc = this.parseElementAttributes(responsev1.body, 'iframe', 'data-src')
+        const iframeSrc = [...new Set([...this.parseElementAttributes(responsev1.body, 'iframe', 'data-src'),
+                            ...this.parseElementAttributes(responsev1.body, 'iframe', 'src'),
+                            ...this.parseElementAttributes(renderedContent, 'iframe', 'data-litespeed-src')])]
                             .filter(this.isValidHttpUrl)
                             .map(x => {
                                 return { link: x, title: this.getSecondLevelDomain(x) } as ResolvedMediaItem;
                             });
-
-        for (const iterator of obj.concat(parsedLinksFromHtml).concat(iframeSrc)) {
+        
+        for (const iterator of [...obj, ...parsedLinksFromHtml, ...iframeSrc]) {
             const title = iterator.title;
             const link = iterator.link.startsWith('http') ? iterator.link : `${extramoviesBaseUrl}${iterator.link}`;
             if (!link) {
@@ -89,6 +90,8 @@ export class ExtraMoviesResolver extends BaseUrlResolver {
                 }
             } else if (u.host.startsWith('extramovies')) {
                 //just skip if the link is linking back to some more extramovies link
+            } else if (u.pathname.startsWith('/category')){
+                //just skip if the link is linking back to some /category/
             } else {
                 links.push({ title, link } as ResolvedMediaItem);
             }
