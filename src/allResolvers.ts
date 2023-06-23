@@ -61,3 +61,4 @@ export * from "./libs/filePost.js";
 export * from "./libs/gdflix.js";
 export * from "./libs/ahvsh.js";
 export * from "./libs/addison.js";
+export * from "./libs/mixdropResolver.js";
