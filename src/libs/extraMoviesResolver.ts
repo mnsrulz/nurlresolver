@@ -43,6 +43,7 @@ export class ExtraMoviesResolver extends BaseUrlResolver {
         const renderedContent = apiResponse.content.rendered;
 
         const regex_self_links = /https?:\/\/(extramovies|t.me)/gi;
+        const knownBadLinks = /https?:\/\/(www\.)imdb\.com/gi;
 
         const obj = this.scrapeAllLinks(renderedContent, '');
         const iframeSrc = [...new Set([...this.parseElementAttributes(responsev1.body, 'iframe', 'data-src'),
@@ -52,11 +53,11 @@ export class ExtraMoviesResolver extends BaseUrlResolver {
                             .map(x => {
                                 return { link: x, title: this.getSecondLevelDomain(x) } as ResolvedMediaItem;
                             });
-        
+
         for (const iterator of [...obj, ...parsedLinksFromHtml, ...iframeSrc]) {
             const title = iterator.title;
             const link = iterator.link.startsWith('http') ? iterator.link : `${extramoviesBaseUrl}${iterator.link}`;
-            if (!link) {
+            if (!link || !this.isValidHttpUrl(link)) {
                 continue;
             }
             const u = new URL(link);
@@ -97,6 +98,6 @@ export class ExtraMoviesResolver extends BaseUrlResolver {
             }
         }
 
-        return links;
+        return links.filter(x=>!x.link.match(knownBadLinks));
     }
 }
