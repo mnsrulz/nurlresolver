@@ -11,9 +11,7 @@ export class UploadRajaResolver extends BaseUrlResolver {
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem | ResolvedMediaItem[]> {
         const response = await this.gotInstance(_urlToResolve);
         const response2 = await this.postHiddenForm(response.url, response.body, 0, false);
-        const monitizeLink = this.scrapeLinkHref(response2.body, 'a.download');
-        const rx = /url=(http.*)/;
-        const link = rx.exec(monitizeLink)![1];
+        const link = this.scrapeLinkHref(response2.body, 'a.download');
         if (link) {
             const title = this.extractFileNameFromUrl(link);
             const result = {
