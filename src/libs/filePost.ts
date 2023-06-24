@@ -24,4 +24,14 @@ export class filePostResolver extends BaseUrlResolver {
         const title = this.parseElementAttributes(response.body, 'meta[name=description]', 'content')[0];
         return { link: resp2.url, title, isPlayable: true } as ResolvedMediaItem;
     }
+
+    override async fillMetaInfo(resolveMediaItem: ResolvedMediaItem): Promise<void> {
+        const contentResponse = await this.gotInstance(resolveMediaItem.link, {
+            headers: {
+                'Range': 'bytes=0-1'
+            }
+        });
+        resolveMediaItem.size = contentResponse.headers['content-range']?.split('/').pop();
+        resolveMediaItem.contentType = contentResponse.headers['content-type'];
+    }
 }
