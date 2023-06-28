@@ -3,7 +3,7 @@ import { GenericFormBasedResolver } from "../BaseResolver.js";
 export class UploadFlixResolver extends GenericFormBasedResolver {
     constructor() {
         super({
-            domains: [/https?:\/\/uploadflix/],
+            domains: [/https?:\/\/(dl\.)?uploadflix/],
             speedRank: 75
         }, 'a.downloadbtn');
     }
