@@ -63,3 +63,4 @@ export * from "./libs/ahvsh.js";
 export * from "./libs/addison.js";
 export * from "./libs/mixdropResolver.js";
 export * from "./libs/desiuploadV2.js";
+export * from "./libs/upstreamResolver.js";
