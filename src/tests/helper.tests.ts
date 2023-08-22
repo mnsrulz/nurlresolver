@@ -1,5 +1,5 @@
 import test from 'ava';
-import { parseElementAttributes, parseAllLinks, isValidHttpUrl, getSecondLevelDomain } from './../src/utils/helper.js';
+import { parseGoogleFileId, parseElementAttributes, parseAllLinks, isValidHttpUrl, getSecondLevelDomain } from '../utils/helper.js';
 
 const data = `
 <html>
@@ -28,6 +28,10 @@ test('isValidUrl should return valid links', async t => {
     isValidHttpUrl('http://example.com') && !isValidHttpUrl('test') ? t.pass() : t.fail();
 });
 
-test('second level domain should return valid domain', t=>{
+test('second level domain should return valid domain', t => {
     t.is(getSecondLevelDomain('http://ww.abc.com'), 'abc');
+});
+
+test('google drive parse links', t => {
+    t.is(parseGoogleFileId('https://drive.google.com/u/0/uc?id=1EBDCCsIy12HwE4II6-KKKsVSL_FFFFFT&export=download'), '1EBDCCsIy12HwE4II6-KKKsVSL_FFFFFT');
 });
