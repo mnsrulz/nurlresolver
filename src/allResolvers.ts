@@ -32,7 +32,7 @@ export * from "./libs/uploadever.js";
 export * from "./libs/gofile.js";
 export * from "./libs/linksExtralinksResolver.js";
 export * from "./libs/send.cm.js";
-//export * from "./libs/clicknUpload.js";
+export * from "./libs/clicknUpload.js";
 export * from "./libs/streamlare.js";
 export * from "./libs/ninjastream.js";
 export * from "./libs/movipk.js";
