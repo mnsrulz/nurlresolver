@@ -24,14 +24,14 @@ export class ClicknUploadResolver extends BaseUrlResolver {
         }
 
         const urlToPost = response2.url;
-        let elapsedSecond = 1;
-        const logTimer = setInterval(() => { 
-            _debug(`Waiting ${elapsedSecond++}/15 seconds for ${_urlToResolve}`) 
-        }, 1000);
+        //let elapsedSecond = 1;
+        // const logTimer = setInterval(() => { 
+        //     _debug(`Waiting ${elapsedSecond++}/15 seconds for ${_urlToResolve}`) 
+        // }, 1000);
 
-        await this.wait(15000);
+        // await this.wait(15000);
 
-        clearInterval(logTimer);
+        // clearInterval(logTimer);
         
         const response3 = await this.gotInstance.post(urlToPost, {
             form: formToPost,
