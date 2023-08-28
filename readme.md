@@ -64,7 +64,7 @@ In some of the sharing sites, it's required to send some header information back
 | extractMetaInformation      | boolean       | instruct the resolver to extract contenttype, lastmodifieddate and size of the file.   
 | timeout   | number        | timeout in seconds      
 | googleDrive.apiKey   | string        | optional api key to avoid anonymous access. Defaults to empty to allow anonymous access.
-| customResolvers   | array        | custom resolvers you can inject for resolving urls. Refer to [app.tests](tests/app.tests.ts) for implementation samples      
+| customResolvers   | array        | custom resolvers you can inject for resolving urls. Refer to [app.tests](src/tests/app.tests.ts) for implementation samples      
 
 
 ```js
