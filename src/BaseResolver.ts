@@ -33,6 +33,7 @@ export abstract class BaseUrlResolver {
     protected extractFileNameFromUrl = helper.extractFileNameFromUrl;
     protected wait = helper.wait;
     protected nodeatob = helper.nodeatob;
+    protected nodebtoa = helper.nodebtoa;
     protected getServerPublicIp = helper.getServerPublicIp;
     protected parseScripts = helper.parseScripts;
     protected scrapeAllLinks(html: string, context: string, baseUrl = '') {

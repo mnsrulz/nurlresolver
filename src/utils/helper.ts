@@ -19,6 +19,7 @@ export const getServerPublicIp = async () => {
 export const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export const nodeatob = (str: string) => Buffer.from(str, 'base64').toString();
+export const nodebtoa = (str: string) => Buffer.from(str).toString('base64');
 
 export const parseForms = (html: string) => {
     const result = scrapeIt.scrapeHTML(html, {
