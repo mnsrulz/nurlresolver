@@ -2,7 +2,7 @@ import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver.js";
 import { parseHiddenForm, parseGoogleFileId } from "../utils/helper.js";
 
 export class gDriveV2Resolver extends BaseUrlResolver {
-    private googleDriveId: string;
+    private googleDriveId: string | null;
     constructor() {
         super({
             domains: [/https?:\/\/(drive|docs)\.google\.com/],
