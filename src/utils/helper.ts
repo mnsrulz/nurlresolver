@@ -177,7 +177,7 @@ export const parseGoogleFileId = (_url: string) => {
     const u = new URL(_url);
     if (/(drive|docs)\.google\.com/.test(u.hostname)) {
         if (u.pathname.startsWith('/file/d')) {
-            return u.pathname.split('/').at(3) || null;
+            return u.pathname.split('/')[3] || null;
         } else if (u.searchParams.get('id')) {
             return u.searchParams.get('id');
         }
