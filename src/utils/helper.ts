@@ -46,7 +46,7 @@ export const parseForms = (html: string) => {
 }
 
 export const transformScrapedFormToFormData = (scrapedForm: ScrapedForm) => {
-    if(!scrapedForm?.kv) return;
+    if (!scrapedForm?.kv) return;
     const form: Record<string, string> = {};
     for (const { name, value } of scrapedForm.kv) {
         name !== undefined && value !== undefined &&
@@ -174,10 +174,13 @@ export interface ScrapedAnchorElement {
 }
 
 export const parseGoogleFileId = (_url: string) => {
-    const rx0 = /(drive|docs)\.google\.com\/open\?id=(.*)/
-    const rx1 = /(drive|docs)\.google\.com\/file\/d\/(.*?)\//
-    const rx2 = /(drive|docs)\.google\.com\/uc\?id=(.*?)&/
-    const rx3 = /(drive|docs)\.google\.com\/u\/\d{0,3}?\/uc\?id=(.*?)&/
-    const regexresult = rx0.exec(_url) || rx1.exec(_url) || rx2.exec(_url)  || rx3.exec(_url)
-    return regexresult![2];
+    const u = new URL(_url);
+    if (/(drive|docs)\.google\.com/.test(u.hostname)) {
+        if (u.pathname.startsWith('/file/d')) {
+            return u.pathname.split('/').at(3) || null;
+        } else if (u.searchParams.get('id')) {
+            return u.searchParams.get('id');
+        }
+    }
+    return null;
 }

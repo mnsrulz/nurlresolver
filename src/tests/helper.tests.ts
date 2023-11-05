@@ -34,4 +34,7 @@ test('second level domain should return valid domain', t => {
 
 test('google drive parse links', t => {
     t.is(parseGoogleFileId('https://drive.google.com/u/0/uc?id=1EBDCCsIy12HwE4II6-KKKsVSL_FFFFFT&export=download'), '1EBDCCsIy12HwE4II6-KKKsVSL_FFFFFT');
+    t.is(parseGoogleFileId('https://drive.google.com/u/0/uc?id=1EBDCCsIy12HwE4II6-KKKsVSL_FFFFFT'), '1EBDCCsIy12HwE4II6-KKKsVSL_FFFFFT');
+    t.is(parseGoogleFileId('https://drive.google.com/file/d/1EBDCCsIy12HwE4II6-KKKsVSL_FFFFFT/view'), '1EBDCCsIy12HwE4II6-KKKsVSL_FFFFFT');
+    t.is(parseGoogleFileId('https://drives.othergoogle.com/file/d/1EBDCCsIy12HwE4II6-KKKsVSL_FFFFFT/view'), null);
 });
