@@ -1,11 +1,11 @@
 import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver.js";
 //this is the sample captcha response
-const shtml = `<div class="captcha"><tr><td align="right"><div style="width:80px;height:26px;font:bold 13px Arial;background:#ccc;text-align:left;direction:ltr;">
-    <span style="position:absolute;padding-left:43px;padding-top:6px;">3</span>
-    <span style="position:absolute;padding-left:27px;padding-top:7px;">5</span>
-    <span style="position:absolute;padding-left:60px;padding-top:3px;">9</span>
-    <span style="position:absolute;padding-left:7px;padding-top:4px;">2</span>
-    </div></td></tr></div>`;
+// const shtml = `<div class="captcha"><tr><td align="right"><div style="width:80px;height:26px;font:bold 13px Arial;background:#ccc;text-align:left;direction:ltr;">
+//     <span style="position:absolute;padding-left:43px;padding-top:6px;">3</span>
+//     <span style="position:absolute;padding-left:27px;padding-top:7px;">5</span>
+//     <span style="position:absolute;padding-left:60px;padding-top:3px;">9</span>
+//     <span style="position:absolute;padding-left:7px;padding-top:4px;">2</span>
+//     </div></td></tr></div>`;
 
 export class PandafilesResolver extends BaseUrlResolver {
     constructor() {
