@@ -24,15 +24,16 @@ export class ClicknUploadResolver extends BaseUrlResolver {
         }
 
         const urlToPost = response2.url;
-        //let elapsedSecond = 1;
-        // const logTimer = setInterval(() => { 
-        //     _debug(`Waiting ${elapsedSecond++}/15 seconds for ${_urlToResolve}`) 
-        // }, 1000);
+        let elapsedSecond = 1;
+        const logTimer = setInterval(() => { 
+            _debug(`Waiting ${elapsedSecond}/10 seconds for ${_urlToResolve}`) 
+            elapsedSecond=elapsedSecond+3;
+        }, 3000);
 
-        // await this.wait(15000);
+        await this.wait(10000);
 
-        // clearInterval(logTimer);
-        
+        clearInterval(logTimer);
+
         const response3 = await this.gotInstance.post(urlToPost, {
             form: formToPost,
             headers: {
@@ -41,16 +42,9 @@ export class ClicknUploadResolver extends BaseUrlResolver {
             followRedirect: false   //it can raise some unhandled error which can potentially cause whole application shutdown.
         });
 
-        const output: { download: string } = this.scrapeHtml(response3.body, {
-            download: {
-                selector: '#downloadbtn',
-                attr: 'onclick'
-            }
-        });
-
-        const rxResult = /window\.open\('([^']*)'/.exec(output.download);
-        if (rxResult) {
-            const link = rxResult[1];
+        const link = this.scrapeLinkHref(response3.body, '#downloadbtn.downloadbtn .downloadbtn');
+        
+        if (link) {
             const title = this.extractFileNameFromUrl(link);
             const result = {
                 link,
