@@ -25,7 +25,7 @@ export class ExtraPlayResolver extends BaseUrlResolver {
         let file = '', key = '';
 
         const context = createContext({
-            HDVBPlayer: function (o: any) {
+            HDVBPlayer: function (o: { file: string; key: string; }) {
                 file = o.file;
                 key = o.key;
             }
@@ -37,6 +37,7 @@ export class ExtraPlayResolver extends BaseUrlResolver {
                     runInContext(sc, context);
                 }
             } catch (error) {
+                console.log(error);
             }
         }
 
