@@ -12,7 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "debug": "^4.3.4",
-    "got": "^12.6.0",
+    "got": "^12.6.1",
     "m3u8": "0.0.10",
     "psl": "^1.9.0",
     "scrape-it": "^6.0.1",
@@ -24,14 +24,14 @@
     "@types/debug": "^4.1.7",
     "@types/psl": "^1.1.0",
     "@types/tough-cookie": "^4.0.2",
-    "@typescript-eslint/eslint-plugin": "^6.6.0",
-    "@typescript-eslint/parser": "^6.6.0",
+    "@typescript-eslint/eslint-plugin": "^6.10.0",
+    "@typescript-eslint/parser": "^6.10.0",
     "ava": "^5.2.0",
-    "eslint": "^8.35.0",
+    "eslint": "^8.53.0",
     "nodemon": "^3.0.1",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.0.4"
+    "typescript": "^5.2.2"
   },
   "scripts": {
     "lint": "eslint . --ext .ts",
