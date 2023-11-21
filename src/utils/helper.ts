@@ -184,3 +184,26 @@ export const parseGoogleFileId = (_url: string) => {
     }
     return null;
 }
+
+export const simpleCaptcha = (html:string, listItem:string)=>{
+    const result: { code: [{ codeValue: string, codePosition: number }] } = scrapeIt.scrapeHTML(html, {
+        code: {
+            listItem: listItem,
+            data: {
+                codeValue: {},
+                codePosition: {
+                    attr: 'style',
+                    convert: (x) => {
+                        const rxResult = /padding-left:(\d*)px/.exec(x);
+                        return rxResult && parseInt(rxResult[1]);
+                    }
+                }
+            }
+        }
+    });
+
+    return result.code
+        .sort((a, b) => a.codePosition - b.codePosition)
+        .map(x => x.codeValue)
+        .join('');
+}
