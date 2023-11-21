@@ -10,38 +10,34 @@ export class hubdriveResolver extends BaseUrlResolver {
         });
     }
 
-    async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
+    async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem | ResolvedMediaItem[]> {
         const u = new URL(_urlToResolve);
         await this.gotInstance(_urlToResolve);
+        const resp1 = await this.gotInstance(_urlToResolve);
+        const title = this.scrapePageTitle(resp1.body);
         const fileid = u.pathname.split('/').pop();
         u.pathname = '/ajax.php';
         u.searchParams.append('ajax', 'direct-download');
         const formToPost = {
             id: parseInt(fileid || '')
         };
-        const response2 = await this.gotInstance.post(u.href, {
+        const { file, code } = await this.gotInstance.post(u.href, {
             form: formToPost,
             headers: {
                 "accept": "application/json",
                 'X-Requested-With': 'XMLHttpRequest',
             },
             throwHttpErrors: false
-        }).json<{ file: string }>();
-        const gdriveId = response2.file.split('=').pop();
-        if (gdriveId) {
-            const gdurl = `https://drive.google.com/file/d/${gdriveId}`;
-            const result = await this._context?.resolveRecursive(gdurl, this._resolverOptions);
-            //alright so here we construct two result one for gdflix and one for google drive
-            if (result && result.length > 0) {
-                const clonedResult = Object.assign({}, result[0]);
-                clonedResult.parent = _urlToResolve;
-                return [clonedResult, ...result];
+        }).json<{ file: string, code: string }>();
+
+        if (file && code == '200') {
+            const resp2 = await this.gotInstance(new URL(file, u.origin));
+            const link = this.scrapeLinkHref(resp2.body, '.card-body .btn-primary');
+
+            if (link) {
+                return { link, title, isPlayable: true } as ResolvedMediaItem;
             }
         }
         return [];
-    }
-
-    async fillMetaInfo(resolveMediaItem: ResolvedMediaItem): Promise<void> {
-        //do nothing...
     }
 }
