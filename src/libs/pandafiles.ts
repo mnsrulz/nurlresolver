@@ -52,7 +52,9 @@ export class PandafilesResolver extends BaseUrlResolver {
         form2['referer'] = response.url;
         form2['code'] = captchaCode;
         const resp2 = await this.gotInstance.post(resp1.url, { form: form2 });
-        const link = this.scrapeLinkHref(resp2.body, '#direct_link a');
+        const redirectlink = this.scrapeLinkHref(resp2.body, '#direct_link a');
+        const headResponse = await this.gotInstance.head(redirectlink);
+        const link = headResponse.url
         const title = this.extractFileNameFromUrl(link);
         const result = {
             link,
