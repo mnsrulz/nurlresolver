@@ -9,23 +9,35 @@ export class FilepressResolver extends BaseUrlResolver {
     }
 
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
-         //it redirects and links change
-         const initialResponse = await this.gotInstance(_urlToResolve, {
+        //it redirects and links change
+        const initialResponse = await this.gotInstance(_urlToResolve, {
             throwHttpErrors: false  //we are expecting 403 forbidden errors due to CF protection
-        });   
-         const workingUrl = initialResponse.url;
-         const parsedUrl = new URL(workingUrl);
-         const fileId = parsedUrl.pathname.split('/').pop();
-         const apiResponse = await this.gotInstance.post(`https://${parsedUrl.hostname}/api/file/downlaod2/`, {
-             json: {
-                 id: fileId,
-                 method: "publicUserDownlaod"
-             },
-             headers: {
-                 "referer": workingUrl
-             }
-         }).json<{ data: string }>();
-         
+        });
+        const workingUrl = initialResponse.url;
+        const parsedUrl = new URL(workingUrl);
+        const originalFileId = parsedUrl.pathname.split('/').pop();
+        const downloadV1 = await this.gotInstance.post(`https://${parsedUrl.hostname}/api/file/downlaod/`, {
+            json: {
+                id: originalFileId,
+                method: "publicDownlaod"
+            },
+            headers: {
+                "referer": workingUrl
+            }
+        }).json<{ data: string, statusCode: string }>();
+
+        const fileId = downloadV1.statusCode == '200' ? downloadV1.data : originalFileId;
+
+        const apiResponse = await this.gotInstance.post(`https://${parsedUrl.hostname}/api/file/downlaod2/`, {
+            json: {
+                id: fileId,
+                method: "publicUserDownlaod"
+            },
+            headers: {
+                "referer": workingUrl
+            }
+        }).json<{ data: string }>();
+        
         if (apiResponse.data) {
             const gdurl = `https://drive.google.com/file/d/${apiResponse.data}/view`;
             const result = await this._context?.resolveRecursive(gdurl, this._resolverOptions);
