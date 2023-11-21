@@ -3,21 +3,23 @@ import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver.js";
 export class FilepressResolver extends BaseUrlResolver {
     constructor() {
         super({
-            domains: [/https?:\/\/filepress/],
+            domains: [/https?:\/\/([^\.]*\.)?filepress/],
             speedRank: 95
         });
     }
 
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
          //it redirects and links change
-         const initialResponse = await this.gotInstance(_urlToResolve);
+         const initialResponse = await this.gotInstance(_urlToResolve, {
+            throwHttpErrors: false  //we are expecting 403 forbidden errors due to CF protection
+        });   
          const workingUrl = initialResponse.url;
          const parsedUrl = new URL(workingUrl);
          const fileId = parsedUrl.pathname.split('/').pop();
-         const apiResponse = await this.gotInstance.post(`https://${parsedUrl.hostname}/api/file/downlaod/`, {
+         const apiResponse = await this.gotInstance.post(`https://${parsedUrl.hostname}/api/file/downlaod2/`, {
              json: {
                  id: fileId,
-                 method: "publicDownlaod"
+                 method: "publicUserDownlaod"
              },
              headers: {
                  "referer": workingUrl
