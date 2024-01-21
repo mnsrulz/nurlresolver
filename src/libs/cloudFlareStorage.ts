@@ -6,6 +6,13 @@ const tryParseContentLengthFromRangeHeader = (h: string | undefined) => {
     }
 }
 
+const parseFileNameFromContentDisposition = (h: string | undefined) => {
+    //Content-Disposition: attachment; filename="Starfish.2023.1080p.Hindi.WEB-DL.5.1.ESub.x264-HDHub4u.Tv.mkv"
+    if (h) {
+        return /filename="([^"]*)"/.exec(h)?.[1];        
+    }
+}
+
 export class cloudFlareStorageResolver extends BaseUrlResolver {
     fn1 = async (_urlToResolve: string) => {
         const purl = new URL(_urlToResolve);
@@ -52,3 +59,53 @@ export class cloudFlareStorageResolver extends BaseUrlResolver {
         ////empty one
     }
 }
+
+export class pixeldraStorageResolver extends BaseUrlResolver {
+    fn1 = async (_urlToResolve: string) => {
+        console.log(_urlToResolve);
+
+        const purl = new URL(_urlToResolve);
+        purl.searchParams.delete('x-nu-org');
+        const newur = purl.href
+        const rs = await this.gotInstance.head(newur);
+        const title = parseFileNameFromContentDisposition(rs.headers["content-disposition"]) || this.extractFileNameFromUrl(_urlToResolve);
+
+        return {
+            link: newur,
+            title,
+            isPlayable: true,
+            parent: _urlToResolve,
+            size: rs.headers["content-length"] && parseInt(rs.headers["content-length"]),
+            lastModified: rs.headers['last-modified'],
+            contentType: rs.headers['content-type']
+        } as ResolvedMediaItem;
+    }
+
+    constructor() {
+        super({
+            domains: [/https?:\/\/pixeldra/],
+            speedRank: 95
+        });
+    }
+
+    async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem | ResolvedMediaItem[]> {
+        try {
+            return await this.fn1(_urlToResolve);
+        } catch (error) {
+            const xnr = new URL(_urlToResolve).searchParams.get('x-nu-org');
+            if (xnr) {
+                const nlinks = await this._context?.resolve(xnr);
+                const whichIsResolvable = nlinks?.find(x => this.canResolve(x.link));   //this will do the trick as long as there's only one cloudflarestorage link in that page.
+                if (whichIsResolvable) {
+                    return this.fn1(whichIsResolvable.link);
+                }
+            }
+        }
+        return [];
+    }
+
+    async fillMetaInfo(resolveMediaItem: ResolvedMediaItem): Promise<void> {
+        ////empty one
+    }
+}
+
