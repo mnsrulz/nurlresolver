@@ -62,3 +62,5 @@ export * from "./libs/hubdrive.js";
 export * from "./libs/extraPlay.js";
 export * from "./libs/streamvid.js";
 export * from "./libs/uploadingSite.js";
+export * from './libs/hubCloudDriveResolver.js';
+export * from './libs/cloudFlareStorage.js';
