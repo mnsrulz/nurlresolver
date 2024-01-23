@@ -1,5 +1,5 @@
 # nurlresolver
-Direct link generator for many known content sharing sites. Avoid clicking numerous times to download links and also avoid seeing ads while downloading the content from sharing sites. Easy to integrate with nodejs application.
+Streamline your download experience with this Node.js package designed to extract direct, hassle-free downloadable links from various file-sharing websites. Say goodbye to multiple clicks and pesky ads, ensuring a seamless and efficient downloading process.
 
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/mnsrulz/nurlresolver/blob/master/LICENSE)
 [![npm latest package](https://img.shields.io/npm/v/nurlresolver/latest.svg)](https://www.npmjs.com/package/nurlresolver)
