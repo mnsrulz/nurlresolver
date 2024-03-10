@@ -50,6 +50,7 @@ export * from "./libs/uptomegaResolver.js";
 export * from "./libs/uploadFlix.js";
 export * from "./libs/filePost.js";
 export * from "./libs/gdflix.js";
+export * from "./libs/gdflixV2.js";
 export * from "./libs/ahvsh.js";
 export * from "./libs/addison.js";
 export * from "./libs/mixdropResolver.js";
