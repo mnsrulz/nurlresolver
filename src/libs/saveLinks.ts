@@ -11,8 +11,14 @@ export class SaveLinksResolver extends BaseUrlResolver {
         const canonicalUrl = new URL(_urlToResolve);
         canonicalUrl.hostname = 'savelinks.me';
         const responsev1 = await this.gotInstance(canonicalUrl.href);
-        const fomruploadresp = await this.postHiddenForm(responsev1.url, responsev1.body);
-        const obj1: { links: ResolvedMediaItem[]; } = this.scrapeHtml(fomruploadresp, {
+        let c = '';
+
+        if (this.getHiddenForm(responsev1.body)) {
+            c = await this.postHiddenForm(responsev1.url, responsev1.body);
+        } else {
+            c = responsev1.body;
+        }
+        const obj1: { links: ResolvedMediaItem[]; } = this.scrapeHtml(c, {
             links: {
                 listItem: '.view-well a',
                 data: {
