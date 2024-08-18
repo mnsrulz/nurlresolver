@@ -1,10 +1,11 @@
 import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver.js";
 import { CookieJar } from 'tough-cookie';
+import { parseGoogleFileId } from "../utils/helper.js";
 export class GDriveResolver extends BaseUrlResolver {
     private googleDriveId: string;
     constructor() {
         super({
-            domains: [/https?:\/\/(drive|docs)\.google\.com/],
+            domains: [/https?:\/\/(drive|docs|drive\.usercontent)\.google\.com/],
             speedRank: 99
         });
         this.googleDriveId = '';
@@ -13,14 +14,10 @@ export class GDriveResolver extends BaseUrlResolver {
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
         const links = [];
 
-        const rx0 = /(drive|docs)\.google\.com\/open\?id=(.*)/
-        const rx1 = /(drive|docs)\.google\.com\/file\/d\/(.*?)\//
-        const rx2 = /(drive|docs)\.google\.com\/uc\?id=(.*?)&/
-
-        const regexresult = rx0.exec(_urlToResolve) || rx1.exec(_urlToResolve) || rx2.exec(_urlToResolve)
-        if (regexresult) {
-            const normalizeDriveUrl = `https://drive.google.com/uc?id=${regexresult[2]}&export=download`;
-            this.googleDriveId = regexresult[2];
+        const googleDriveId = parseGoogleFileId(_urlToResolve)
+        if (googleDriveId) {
+            const normalizeDriveUrl = `https://drive.google.com/uc?id=${googleDriveId}&export=download`;
+            this.googleDriveId = googleDriveId;
             const cookieJar = new CookieJar();
             const response = await this.gotInstance(normalizeDriveUrl, {
                 cookieJar,
