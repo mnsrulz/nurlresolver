@@ -5,7 +5,7 @@ import { URL } from 'url';
 export class hdMoviesFlixResolver extends BaseUrlResolver {
     constructor() {
         super({
-            domains: [/https?:\/\/(hdmoviesflix|moviesflix)/]
+            domains: [/https?:\/\/(hdmoviesflix|moviesflix|themoviesflix)/]
         });
     }
 
@@ -17,7 +17,7 @@ export class hdMoviesFlixResolver extends BaseUrlResolver {
             return [{ title: decodeUrl.host, link: decodeUrl.href } as ResolvedMediaItem];
         } else {
             const response = await this.gotInstance(_urlToResolve);
-            const links = this.scrapeAllLinks(response.body, '.mb-container');
+            const links = this.scrapeAllLinks(response.body, '.page-body');
             return links;
         }
     }

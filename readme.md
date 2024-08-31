@@ -65,6 +65,7 @@ In some of the sharing sites, it's required to send some header information back
 | timeout   | number        | timeout in seconds      
 | googleDrive.apiKey   | string        | optional api key to avoid anonymous access. Defaults to empty to allow anonymous access.
 | customResolvers   | array        | custom resolvers you can inject for resolving urls. Refer to [app.tests](src/tests/app.tests.ts) for implementation samples      
+| ignoreResolvers   | array        | regex array you can inject to ignore executing specific resolvers. Refer to [app.tests](src/tests/app.tests.ts) for implementation samples      
 
 
 ```js

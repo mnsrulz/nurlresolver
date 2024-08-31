@@ -3,7 +3,7 @@ import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver.js";
 export class LinkritResolver extends BaseUrlResolver {
     constructor() {
         super({
-            domains: [/https?:\/\/linkrit\.com/, /https?:\/\/extralinks/, /https?:\/\/dlink\.mobilejsr\.com/, /https?:\/\/dlinks\.dailypotrika/],
+            domains: [/https?:\/\/linkrit\.com/, /https?:\/\/extralinks/, /https?:\/\/(dlink\.)?mobilejsr\.com/, /https?:\/\/dlinks\.dailypotrika/],
             useCookies: true
         });
     }
