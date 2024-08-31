@@ -20,6 +20,6 @@ export class WorkersDevResolver extends BaseUrlResolver {
 
     async canResolve(urlToResolve: string): Promise<boolean> {
         const u = new URL(urlToResolve);
-        return u.hostname.endsWith('workers.dev');
+        return u.hostname.endsWith('workers.dev') || u.hostname.endsWith('r2.dev');
     }
 }
