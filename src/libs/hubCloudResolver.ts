@@ -5,7 +5,7 @@ export class HubCloudResolver extends BaseUrlResolver {
 
     constructor() {
         super({
-            domains: [/https?:\/\/(hubcloud.link)/],
+            domains: [/https?:\/\/(hubcloud)/],
             speedRank: 90
         });
     }
@@ -18,7 +18,16 @@ export class HubCloudResolver extends BaseUrlResolver {
             const regex01Result = regex01.exec(response.body);
             link = regex01Result?.[1] || '';
         }
+
         const title = this.extractFileNameFromUrl(link);
+
+        if (title.endsWith('.php')) {
+            //it's  a redirect
+            const rsp2 = await this.gotInstance(link);
+            const result_01 = this.scrapeAllLinks(rsp2.body, '.card-body');
+            return result_01;
+        }
+
         const result = {
             link,
             title,
