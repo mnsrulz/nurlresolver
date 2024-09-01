@@ -2,6 +2,7 @@ import debug from 'debug';
 const _debug = debug('nurl:ClicknUploadResolver');
 
 import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver.js";
+import { simpleCaptcha } from '../utils/helper.js';
 
 export class ClicknUploadResolver extends BaseUrlResolver {
     constructor() {
@@ -15,7 +16,7 @@ export class ClicknUploadResolver extends BaseUrlResolver {
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem | ResolvedMediaItem[]> {
         const response = await this.gotInstance(_urlToResolve);
         const response2 = await this.postHiddenForm(response.url, response.body, 0, false);
-        const parsedCode = this.parseCaptchaCode(response2.body);
+        const parsedCode = simpleCaptcha(response2.body, 'td[align=right] span');
         const formToPost = this.getHiddenForm(response2.body, 0);
 
         if (formToPost) {
@@ -30,8 +31,7 @@ export class ClicknUploadResolver extends BaseUrlResolver {
             elapsedSecond=elapsedSecond+3;
         }, 3000);
 
-        await this.wait(10000);
-
+        await this.wait(15000);
         clearInterval(logTimer);
 
         const response3 = await this.gotInstance.post(urlToPost, {
@@ -39,6 +39,7 @@ export class ClicknUploadResolver extends BaseUrlResolver {
             headers: {
                 Referer: urlToPost
             },
+            throwHttpErrors: false,
             followRedirect: false   //it can raise some unhandled error which can potentially cause whole application shutdown.
         });
 
@@ -54,50 +55,5 @@ export class ClicknUploadResolver extends BaseUrlResolver {
             return [result];
         }
         return [];
-    }
-
-    private parseCaptchaCode(html: string): string {
-        const result: { code: [{ codeValue: string, codePosition: number }] } = this.scrapeHtml(html, {
-            // code: "td[align=right]",
-            // codeValues: {
-            //   listItem: 'td[align=right] span'
-            // },
-            code: {
-                listItem: 'td[align=right] span',
-                data: {
-                    codeValue: {},
-                    codePosition: {
-                        attr: 'style',
-                        convert: (x) => {
-                            const rxResult = /padding-left:(\d*)px/.exec(x);
-                            return rxResult && parseInt(rxResult[1]);
-                        }
-                    }
-                }
-            },
-            // tag: {
-            //   listItem: 'td[align=right] span',
-            //   data: {
-            //     code: {
-            //       selector: '',
-            //       how: (i: cheerio.Selector) => {
-            //         const vals = Object.values(i);
-            //         const codeValue = vals['0']['children'][0]['data'];
-            //         const styleAttribute = vals['0']['attribs']['style'];
-            //         const rxResult = /padding-left:(\d*)px/.exec(styleAttribute);
-            //         const position = rxResult && parseInt(rxResult[1]);
-            //         return {
-            //           codeValue, position
-            //         };
-            //       }
-            //     }
-            //   },
-            // }
-        });
-
-        return result.code
-            .sort((a, b) => a.codePosition - b.codePosition)
-            .map(x => x.codeValue)
-            .join('');
     }
 }
