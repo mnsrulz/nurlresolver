@@ -19,7 +19,7 @@ export abstract class BaseUrlResolver {
     protected scrapeItAsync = scrapeIt;
     protected scrapeHtml = scrapeIt.scrapeHTML;
     protected _cookieJar?: CookieJar;
-    protected defaultUserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/111.0';
+    protected defaultUserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36';
     protected _resolverOptions?: Partial<UrlResolverOptions>;
     protected _context?: UrlResolver;
     protected getSecondLevelDomain = helper.getSecondLevelDomain;
@@ -151,9 +151,9 @@ export abstract class BaseUrlResolver {
 
     abstract resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[] | ResolvedMediaItem>;
 
-    protected async postHiddenForm(urlToPost: string, page: string, ix?: number, resolveBody?: true): Promise<string>
-    protected async postHiddenForm(urlToPost: string, page: string, ix?: number, resolveBody?: false): Promise<Response<string>>
-    protected async postHiddenForm(urlToPost: string, page: string, ix?: number, resolveBody = true): Promise<string | Response<string>> {
+    protected async postHiddenForm(urlToPost: string, page: string, ix?: number, resolveBody?: true, followRedirect?: boolean): Promise<string>
+    protected async postHiddenForm(urlToPost: string, page: string, ix?: number, resolveBody?: false, followRedirect?: boolean): Promise<Response<string>>
+    protected async postHiddenForm(urlToPost: string, page: string, ix?: number, resolveBody = true, followRedirect?: boolean): Promise<string | Response<string>> {
         const form = this.getHiddenForm(page, ix);
         if (form) {
             const response2 = await this.gotInstance.post(urlToPost, {
@@ -161,7 +161,7 @@ export abstract class BaseUrlResolver {
                 headers: {
                     Referer: urlToPost
                 },
-                followRedirect: false   //it can raise some unhandled error which can potentially cause whole application shutdown.
+                followRedirect: followRedirect || false   //it can raise some unhandled error which can potentially cause whole application shutdown.
             });
             return resolveBody ? response2.body : response2;
         }
