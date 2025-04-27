@@ -65,3 +65,4 @@ export * from './libs/hubCloudDriveResolver.js';
 export * from './libs/cloudFlareStorage.js';
 export * from './libs/allLinksHub.js';
 export * from './libs/appDrive.js';
+export * from './libs/nexdrive.js';
