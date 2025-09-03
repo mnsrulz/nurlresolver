@@ -70,7 +70,7 @@ export abstract class BaseUrlResolver {
         try {
             canResolve = await this.canResolve(urlToResolve);
         } catch (error) {
-            logger('Error occurred while calling canResolve BaseResolver');
+            logger(`Error occurred while calling canResolve BaseResolver: ${error}`);
         }
         if (canResolve) {
             let status = 'ERROR';

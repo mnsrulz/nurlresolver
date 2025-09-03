@@ -22,17 +22,24 @@ export class UrlResolver {
     urlToResolve: string | string[],
     options: Partial<UrlResolverOptions> = {},
   ): Promise<ResolvedMediaItem[]> {
+    if (!urlToResolve) return [];
+    if (Array.isArray(urlToResolve) && urlToResolve.length === 0) return [];
+    
     const _options = Object.assign({
       timeout: 30
     }, options);
     const instance = this;
-    
+
     const _allResolvers = _options.customResolvers ? [...this.allResolvers, ..._options.customResolvers] : this.allResolvers;
-    const _filteredResolvers = _allResolvers.filter(j=> !_options.ignoreResolvers?.some(r=>r.test(j.name)));
+    const _filteredResolvers = _allResolvers.filter(j => !_options.ignoreResolvers?.some(r => r.test(j.name)));
     let result: ResolvedMediaItem[] = [];
-    const timeoutPromise = new Promise(resolve => setTimeout(resolve, _options.timeout * 1000));
+    let timeoutPointer: NodeJS.Timeout | undefined;
+    const timeoutPromise = new Promise(resolve => {
+      timeoutPointer = setTimeout(resolve, _options.timeout * 1000);
+    });
     const actualPromise = _();
     await Promise.race([timeoutPromise, actualPromise]);
+    if (timeoutPointer) clearTimeout(timeoutPointer);
     return result;
     async function _() {
       const urlsToResolve = typeof urlToResolve === "string" ? [urlToResolve] : urlToResolve;

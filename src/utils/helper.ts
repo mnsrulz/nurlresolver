@@ -1,4 +1,4 @@
-import psl from "psl";
+import { parse } from 'tldts';
 import scrapeIt from "scrape-it";
 import got from 'got';
 const map = new Map();
@@ -138,11 +138,20 @@ export const scrapeInnerText = (html: string, selector: string) => {
     return title;
 }
 
-export const getSecondLevelDomain = (someUrl: string) => {
-    const hostname = new URL(someUrl);
-    const parsed = psl.parse(hostname.hostname) as psl.ParsedDomain;
-    return parsed.sld;
-}
+// export const getSecondLevelDomain = (someUrl: string) => {
+//     const hostname = new URL(someUrl);
+//     const parsed = psl.parse(hostname.hostname) as psl.ParsedDomain;
+//     return parsed.sld;
+// }
+
+export const getSecondLevelDomain = (someUrl: string): string | null => {
+  const { hostname } = new URL(someUrl);
+  const { domain } = parse(hostname);
+  if (!domain) return null;
+
+  // Extract SLD from domain (e.g. "abc.com" -> "abc")
+  return domain.split('.')[0];
+};
 
 export const isValidHttpUrl = (someUrl: string) => {
     try {
