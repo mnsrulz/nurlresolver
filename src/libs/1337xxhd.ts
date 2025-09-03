@@ -8,8 +8,9 @@ export class XhdResolver extends BaseUrlResolver {
 
     }
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem | ResolvedMediaItem[]> {
-        const responsev1 = await this.gotInstance(_urlToResolve);
-        const obj1: { links: ResolvedMediaItem[]; } = this.scrapeHtml(responsev1.body, {
+        const resp = await fetch(_urlToResolve);        
+        const body = await resp.text();                
+        const obj1: { links: ResolvedMediaItem[]; } = this.scrapeHtml(body, {
             links: {
                 listItem: 'a',
                 data: {
