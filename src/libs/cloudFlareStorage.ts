@@ -7,7 +7,7 @@ const tryParseContentLengthFromRangeHeader = (h: string | undefined) => {
 }
 
 const parseFileNameFromContentDisposition = (h: string | undefined) => {
-    //Content-Disposition: attachment; filename="Starfish.2023.1080p.Hindi.WEB-DL.5.1.ESub.x264-HDHub4u.Tv.mkv"
+    //Content-Disposition: attachment; filename="Bunny.Video.1080p.WEB-DL.x264.mkv"
     if (h) {
         return /filename="([^"]*)"/.exec(h)?.[1];        
     }

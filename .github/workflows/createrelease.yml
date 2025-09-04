@@ -3,7 +3,7 @@ name: Create Release on tag push
 on:
   push:
     tags: ['*']
-    branches: [master]
+    branches: [main]
     
 jobs:
   build:
