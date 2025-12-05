@@ -42,7 +42,7 @@ export class cloudFlareStorageResolver extends BaseUrlResolver {
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem | ResolvedMediaItem[]> {
         try {
             return await this.fn1(_urlToResolve);
-        } catch (error) {
+        } catch {
             const xnr = new URL(_urlToResolve).searchParams.get('x-nu-org');
             if (xnr) {
                 const nlinks = await this._context?.resolve(xnr);
@@ -55,15 +55,13 @@ export class cloudFlareStorageResolver extends BaseUrlResolver {
         return [];
     }
 
-    async fillMetaInfo(resolveMediaItem: ResolvedMediaItem): Promise<void> {
+    async fillMetaInfo(): Promise<void> {
         ////empty one
     }
 }
 
 export class pixeldraStorageResolver extends BaseUrlResolver {
     fn1 = async (_urlToResolve: string) => {
-        console.log(_urlToResolve);
-
         const purl = new URL(_urlToResolve);
         purl.searchParams.delete('x-nu-org');
         const newur = purl.href
@@ -90,8 +88,10 @@ export class pixeldraStorageResolver extends BaseUrlResolver {
 
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem | ResolvedMediaItem[]> {
         try {
-            return await this.fn1(_urlToResolve);
-        } catch (error) {
+            const urlInstance = new URL(_urlToResolve);
+            const id = urlInstance.pathname.split('/').at(-1);
+            return await this.fn1(`${urlInstance.origin}/api/file/${id}`);
+        } catch {
             const xnr = new URL(_urlToResolve).searchParams.get('x-nu-org');
             if (xnr) {
                 const nlinks = await this._context?.resolve(xnr);
@@ -104,7 +104,7 @@ export class pixeldraStorageResolver extends BaseUrlResolver {
         return [];
     }
 
-    async fillMetaInfo(resolveMediaItem: ResolvedMediaItem): Promise<void> {
+    async fillMetaInfo(): Promise<void> {
         ////empty one
     }
 }
