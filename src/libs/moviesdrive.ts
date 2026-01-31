@@ -4,7 +4,7 @@ const rx = /http(s)?:\/\/(moviesdrive|t\.me)/;
 export class MoviesdriveResolver extends BaseUrlResolver {
     constructor() {
         super({
-            domains: [/https?:\/\/moviesdrive/]
+            domains: [/https?:\/\/([a-z0-9-]+\.)*moviesdrive/]
         });
     }
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem | ResolvedMediaItem[]> {
