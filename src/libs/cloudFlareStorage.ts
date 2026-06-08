@@ -1,15 +1,9 @@
+import { parse } from "content-disposition";
 import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver.js";
 
 const tryParseContentLengthFromRangeHeader = (h: string | undefined) => {
     if (h) {
         return parseInt(h.split('/').pop() || '0');
-    }
-}
-
-const parseFileNameFromContentDisposition = (h: string | undefined) => {
-    //Content-Disposition: attachment; filename="Bunny.Video.1080p.WEB-DL.x264.mkv"
-    if (h) {
-        return /filename="([^"]*)"/.exec(h)?.[1];        
     }
 }
 
@@ -66,7 +60,7 @@ export class pixeldraStorageResolver extends BaseUrlResolver {
         purl.searchParams.delete('x-nu-org');
         const newur = purl.href
         const rs = await this.gotInstance.head(newur);
-        const title = parseFileNameFromContentDisposition(rs.headers["content-disposition"]) || this.extractFileNameFromUrl(_urlToResolve);
+        const title = parse(rs.headers['content-disposition'] || '').parameters.filename || this.extractFileNameFromUrl(_urlToResolve);
 
         return {
             link: newur,

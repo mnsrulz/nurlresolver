@@ -11,6 +11,7 @@
   "author": "mnsrulz",
   "license": "MIT",
   "dependencies": {
+    "content-disposition": "^2.0.1",
     "debug": "^4.4.1",
     "got": "^14.4.8",
     "m3u8": "0.0.10",
