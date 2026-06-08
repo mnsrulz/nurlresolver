@@ -33,8 +33,10 @@ export class mdrive extends BaseUrlResolver {
 
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[] | ResolvedMediaItem> {
         const urlInstance = new URL(_urlToResolve);
-        const docId = urlInstance.pathname.split('/').at(-1);
+        const docId = urlInstance.pathname.split('/').at(-1) || urlInstance.pathname.split('/').at(-2); // handle trailing slash
         const result = await this.gotInstance(`${urlInstance.origin}/wp-json/wp/v2/posts/${docId}`).json<{ content: { rendered: string } }>();
+
+        //console.log(result);
         const links = this.scrapeAllLinks(result.content.rendered, '');
         return links.filter(x => x.link.startsWith('http') && !rx.test(x.link));
     }
