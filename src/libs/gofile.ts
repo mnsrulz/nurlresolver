@@ -1,5 +1,17 @@
+import crypto from 'node:crypto';
 import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver.js";
 let globaltoken = '';
+
+
+function generateWebsiteToken(userAgent: string, accountToken: string) {
+  const timeSlot = Math.floor(Date.now() / 1000 / 14400);
+  const raw = `${userAgent}::en-US::${accountToken}::${timeSlot}::12af056dacea0b`;
+
+  return crypto
+    .createHash('sha256')
+    .update(raw)
+    .digest('hex');
+}
 
 export class GoFileResolver extends BaseUrlResolver {
     private async fetchGlobalToken() {
@@ -24,10 +36,13 @@ export class GoFileResolver extends BaseUrlResolver {
         const initialResponse = await this.gotInstance(_urlToResolve);
         const gofileId = new URL(initialResponse.url).pathname.split('/').pop(); //extract go fileid
         const token = await this.fetchGlobalToken();
-        const apiUrl = `https://api.gofile.io/contents/${gofileId}?wt=4fd6sg89d7s6`;
+        const websiteToken = generateWebsiteToken(this.defaultUserAgent, token);
+        const apiUrl = `https://api.gofile.io/contents/${gofileId}?cache=true&sortField=createTime&sortDirection=1`;
         const {data} = await this.gotInstance<ResponsePayload>(apiUrl, {
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
+                'X-Website-Token': websiteToken,
+                'X-BL': 'en-US'
             },
             resolveBodyOnly: true,
             responseType: 'json'
