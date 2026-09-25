@@ -127,6 +127,16 @@ export abstract class BaseUrlResolver {
         resolveMediaItem.contentType = headResponse.headers['content-type'];
     }
 
+     cleanupLinks(links: ResolvedMediaItem[]) {
+        const mappedLinks = []
+        for (const link of links) {
+            const { hostname } = new URL(link.link);
+            if (['tinyurl.com', 'www.google.com', 't.me', 'www-google-com.cdn.ampproject.org', 'one.one.one.one'].includes(hostname)) continue;
+            mappedLinks.push(link);
+        }
+        return mappedLinks;
+    }
+
     private setupEnvironment(): void {
         const rejectUnauthorized = process.env.NODE_TLS_REJECT_UNAUTHORIZED;
         const gotOptions: OptionsOfTextResponseBody = {
