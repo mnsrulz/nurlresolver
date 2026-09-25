@@ -29,6 +29,6 @@ export class WorkersDevResolver extends BaseUrlResolver {
     async canResolve(urlToResolve: string): Promise<boolean> {
         const u = new URL(urlToResolve);
         return u.hostname.endsWith('workers.dev') || u.hostname.endsWith('r2.dev') || u.hostname.endsWith('fastdl.lol') 
-            || u.hostname.endsWith('obsession.buzz') || u.hostname.endsWith('storage.googleapis.com');
+            || u.hostname.endsWith('obsession.buzz') || u.hostname.endsWith('bunker.monster') || u.hostname.endsWith('storage.googleapis.com');
     }
 }

@@ -13,7 +13,7 @@ export class cloudFlareStorageResolver extends BaseUrlResolver {
         purl.searchParams.delete('x-nu-org');
         const newur = purl.href
         const rs = await this.gotInstance(newur, { headers: { Range: 'bytes=0-0' } });
-        const title = this.extractFileNameFromUrl(_urlToResolve);
+        const title = parse(rs.headers['content-disposition'] || '').parameters.filename || this.extractFileNameFromUrl(_urlToResolve);
 
         return {
             link: newur,
@@ -89,7 +89,7 @@ export class pixeldraStorageResolver extends BaseUrlResolver {
             const xnr = new URL(_urlToResolve).searchParams.get('x-nu-org');
             if (xnr) {
                 const nlinks = await this._context?.resolve(xnr);
-                const whichIsResolvable = nlinks?.find(x => this.canResolve(x.link));   //this will do the trick as long as there's only one cloudflarestorage link in that page.
+                const whichIsResolvable = nlinks?.find(x => new URL(x.link).hostname.includes('pixeldra') && this.canResolve(x.link));   //this will do the trick as long as there's only one cloudflarestorage link in that page.
                 if (whichIsResolvable) {
                     return this.fn1(whichIsResolvable.link);
                 }
