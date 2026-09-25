@@ -1,14 +1,5 @@
 import { BaseUrlResolver, ResolvedMediaItem } from "../BaseResolver.js";
 
-const cleanupLinks = (links: ResolvedMediaItem[]) => {
-    const mappedLinks = []
-    for (const link of links) {
-        const { hostname } = new URL(link.link);
-        if (['tinyurl.com', 'www.google.com', 't.me', 'www-google-com.cdn.ampproject.org', 'one.one.one.one'].includes(hostname)) continue;
-        mappedLinks.push(link);
-    }
-    return mappedLinks;
-}
 export class HubCloudResolver extends BaseUrlResolver {
 
     constructor() {
@@ -19,10 +10,12 @@ export class HubCloudResolver extends BaseUrlResolver {
     }
 
     async resolveInner(_urlToResolve: string): Promise<ResolvedMediaItem[]> {
+        let finalUrl = _urlToResolve;
         let response = await this.gotInstance(_urlToResolve);
         const redirectUrl = this.parseElementAttributes(response.body, 'META[HTTP-EQUIV=refresh]', 'content').at(0)?.split('=').at(1);
 
         if (redirectUrl) {
+            finalUrl = redirectUrl;
             response = await this.gotInstance(redirectUrl);
         }
 
@@ -39,7 +32,24 @@ export class HubCloudResolver extends BaseUrlResolver {
             //it's  a redirect
             const rsp2 = await this.gotInstance(link);
             const result_01 = this.scrapeAllLinks(rsp2.body, '.card-body');
-            return cleanupLinks(result_01);
+
+            const regex02 = /var pxl = "(https:\/\/pixeldrain[^"]*)";/g
+            const regex02Result = regex02.exec(rsp2.body);
+            const pixelDrainLink = regex02Result?.[1] || '';
+
+            console.log('pixelDrainLink: ', pixelDrainLink);
+
+            result_01.push({
+                link: pixelDrainLink,
+                title: 'PixelDrain Link'
+            } as ResolvedMediaItem);
+
+            return this.cleanupLinks(result_01).map(x => {
+                const u = new URL(x.link);
+                u.searchParams.append('x-nu-org', finalUrl);
+                x.link = u.href;
+                return x;
+            });
         }
 
         const result = {
