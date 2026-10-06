@@ -21,7 +21,7 @@
     "unpacker": "^1.0.1"
   },
   "devDependencies": {
-    "@ava/typescript": "^6.0.0",
+    "@ava/typescript": "^7.0.0",
     "@eslint/js": "^9.34.0",
     "@types/debug": "^4.1.12",
     "@types/tough-cookie": "^4.0.5",
